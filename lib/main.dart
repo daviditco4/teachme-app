@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'pages/home_page.dart';
+import 'pages/teacher_profile_page.dart';
 
 void main() => runApp(const MyApp());
 
@@ -10,9 +10,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'TeachMe',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const HomePage(),
+      home: const TeacherProfilePage(),
     );
   }
 }
