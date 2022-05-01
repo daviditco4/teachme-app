@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
-import 'package:teachme_app/widgets/main_drawer.dart';
-import 'package:teachme_app/widgets/nav_bar.dart';
+import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import 'package:teachme_app/widgets/setting_button.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -16,8 +15,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: MyColors.background,
-        //appBar: const Navbar(),
-        //drawer: const MainDrawer(),
+        bottomNavigationBar: TMBottomNavigationBar(),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Padding(

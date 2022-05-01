@@ -15,6 +15,10 @@ class MyColors {
 
   static const Color settingButton = Color.fromRGBO(216, 239, 239, 1.0);
 
+  static const Color bottomNavBarBackground = Color(0xFF1F51AF);
+
+  static const Color bottomNavBarSelected = Color.fromRGBO(255, 255, 255, 0.7);
+
   static const Color label = Color.fromRGBO(254, 36, 114, 1.0);
 
   static const Color neutral = Color.fromRGBO(255, 255, 255, 0.2);
