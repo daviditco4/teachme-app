@@ -13,6 +13,10 @@ class MyColors {
 
   static const Color background = Color(0xFFE6FFFF);
 
+  static const Color cardClass = Color(0xFF5F7DE2);
+
+  static const Color buttonCardClass = Color(0xFF002A7F);
+
   static const Color settingButton = Color.fromRGBO(216, 239, 239, 1.0);
 
   static const Color bottomNavBarBackground = Color(0xFF1F51AF);
@@ -34,6 +38,8 @@ class MyColors {
   static const Color warning = Color.fromRGBO(255, 178, 54, 1.0);
 
   static const Color text = Color.fromRGBO(44, 44, 44, 1.0);
+
+  static const Color highlightText = Color.fromRGBO(31, 81, 175, 0.87);
 
   static const Color bgColorScreen = Color.fromRGBO(255, 255, 255, 1.0);
 
