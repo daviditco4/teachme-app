@@ -80,7 +80,7 @@ class AuthPage extends StatelessWidget {
                         child: Text('Inicia sesión',
                             style: TextStyle(
                                 fontSize: 32,
-                                fontWeight: FontWeight.w100,
+                                fontWeight: FontWeight.bold,
                                 fontFamily: 'Poppins')),
                       ),
                     ],
@@ -95,7 +95,7 @@ class AuthPage extends StatelessWidget {
                         children: [
                           Center(
                             child: Card(
-                              margin: const EdgeInsets.all(30.0),
+                              //margin: const EdgeInsets.all(5.0),
                               child: Container(
                                 color: const Color.fromARGB(255, 230, 255, 255),
                                 child: Padding(
@@ -116,16 +116,3 @@ class AuthPage extends StatelessWidget {
         ));
   }
 }
-
-
-/*
-Center(
-        child: Card(
-          margin: const EdgeInsets.all(30.0),
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: AuthForm(_authenticate),
-          ),
-        ),
-
-*/

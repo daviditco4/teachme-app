@@ -85,16 +85,37 @@ class _AuthFormState extends State<AuthForm> {
                 child: SizedBox(child: LinearProgressIndicator()),
               )
             else
-              ButtonBar(
-                alignment: MainAxisAlignment.spaceBetween,
+              Column(
                 children: [
-                  TextButton(
-                    child: Text('Sign ${isSigninMode ? 'Up' : 'In'} Instead'),
-                    onPressed: _switchAuthMode,
+                  Row(
+                    children: [
+                      const Text(
+                        '¿Ha olvidado su contrazeña?',
+                        style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 12,
+                            fontWeight: FontWeight.w800,
+                            decoration: TextDecoration.underline),
+                      ),
+                      const Spacer(),
+                      TextButton(
+                        child:
+                            Text('Sign ${isSigninMode ? 'Up' : 'In'} Instead'),
+                        onPressed: _switchAuthMode,
+                      ),
+                    ],
                   ),
                   ElevatedButton(
-                    child: Text('Sign ${isSigninMode ? 'In' : 'Up'}'),
+                    child: const Text(
+                        '${isSigninMode ? 'INGRESAR' : 'REGISTRARSE'}'),
                     onPressed: _submit,
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(const Color(0xFF002A7F)),
+                        shape: MaterialStateProperty
+                            .all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18),
+                                side: const BorderSide(color: Colors.white)))),
                   ),
                 ],
               ),
