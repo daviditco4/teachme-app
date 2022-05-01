@@ -23,18 +23,14 @@ class _TMBottomNavigationBarState extends State<TMBottomNavigationBar> {
         showSelectedLabels: false,
         iconSize: 30.0,
         selectedItemColor: MyColors.bottomNavBarSelected,
-        items: [
+        items: const [
           BottomNavigationBarItem(
               icon: Icon(Icons.menu_book_rounded), label: 'My Classes'),
           BottomNavigationBarItem(
               icon: Icon(Icons.search_rounded), label: 'Search'),
           BottomNavigationBarItem(
               icon: Icon(Icons.chat_bubble_outline_rounded), label: 'Chat'),
-          BottomNavigationBarItem(
-              icon: CircleAvatar(
-                  foregroundImage:
-                      AssetImage("assets/images/profile_photo.jpg")),
-              label: 'Profile')
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Profile')
         ],
         onTap: (index) {
           setState(() {
