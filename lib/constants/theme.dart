@@ -35,6 +35,8 @@ class MyColors {
 
   static const Color text = Color.fromRGBO(44, 44, 44, 1.0);
 
+  static const Color highlightText = Color.fromRGBO(31, 81, 175, 0.87);
+
   static const Color bgColorScreen = Color.fromRGBO(255, 255, 255, 1.0);
 
   static const Color border = Color.fromRGBO(231, 231, 231, 1.0);
