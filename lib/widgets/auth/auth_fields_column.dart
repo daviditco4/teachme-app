@@ -98,16 +98,16 @@ class _AuthFieldsColumnState extends State<AuthFieldsColumn> {
           ),
           TextFormField(
             enabled: widget.enabled,
-            keyboardType: TextInputType.emailAddress,
+            keyboardType: TextInputType.text,
             textInputAction: TextInputAction.next,
             validator: (value) {
               if (value != null && _emailRegExp.hasMatch(value)) return null;
               return 'Enter a valid email address.';
             },
-            onSaved: widget.onEmailSaved,
+            onSaved: widget.onUsernameSaved,
             decoration: const InputDecoration(
-              icon: Icon(Icons.email),
-              labelText: 'Email',
+              //icon: Icon(Icons.),
+              labelText: 'Username',
             ),
           ),
           _buildAnimatedChildVisibleOnCondition(
@@ -128,7 +128,7 @@ class _AuthFieldsColumnState extends State<AuthFieldsColumn> {
               },
               onSaved: widget.onUsernameSaved,
               decoration: const InputDecoration(
-                icon: Icon(Icons.person),
+                //icon: Icon(Icons.person),
                 labelText: 'Username',
               ),
             ),

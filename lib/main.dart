@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:teachme_app/pages/settings_page.dart';
-
-import 'pages/teacher_profile_page.dart';
+import 'package:teachme_app/pages/auth_page.dart';
 
 void main() => runApp(const MyApp());
 
@@ -13,7 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'TeachMe',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const SettingsPage(),
+      home: AuthPage(),
     );
   }
 }

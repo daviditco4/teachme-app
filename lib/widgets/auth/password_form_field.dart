@@ -48,7 +48,7 @@ class _PasswordFormFieldState extends State<PasswordFormField> {
       },
       onSaved: widget.onSaved,
       decoration: InputDecoration(
-        icon: const Icon(Icons.password),
+        //icon: const Icon(Icons.password),
         labelText: 'Password',
         suffixIcon: InkWell(
           canRequestFocus: false,
