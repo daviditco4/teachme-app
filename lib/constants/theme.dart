@@ -11,6 +11,10 @@ class MyColors {
 
   static const Color secondary = Color.fromRGBO(68, 68, 68, 1.0);
 
+  static const Color background = Color(0xFFE6FFFF);
+
+  static const Color settingButton = Color.fromRGBO(216, 239, 239, 1.0);
+
   static const Color label = Color.fromRGBO(254, 36, 114, 1.0);
 
   static const Color neutral = Color.fromRGBO(255, 255, 255, 0.2);
