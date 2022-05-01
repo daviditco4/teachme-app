@@ -64,6 +64,7 @@ flutter:
   assets:
     - assets/images/profile_top_background.png
     - assets/images/profile_photo.jpg
+    - assets/images/teach_me_logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
