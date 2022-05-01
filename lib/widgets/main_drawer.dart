@@ -38,7 +38,7 @@ class MainDrawer extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.baseline,
                     textBaseline: TextBaseline.alphabetic,
                     children: [
-                      Image.asset("assets/imgs/now-logo.png"),
+                      Image.asset("assets/images/teachme_logo.png"),
                       Padding(
                         padding: const EdgeInsets.only(top: 10.0),
                         child: IconButton(
