@@ -22,7 +22,6 @@ class MyClass extends StatefulWidget {
 }
 
 class _MyClass extends State<MyClass> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +32,7 @@ class _MyClass extends State<MyClass> {
           child: SingleChildScrollView(
             child: Padding(
               padding:
-              const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
+                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: const <Widget>[
@@ -45,7 +44,8 @@ class _MyClass extends State<MyClass> {
                             fontSize: 30, fontWeight: FontWeight.bold)),
                   ),
                   CardClass(
-                      title: 'Aun no tienes clases agendadas, busca tu proxima clase',
+                      title:
+                          'Aun no tienes clases agendadas, busca tu proxima clase',
                       textButton: 'Proxima clase',
                       schedule: '',
                       direction: ''),

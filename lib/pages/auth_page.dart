@@ -63,38 +63,6 @@ class AuthPage extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _buildAnimatedChildVisibleOnCondition(
-                  onInvisibleWidget: const SizedBox(height: 6.0),
-                  verticalSpace: verticalSpace,
-                  verticalSpaceLocation: VerticalDirection.down,
-                  condition: false,
-                  child: Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: const [
-                        Expanded(
-                          flex: 2,
-                          child: Image(
-                            image:
-                                AssetImage("assets/images/teach_me_logo.png"),
-                            width: 200,
-                            height: 200,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        Spacer(),
-                        Expanded(
-                          flex: 1,
-                          child: Text('Inicia sesión',
-                              style: TextStyle(
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Poppins')),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
                 Expanded(
                   child: Scaffold(
                     backgroundColor: const Color(0xFFE6FFFF),
@@ -123,32 +91,5 @@ class AuthPage extends StatelessWidget {
             ),
           ),
         ));
-  }
-
-  Widget _buildAnimatedChildVisibleOnCondition({
-    required bool condition,
-    required Widget child,
-    SizedBox? onInvisibleWidget,
-    required SizedBox verticalSpace,
-    VerticalDirection verticalSpaceLocation = VerticalDirection.up,
-  }) {
-    final hasTopSpace = (verticalSpaceLocation == VerticalDirection.up);
-
-    return AnimatedCrossFade(
-      duration: const Duration(milliseconds: 500),
-      sizeCurve: Curves.ease,
-      alignment: hasTopSpace ? Alignment.bottomCenter : Alignment.topCenter,
-      crossFadeState:
-          condition ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-      firstChild: onInvisibleWidget ?? Container(),
-      secondChild: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (hasTopSpace) verticalSpace,
-          if (condition) child,
-          if (!hasTopSpace) verticalSpace,
-        ],
-      ),
-    );
   }
 }

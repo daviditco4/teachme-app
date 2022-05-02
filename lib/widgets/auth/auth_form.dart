@@ -68,6 +68,27 @@ class _AuthFormState extends State<AuthForm> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            _buildAnimatedChildVisibleOnCondition(
+              onInvisibleWidget: const SizedBox(height: 6.0),
+              verticalSpace: SizedBox(height: 18.0),
+              verticalSpaceLocation: VerticalDirection.down,
+              condition: isSigninMode,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Image(
+                      image: AssetImage("assets/images/teach_me_logo.png"),
+                      width: 200,
+                      height: 200,
+                      fit: BoxFit.fill),
+                  Text('Inicia sesión',
+                      style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Poppins')),
+                ],
+              ),
+            ),
             AuthFieldsColumn(
               authMode: _authMode,
               onUserImageSaved: (newValue) => _pickedUserImage = newValue,
@@ -123,4 +144,31 @@ class _AuthFormState extends State<AuthForm> {
       ),
     );
   }
+}
+
+Widget _buildAnimatedChildVisibleOnCondition({
+  required bool condition,
+  required Widget child,
+  SizedBox? onInvisibleWidget,
+  required SizedBox verticalSpace,
+  VerticalDirection verticalSpaceLocation = VerticalDirection.up,
+}) {
+  final hasTopSpace = (verticalSpaceLocation == VerticalDirection.up);
+
+  return AnimatedCrossFade(
+    duration: const Duration(milliseconds: 500),
+    sizeCurve: Curves.ease,
+    alignment: hasTopSpace ? Alignment.bottomCenter : Alignment.topCenter,
+    crossFadeState:
+        condition ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+    firstChild: onInvisibleWidget ?? Container(),
+    secondChild: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (hasTopSpace) verticalSpace,
+        if (condition) child,
+        if (!hasTopSpace) verticalSpace,
+      ],
+    ),
+  );
 }
