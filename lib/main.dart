@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:teachme_app/pages/MyClass_page.dart';
 import 'package:teachme_app/pages/auth_page.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/pages/settings_page.dart';
