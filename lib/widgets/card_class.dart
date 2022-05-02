@@ -2,15 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
 
 class CardClass extends StatelessWidget {
-  const CardClass({Key? key, required this.title, required this.textButton, required this.schedule, required this.direction
-  }) : super(key: key);
+  const CardClass(
+      {Key? key,
+      required this.title,
+      required this.textButton,
+      required this.schedule,
+      required this.direction})
+      : super(key: key);
   final String title;
   final String textButton;
   final String schedule;
   final String direction;
 
-    @override
-    Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return Center(
     child: Card(
     child:Container(
