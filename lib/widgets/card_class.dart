@@ -13,7 +13,8 @@ class CardClass extends StatelessWidget {
     Widget build(BuildContext context) {
     return Center(
     child: Card(
-
+    child:Container(
+        color: MyColors.cardClass,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -22,7 +23,7 @@ class CardClass extends StatelessWidget {
         child: Text(title,
         style: const TextStyle(
         color: MyColors.white,
-        fontSize: 20,
+        fontSize: 15,
         )),
         style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(MyColors.cardClass),
@@ -33,6 +34,16 @@ class CardClass extends StatelessWidget {
         MaterialStateProperty.all(const Size.fromHeight(75))
         ),
         ),
+            Text(schedule,
+                style: const TextStyle(
+                  color: MyColors.white,
+                  fontSize: 15,
+                )),
+          Text(direction,
+              style: const TextStyle(
+                color: MyColors.white,
+                fontSize: 15,
+              )),
       Row(
         children: <Widget>[
         TextButton(
@@ -41,7 +52,7 @@ class CardClass extends StatelessWidget {
         child: Text(textButton,
         style: const TextStyle(
         color: MyColors.white,
-        fontSize: 15,
+        fontSize: 12,
         )),
         style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(MyColors.buttonCardClass),
@@ -51,6 +62,7 @@ class CardClass extends StatelessWidget {
         ),
       ],
       ),
+    ),
     ),
     );
   }
