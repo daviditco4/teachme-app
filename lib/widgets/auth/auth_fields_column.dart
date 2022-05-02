@@ -117,19 +117,19 @@ class _AuthFieldsColumnState extends State<AuthFieldsColumn> {
               enabled: widget.enabled,
               textInputAction: TextInputAction.next,
               validator: (value) {
-                if (value == null || value.length < 8 || value.length > 20) {
-                  return 'The username must have between 8 and 20 characters '
+                if (value == null || value.length < 4 || value.length > 30) {
+                  return 'The email must have between 4 and 30 characters '
                       'in total.';
-                } else if (!_usernameRegExp.hasMatch(value)) {
-                  return 'The username must only contain letters, numbers '
+                } else if (!_emailRegExp.hasMatch(value)) {
+                  return 'The email error del aemil... '
                       'or single dots/underscores in between.';
                 }
                 return null;
               },
-              onSaved: widget.onUsernameSaved,
+              onSaved: widget.onEmailSaved,
               decoration: const InputDecoration(
                 //icon: Icon(Icons.person),
-                labelText: 'Username',
+                labelText: 'Email',
               ),
             ),
           ),
