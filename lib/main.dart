@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'pages/teacher_profile_page.dart';
+import 'pages/lesson_search/teacher_profile_page.dart';
 
 void main() => runApp(const MyApp());
 
