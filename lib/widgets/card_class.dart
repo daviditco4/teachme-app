@@ -17,45 +17,58 @@ class CardClass extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Card(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            TextButton(
-              onPressed: () => onPressed(title),
-              child: Text(title,
-                  style: const TextStyle(
-                    color: MyColors.white,
-                    fontSize: 20,
-                  )),
-              style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all(MyColors.cardClass),
-                  alignment: AlignmentDirectional.centerStart,
-                  padding: MaterialStateProperty.all(
-                      const EdgeInsets.symmetric(horizontal: 20)),
-                  fixedSize:
-                      MaterialStateProperty.all(const Size.fromHeight(75))),
-            ),
-            Row(
-              children: <Widget>[
-                TextButton(
-                  onPressed: () => onPressed(textButton),
-                  child: Text(textButton,
-                      style: const TextStyle(
-                        color: MyColors.white,
-                        fontSize: 15,
-                      )),
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all(MyColors.buttonCardClass),
-                  ),
-                ),
-              ],
-            ),
-          ],
+    child: Card(
+    child:Container(
+        color: MyColors.cardClass,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+        TextButton(
+        onPressed: () => onPressed(title),
+        child: Text(title,
+        style: const TextStyle(
+        color: MyColors.white,
+        fontSize: 15,
+        )),
+        style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(MyColors.cardClass),
+        alignment: AlignmentDirectional.centerStart,
+        padding: MaterialStateProperty.all(
+        const EdgeInsets.symmetric(horizontal: 20)),
+        fixedSize:
+        MaterialStateProperty.all(const Size.fromHeight(75))
         ),
+        ),
+            Text(schedule,
+                style: const TextStyle(
+                  color: MyColors.white,
+                  fontSize: 15,
+                )),
+          Text(direction,
+              style: const TextStyle(
+                color: MyColors.white,
+                fontSize: 15,
+              )),
+      Row(
+        children: <Widget>[
+        TextButton(
+        onPressed: () => onPressed(textButton),
+
+        child: Text(textButton,
+        style: const TextStyle(
+        color: MyColors.white,
+        fontSize: 12,
+        )),
+        style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(MyColors.buttonCardClass),
+        ),
+        ),
+        ],
+        ),
+      ],
       ),
+    ),
+    ),
     );
   }
 }
