@@ -106,8 +106,7 @@ class _AuthFormState extends State<AuthForm> {
                     ],
                   ),
                   ElevatedButton(
-                    child: const Text(
-                        '${isSigninMode ? 'INGRESAR' : 'REGISTRARSE'}'),
+                    child: Text(isSigninMode ? 'INGRESAR' : 'REGISTRARSE'),
                     onPressed: _submit,
                     style: ButtonStyle(
                         backgroundColor:
