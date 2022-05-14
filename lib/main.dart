@@ -26,41 +26,53 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Firebase.initializeApp(),
-      builder: (ctx, snapshot) {
-        return GestureDetector(
-            onTap: () {
-              final focusScope = FocusScope.of(ctx);
-              if (!focusScope.hasPrimaryFocus) focusScope.unfocus();
-            },
-            child: MaterialApp(
-              title: 'TeachMe-app',
-              theme: ThemeData(
-                primaryColor: Color.fromARGB(255, 0, 42, 127),
-                primaryColorDark: Color.fromARGB(255, 95, 125, 226),
-                accentColor: Color(0xff00adb5),
-                backgroundColor: Color(0xffeeeeee),
-              ),
-              home: snapshot.connectionState != ConnectionState.done
-                  ? SplashPage()
-                  : StreamBuilder(
-                      stream: FirebaseAuth.instance.authStateChanges(),
-                      builder: (_, snap) {
-                        //final fcm = FirebaseMessaging.instance;
+        future: Firebase.initializeApp(),
+        builder: (ctx, snapshot) {
+          return GestureDetector(
+              onTap: () {
+                final focusScope = FocusScope.of(ctx);
+                if (!focusScope.hasPrimaryFocus) focusScope.unfocus();
+              },
+              child: MaterialApp(
+                title: 'TeachMe-app',
+                theme: ThemeData(
+                  primaryColor: Color.fromARGB(255, 0, 42, 127),
+                  primaryColorDark: Color.fromARGB(255, 95, 125, 226),
+                  accentColor: Color(0xff00adb5),
+                  backgroundColor: Color(0xffeeeeee),
+                ),
+                home: snapshot.connectionState != ConnectionState.done
+                    ? SplashPage()
+                    : StreamBuilder(
+                        stream: FirebaseAuth.instance.authStateChanges(),
+                        builder: (_, snap) {
+                          //final fcm = FirebaseMessaging.instance;
 
-                        if (snap.connectionState == ConnectionState.waiting) {
-                          //fcm.requestPermission();
-                          return SplashPage();
-                        } else if (!snap.hasData) {
-                          //fcm.unsubscribeFromTopic(CHAT_TOPIC);
-                          return AuthPage();
-                        }
-                        //fcm.subscribeToTopic(CHAT_TOPIC);
-                        return const MyClass();
-                      },
-                    ),
-            ));
+                          if (snap.connectionState == ConnectionState.waiting) {
+                            //fcm.requestPermission();
+                            return SplashPage();
+                          } else if (!snap.hasData) {
+                            //fcm.unsubscribeFromTopic(CHAT_TOPIC);
+                            return AuthPage();
+                          }
+                          //fcm.subscribeToTopic(CHAT_TOPIC);
+                          return const MyClass();
+                        },
+                      ),
+              ));
+          /* return MaterialApp(
+      title: 'TeachMe',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const LoadingPage(),
+        '/authentication': (context) => AuthPage(),
+        '/class': (context) => const MyClass(),
+        '/notifications': (context) => const NotificationsPage(),
+        '/settings': (context) => const SettingsPage(),
+        '/profile': (context) => const TeacherProfilePage()
       },
-    );
+    ); */
+        });
   }
 }

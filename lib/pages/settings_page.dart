@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
+import 'package:teachme_app/pages/notifications_page.dart';
+import 'package:teachme_app/pages/teacher_profile_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import 'package:teachme_app/widgets/setting_button.dart';
 
@@ -31,9 +33,13 @@ class _SettingsPageState extends State<SettingsPage> {
                         style: TextStyle(
                             fontSize: 30, fontWeight: FontWeight.bold)),
                   ),
-                  SettingButton(text: 'Datos de Perfil'),
+                  SettingButton(
+                      text: 'Datos de Perfil',
+                      onPressedPage: TeacherProfilePage()),
                   SettingButton(text: 'Privacidad'),
-                  SettingButton(text: 'Notificaciones'),
+                  SettingButton(
+                      text: 'Notificaciones',
+                      onPressedPage: NotificationsPage()),
                   SettingButton(text: 'Métodos de Pago'),
                   SettingButton(text: 'Ayuda'),
                   SettingButton(text: 'Cerrar Sesión')
