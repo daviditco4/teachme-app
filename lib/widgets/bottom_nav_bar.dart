@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/pages/MyClass_page.dart';
+import 'package:teachme_app/pages/profile_page.dart';
 import 'package:teachme_app/pages/settings_page.dart';
 import 'package:teachme_app/widgets/card_class.dart';
 
@@ -41,7 +42,7 @@ class _TMBottomNavigationBarState extends State<TMBottomNavigationBar> {
               icon: Icon(Icons.search_rounded), label: 'Search'),
           BottomNavigationBarItem(
               icon: Icon(Icons.chat_bubble_outline_rounded), label: 'Chat'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Profile')
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile')
         ],
         onTap: (index) {
           setState(() {
@@ -59,7 +60,7 @@ class _TMBottomNavigationBarState extends State<TMBottomNavigationBar> {
               break;
             case 3:
               Navigator.pushReplacement(
-                  context, _noAnimationRouter(SettingsPage()));
+                  context, _noAnimationRouter(ProfilePage()));
               break;
           }
         });

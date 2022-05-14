@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
+import 'package:teachme_app/pages/notifications_page.dart';
+import 'package:teachme_app/pages/settings_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
+import 'package:teachme_app/widgets/card_class.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -10,37 +13,40 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-@override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         extendBodyBehindAppBar: true,
         backgroundColor: MyColors.background,
         bottomNavigationBar: const TMBottomNavigationBar(),
         appBar: AppBar(
-          
           leading: const ImageIcon(
             AssetImage("assets/images/teach_me_logo.png"),
             color: MyColors.black,
           ),
           centerTitle: true,
-          title: const Text('Mi Perfil', 
-                            style: TextStyle(color: Colors.black, 
-                                            fontSize: 25, 
-                                            fontWeight: FontWeight.w900, )),
-          actions: const [
-            Icon(Icons.settings, 
-                color: Colors.black),
+          title: const Text('Mi Perfil',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 25,
+                fontWeight: FontWeight.w900,
+              )),
+          actions: [
+            IconButton(
+                icon: const Icon(Icons.settings, color: Colors.black),
+                onPressed: () => navigateTo(context, const SettingsPage())),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Icon(Icons.notifications_none, 
-                          color: Colors.black),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: IconButton(
+                icon: const Icon(Icons.notifications_none, color: Colors.black),
+                onPressed: () => navigateTo(context, const NotificationsPage()),
+              ),
             ),
-        ],
-        backgroundColor: MyColors.background,
-        elevation: 0,
-      ),
-        body: Stack(
-          children: <Widget>[
+          ],
+          backgroundColor: MyColors.background,
+          elevation: 0,
+        ),
+        body: Stack(children: <Widget>[
           SafeArea(
             child: ListView(children: [
               Padding(
@@ -53,14 +59,15 @@ class _ProfilePageState extends State<ProfilePage> {
                       Container(
                         decoration: BoxDecoration(
                           color: MyColors.cardClass,
-                          borderRadius: const BorderRadius.all(Radius.circular(30.0)),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(30.0)),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.grey.withOpacity(0.1),
                               spreadRadius: 1,
                               blurRadius: 7,
-                              offset:
-                                  const Offset(0, 3), // changes position of shadow
+                              offset: const Offset(
+                                  0, 3), // changes position of shadow
                             ),
                           ],
                         ),
@@ -161,7 +168,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: Align(
                             child: CircleAvatar(
                               backgroundColor: MyColors.white,
-                              backgroundImage: AssetImage("images/hasbulla.png"),
+                              backgroundImage:
+                                  AssetImage("images/hasbulla.png"),
                               radius: 65.0,
                               // maxRadius: 200.0,
                             ),
@@ -175,4 +183,16 @@ class _ProfilePageState extends State<ProfilePage> {
           )
         ]));
   }
+}
+
+PageRouteBuilder _noAnimationRouter(Widget page) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation1, animation2) => page,
+    transitionDuration: Duration.zero,
+    reverseTransitionDuration: Duration.zero,
+  );
+}
+
+void navigateTo(BuildContext context, Widget page) {
+  Navigator.pushReplacement(context, _noAnimationRouter(page));
 }

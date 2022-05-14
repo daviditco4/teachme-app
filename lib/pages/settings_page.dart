@@ -34,9 +34,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         style: TextStyle(
                             fontSize: 30, fontWeight: FontWeight.bold)),
                   ),
-                  SettingButton(
-                      text: 'Datos de Perfil',
-                      onPressedPage: TeacherProfilePage()),
+                  SettingButton(text: 'Datos de Perfil'),
                   SettingButton(text: 'Privacidad'),
                   SettingButton(
                       text: 'Notificaciones',
