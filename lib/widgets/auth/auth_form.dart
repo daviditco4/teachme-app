@@ -121,13 +121,14 @@ class _AuthFormState extends State<AuthForm> {
                       const Spacer(),
                       TextButton(
                         child:
+                            /* TODO: Traducir esta linea */
                             Text('Sign ${isSigninMode ? 'Up' : 'In'} Instead'),
                         onPressed: _switchAuthMode,
                       ),
                     ],
                   ),
                   ElevatedButton(
-                    child: Text('${isSigninMode ? 'INGRESAR' : 'REGISTRARSE'}'),
+                    child: Text(isSigninMode ? 'INGRESAR' : 'REGISTRARSE'),
                     onPressed: _submit,
                     style: ButtonStyle(
                         backgroundColor:
