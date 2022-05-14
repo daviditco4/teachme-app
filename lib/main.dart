@@ -19,7 +19,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'TeachMe',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const TeacherProfilePage(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const LoadingPage(),
+        '/authentication': (context) => AuthPage(),
+        '/class': (context) => const MyClass(),
+        '/notifications': (context) => const NotificationsPage(),
+        '/settings': (context) => const SettingsPage(),
+        '/profile': (context) => const TeacherProfilePage()
+      },
     );
   }
 }
