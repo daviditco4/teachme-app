@@ -7,9 +7,10 @@ import 'package:teachme_app/pages/MyClass_page.dart';
 import 'package:teachme_app/pages/auth_page.dart';
 import 'package:teachme_app/pages/settings_page.dart';
 import 'package:teachme_app/pages/splash_page.dart';
+import 'package:teachme_app/pages/profile_page.dart';
 
 //import 'pages/lesson_search/teacher_profile_page.dart';
-import 'pages/teacher_profile_page.dart';
+// import 'pages/teacher_profile_page.dart';
 
 const CHAT_TOPIC = 'public';
 
