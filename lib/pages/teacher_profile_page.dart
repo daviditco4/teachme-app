@@ -24,7 +24,7 @@ class _TeacherProfilePageState extends State<TeacherProfilePage> {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("teach_me_logo.png"),
+                image: AssetImage('teachme_logo.png'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -40,7 +40,7 @@ class _TeacherProfilePageState extends State<TeacherProfilePage> {
                       children: [
                         const CircleAvatar(
                           backgroundImage: AssetImage(
-                            "assets/images/profile_photo.jpg",
+                            "assets/images/profile_photo.png",
                           ),
                           radius: 65.0,
                         ),
