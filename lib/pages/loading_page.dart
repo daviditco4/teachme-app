@@ -1,14 +1,12 @@
 // import 'dart:html';
 
 import 'package:flutter/material.dart';
-import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 
 class LoadingPage extends StatelessWidget {
   const LoadingPage({Key? key}) : super(key: key);
 
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const TMBottomNavigationBar(),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(

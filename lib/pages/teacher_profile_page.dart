@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../constants/theme.dart';
-import '../widgets/bottom_nav_bar.dart';
 import '../widgets/main_drawer.dart';
 import '../widgets/nav_bar.dart';
 
@@ -16,7 +15,6 @@ class _TeacherProfilePageState extends State<TeacherProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const TMBottomNavigationBar(),
       extendBodyBehindAppBar: true,
       appBar: const Navbar(title: "Profile", transparent: true),
       backgroundColor: MyColors.bgColorScreen,
@@ -26,7 +24,7 @@ class _TeacherProfilePageState extends State<TeacherProfilePage> {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/images/teach_me_logo.png"),
+                image: AssetImage("teach_me_logo.png"),
                 fit: BoxFit.cover,
               ),
             ),
@@ -42,7 +40,7 @@ class _TeacherProfilePageState extends State<TeacherProfilePage> {
                       children: [
                         const CircleAvatar(
                           backgroundImage: AssetImage(
-                            "assets/images/profile_photo.png",
+                            "assets/images/profile_photo.jpg",
                           ),
                           radius: 65.0,
                         ),

@@ -1,19 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
 
-PageRouteBuilder _noAnimationRouter(Widget page) {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation1, animation2) => page,
-    transitionDuration: Duration.zero,
-    reverseTransitionDuration: Duration.zero,
-  );
-}
-
 class SettingButton extends StatelessWidget {
-  const SettingButton({Key? key, required this.text, this.onPressedPage})
-      : super(key: key);
+  const SettingButton({Key? key, required this.text}) : super(key: key);
   final String text;
-  final Widget? onPressedPage;
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +11,7 @@ class SettingButton extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           TextButton(
-              onPressed: () {
-                if (onPressedPage != null) {
-                  Navigator.pushReplacement(
-                      context, _noAnimationRouter(onPressedPage!));
-                } else {
-                  onPressed(text);
-                }
-              },
+              onPressed: () => onPressed(text),
               child: Text(text,
                   style: const TextStyle(
                     color: MyColors.text,
