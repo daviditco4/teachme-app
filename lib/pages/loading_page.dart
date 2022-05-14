@@ -1,8 +1,10 @@
-import 'dart:html';
+// import 'dart:html';
 
 import 'package:flutter/material.dart';
 
 class LoadingPage extends StatelessWidget {
+  const LoadingPage({Key? key}) : super(key: key);
+
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
