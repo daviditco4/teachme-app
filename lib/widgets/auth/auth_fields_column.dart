@@ -98,16 +98,16 @@ class _AuthFieldsColumnState extends State<AuthFieldsColumn> {
           ),
           TextFormField(
             enabled: widget.enabled,
-            keyboardType: TextInputType.text,
+            keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
             validator: (value) {
               if (value != null && _emailRegExp.hasMatch(value)) return null;
               return 'Enter a valid email address.';
             },
-            onSaved: widget.onUsernameSaved,
+            onSaved: widget.onEmailSaved,
             decoration: const InputDecoration(
-              //icon: Icon(Icons.),
-              labelText: 'Username',
+              icon: Icon(Icons.email),
+              labelText: 'Email',
             ),
           ),
           _buildAnimatedChildVisibleOnCondition(
@@ -117,19 +117,19 @@ class _AuthFieldsColumnState extends State<AuthFieldsColumn> {
               enabled: widget.enabled,
               textInputAction: TextInputAction.next,
               validator: (value) {
-                if (value == null || value.length < 4 || value.length > 30) {
-                  return 'The email must have between 4 and 30 characters '
+                if (value == null || value.length < 8 || value.length > 20) {
+                  return 'The username must have between 8 and 20 characters '
                       'in total.';
-                } else if (!_emailRegExp.hasMatch(value)) {
-                  return 'The email error del aemil... '
+                } else if (!_usernameRegExp.hasMatch(value)) {
+                  return 'The username must only contain letters, numbers '
                       'or single dots/underscores in between.';
                 }
                 return null;
               },
-              onSaved: widget.onEmailSaved,
+              onSaved: widget.onUsernameSaved,
               decoration: const InputDecoration(
-                //icon: Icon(Icons.person),
-                labelText: 'Email',
+                icon: Icon(Icons.person),
+                labelText: 'Username',
               ),
             ),
           ),
