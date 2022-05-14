@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/pages/MyClass_page.dart';
+import 'package:teachme_app/pages/lesson_search/teacher_profile_page.dart';
 import 'package:teachme_app/pages/profile_page.dart';
 import 'package:teachme_app/pages/settings_page.dart';
 import 'package:teachme_app/widgets/card_class.dart';
@@ -15,6 +16,10 @@ PageRouteBuilder _noAnimationRouter(Widget page) {
     transitionDuration: Duration.zero,
     reverseTransitionDuration: Duration.zero,
   );
+}
+
+void navigateTo(BuildContext context, Widget page) {
+  Navigator.pushReplacement(context, _noAnimationRouter(page));
 }
 
 class TMBottomNavigationBar extends StatefulWidget {
@@ -50,17 +55,16 @@ class _TMBottomNavigationBarState extends State<TMBottomNavigationBar> {
           });
           switch (_currentIndex) {
             case 0:
-              Navigator.pushReplacement(context, _noAnimationRouter(MyClass()));
+              navigateTo(context, MyClass());
               break;
             case 1:
               /*TODO: Navigation a Search */
               break;
             case 2:
-              /* TODO: Navigation a Chats */
+              navigateTo(context, TeacherProfilePage());
               break;
             case 3:
-              Navigator.pushReplacement(
-                  context, _noAnimationRouter(ProfilePage()));
+              navigateTo(context, ProfilePage());
               break;
           }
         });
