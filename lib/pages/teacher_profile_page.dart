@@ -24,7 +24,7 @@ class _TeacherProfilePageState extends State<TeacherProfilePage> {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('teachme_logo.png'),
+                image: AssetImage('images/teach_me_logo.png'),
                 fit: BoxFit.cover,
               ),
             ),
