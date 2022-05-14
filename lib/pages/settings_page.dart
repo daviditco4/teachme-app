@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
@@ -17,7 +18,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: MyColors.background,
-        bottomNavigationBar: TMBottomNavigationBar(),
+        bottomNavigationBar: const TMBottomNavigationBar(),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Padding(

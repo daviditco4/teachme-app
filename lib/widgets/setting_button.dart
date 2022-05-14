@@ -10,10 +10,15 @@ PageRouteBuilder _noAnimationRouter(Widget page) {
 }
 
 class SettingButton extends StatelessWidget {
-  const SettingButton({Key? key, required this.text, this.onPressedPage})
+  const SettingButton(
+      {Key? key,
+      required this.text,
+      this.onPressedPage,
+      this.onPressedFunction})
       : super(key: key);
   final String text;
   final Widget? onPressedPage;
+  final Function? onPressedFunction;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +30,8 @@ class SettingButton extends StatelessWidget {
                 if (onPressedPage != null) {
                   Navigator.pushReplacement(
                       context, _noAnimationRouter(onPressedPage!));
+                } else if (onPressedFunction != null) {
+                  onPressedFunction!;
                 } else {
                   onPressed(text);
                 }

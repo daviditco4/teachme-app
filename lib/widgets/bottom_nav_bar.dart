@@ -7,7 +7,6 @@ import 'package:teachme_app/pages/settings_page.dart';
 import 'package:teachme_app/widgets/card_class.dart';
 
 int _currentIndex = 0;
-int previousIndex = _currentIndex;
 
 PageRouteBuilder _noAnimationRouter(Widget page) {
   return PageRouteBuilder(
@@ -46,26 +45,22 @@ class _TMBottomNavigationBarState extends State<TMBottomNavigationBar> {
         ],
         onTap: (index) {
           setState(() {
-            previousIndex = _currentIndex;
             _currentIndex = index;
           });
-          if (previousIndex != _currentIndex) {
-            switch (_currentIndex) {
-              case 0:
-                Navigator.pushReplacement(
-                    context, _noAnimationRouter(MyClass()));
-                break;
-              case 1:
-                /*TODO: Navigation a Search */
-                break;
-              case 2:
-                /* TODO: Navigation a Chats */
-                break;
-              case 3:
-                Navigator.pushReplacement(
-                    context, _noAnimationRouter(SettingsPage()));
-                break;
-            }
+          switch (_currentIndex) {
+            case 0:
+              Navigator.pushReplacement(context, _noAnimationRouter(MyClass()));
+              break;
+            case 1:
+              /*TODO: Navigation a Search */
+              break;
+            case 2:
+              /* TODO: Navigation a Chats */
+              break;
+            case 3:
+              Navigator.pushReplacement(
+                  context, _noAnimationRouter(SettingsPage()));
+              break;
           }
         });
   }
