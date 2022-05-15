@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
@@ -5,6 +6,8 @@ import 'package:teachme_app/pages/settings_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import 'package:teachme_app/widgets/card_class.dart';
 import '../widgets/other/tm_navigator.dart';
+
+FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -91,9 +94,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                     child: Column(
                                       children: [
                                         const SizedBox(height: 40.0),
-                                        const Align(
-                                          child: Text("Juan López",
-                                              style: TextStyle(
+                                        Align(
+                                          child: Text(_getUsername(),
+                                              style: const TextStyle(
                                                   color: MyColors.black,
                                                   fontSize: 28.0,
                                                   fontWeight: FontWeight.bold)),
@@ -166,17 +169,16 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             )),
                       ),
-                      const FractionalTranslation(
-                          translation: Offset(0.0, -0.5),
+                      FractionalTranslation(
+                          translation: const Offset(0.0, -0.5),
                           child: Align(
                             child: CircleAvatar(
                               backgroundColor: MyColors.white,
-                              backgroundImage:
-                                  AssetImage("images/hasbulla.png"),
+                              backgroundImage: _getUserImage(),
                               radius: 65.0,
                               // maxRadius: 200.0,
                             ),
-                            alignment: FractionalOffset(0.5, 0.0),
+                            alignment: const FractionalOffset(0.5, 0.0),
                           ))
                     ]),
                   ],
@@ -185,5 +187,19 @@ class _ProfilePageState extends State<ProfilePage> {
             ]),
           )
         ]));
+  }
+}
+
+String _getUsername() {
+  String? username = firebaseAuth.currentUser!.displayName;
+  return username ?? "ERROR";
+}
+
+ImageProvider _getUserImage() {
+  String? userImageUrl = firebaseAuth.currentUser!.photoURL;
+  if (userImageUrl != null) {
+    return NetworkImage(userImageUrl);
+  } else {
+    return const AssetImage("assets/images/hasbulla.png");
   }
 }
