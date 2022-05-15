@@ -46,7 +46,6 @@ android {
 
     defaultConfig {
         applicationId "com.daviditcovici.teachme_app"
-        //minSdkVersion flutter.minSdkVersion
         minSdkVersion 19
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
@@ -69,5 +68,7 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation platform('com.google.firebase:firebase-bom:29.3.1')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.android.support:multidex:1.0.3'
 }
