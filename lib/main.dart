@@ -15,6 +15,7 @@ import 'package:teachme_app/pages/profile_page.dart';
 const CHAT_TOPIC = 'public';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
