@@ -1,11 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
+import 'package:teachme_app/pages/auth_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import 'package:teachme_app/widgets/other/tm_navigator.dart';
 import 'package:teachme_app/widgets/setting_button.dart';
-import 'package:teachme_app/pages/notifications_page.dart';
-import 'package:teachme_app/pages/teacher_profile_page.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -15,6 +14,13 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  void signout() {
+    print("Deslogueando la cuenta" + FirebaseAuth.instance.currentUser!.email!);
+    FirebaseAuth.instance
+        .signOut()
+        .then((value) => TMNavigator.navigateTo(context, AuthPage()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,20 +33,21 @@ class _SettingsPageState extends State<SettingsPage> {
                   const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: const <Widget>[
-                  Padding(
+                children: <Widget>[
+                  const Padding(
                     padding: EdgeInsets.only(top: 5, bottom: 40),
                     child: Text("Configuración",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 30, fontWeight: FontWeight.bold)),
                   ),
-                  SettingButton(text: 'Datos de Perfil'),
-                  SettingButton(text: 'Privacidad'),
-                  SettingButton(text: 'Notificaciones'),
-                  SettingButton(text: 'Métodos de Pago'),
-                  SettingButton(text: 'Ayuda'),
-                  SettingButton(text: 'Cerrar Sesión')
+                  const SettingButton(text: 'Datos de Perfil'),
+                  const SettingButton(text: 'Privacidad'),
+                  const SettingButton(text: 'Notificaciones'),
+                  const SettingButton(text: 'Métodos de Pago'),
+                  const SettingButton(text: 'Ayuda'),
+                  SettingButton(
+                      text: 'Cerrar Sesión', onPressedFunction: signout)
                 ],
               ),
             ),
