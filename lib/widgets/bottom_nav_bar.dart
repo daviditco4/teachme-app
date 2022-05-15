@@ -5,8 +5,6 @@ import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/pages/MyClass_page.dart';
 import 'package:teachme_app/pages/lesson_search/teacher_profile_page.dart';
 import 'package:teachme_app/pages/profile_page.dart';
-import 'package:teachme_app/pages/settings_page.dart';
-import 'package:teachme_app/widgets/card_class.dart';
 import 'package:teachme_app/widgets/other/tm_navigator.dart';
 
 int _currentIndex = 0;
