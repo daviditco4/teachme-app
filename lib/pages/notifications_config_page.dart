@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
+import 'package:teachme_app/pages/settings_page.dart';
+
+import '../widgets/bottom_nav_bar.dart';
 
 /*
 class NotificationConfig extends StatelessWidget {
@@ -38,6 +41,14 @@ class _NotificationConfig extends State<NotificationConfig> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: MyColors.background,
+        appBar: AppBar(
+          centerTitle: true,
+          automaticallyImplyLeading: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => navigateTo(context, const SettingsPage())
+          ),
+        ),
         body: Column(children: <Widget>[
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
@@ -92,20 +103,6 @@ class _NotificationConfig extends State<NotificationConfig> {
               });
             },
           ),
-          RaisedButton(
-              padding: EdgeInsets.all(15),
-              color: Colors.red,
-              textColor: Colors.white,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Acepto todo", style: TextStyle(fontSize: 20),),
-                  Icon(Icons.arrow_forward_ios)
-                ],
-              ),
-              onPressed: ()=>{
-                Navigator.pop(context)
-              })
           ],
         ),
     );
