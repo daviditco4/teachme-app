@@ -125,7 +125,7 @@ class _AuthFormState extends State<AuthForm> {
                     children: [
                       TextButton(
                         child: const Text(
-                          '¿Ha olvidado su contrazeña?',
+                          '¿Ha olvidado su contraseña?',
                           style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 12,

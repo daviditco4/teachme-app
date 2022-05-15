@@ -97,7 +97,7 @@ class _LogInPage extends State<LogInPage> {
                       Row(
                         mainAxisSize: MainAxisSize.max,
                         children: const [
-                          Text('Contrazeña',
+                          Text('Contraseña',
                               style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w100,
@@ -139,7 +139,7 @@ class _LogInPage extends State<LogInPage> {
                         mainAxisSize: MainAxisSize.max,
                         children: const [
                           Text(
-                            '¿Ha olvidado su contrazeña?',
+                            '¿Ha olvidado su contraseña?',
                             style: TextStyle(
                                 fontFamily: 'Poppins',
                                 fontSize: 10,
@@ -153,7 +153,7 @@ class _LogInPage extends State<LogInPage> {
                         child: const Text('Inicia sesión'),
                         onPressed: () {
                           print("Usuario: " + _userController.text);
-                          print("Contrazeña: " + _passwordController.text);
+                          print("Contraseña: " + _passwordController.text);
                         },
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(

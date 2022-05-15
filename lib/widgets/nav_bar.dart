@@ -1,11 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-
-// import 'package:now_ui_flutter/screens/trending.dart';
-// import 'package:now_ui_flutter/screens/fashion.dart';
-// import 'package:now_ui_flutter/screens/notifications.dart';
-// import 'package:now_ui_flutter/screens/search.dart';
-// import 'package:now_ui_flutter/screens/cart.dart';
 
 import '../constants/theme.dart';
 import 'input.dart';
