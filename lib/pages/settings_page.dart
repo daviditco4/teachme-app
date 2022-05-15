@@ -15,7 +15,8 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   void signout() {
-    print("Deslogueando la cuenta" + FirebaseAuth.instance.currentUser!.email!);
+    print("[SETTINGS_PAGE 19]Deslogueando la cuenta " +
+        FirebaseAuth.instance.currentUser!.email!);
     FirebaseAuth.instance
         .signOut()
         .then((value) => TMNavigator.navigateTo(context, AuthPage()));
