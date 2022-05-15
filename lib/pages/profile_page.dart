@@ -5,6 +5,8 @@ import 'package:teachme_app/pages/settings_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import 'package:teachme_app/widgets/card_class.dart';
 
+import '../widgets/other/tm_navigator.dart';
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -34,12 +36,14 @@ class _ProfilePageState extends State<ProfilePage> {
           actions: [
             IconButton(
                 icon: const Icon(Icons.settings, color: Colors.black),
-                onPressed: () => navigateTo(context, const SettingsPage())),
+                onPressed: () =>
+                    TMNavigator.navigateTo(context, const SettingsPage())),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: IconButton(
                 icon: const Icon(Icons.notifications_none, color: Colors.black),
-                onPressed: () => navigateTo(context, const NotificationsPage()),
+                onPressed: () =>
+                    TMNavigator.navigateTo(context, const NotificationsPage()),
               ),
             ),
           ],
@@ -183,16 +187,4 @@ class _ProfilePageState extends State<ProfilePage> {
           )
         ]));
   }
-}
-
-PageRouteBuilder _noAnimationRouter(Widget page) {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation1, animation2) => page,
-    transitionDuration: Duration.zero,
-    reverseTransitionDuration: Duration.zero,
-  );
-}
-
-void navigateTo(BuildContext context, Widget page) {
-  Navigator.pushReplacement(context, _noAnimationRouter(page));
 }

@@ -36,9 +36,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   SettingButton(text: 'Datos de Perfil'),
                   SettingButton(text: 'Privacidad'),
-                  SettingButton(
-                      text: 'Notificaciones',
-                      onPressedPage: NotificationsPage()),
+                  SettingButton(text: 'Notificaciones'),
                   SettingButton(text: 'Métodos de Pago'),
                   SettingButton(text: 'Ayuda'),
                   SettingButton(text: 'Cerrar Sesión')
