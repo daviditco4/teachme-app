@@ -7,20 +7,9 @@ import 'package:teachme_app/pages/lesson_search/teacher_profile_page.dart';
 import 'package:teachme_app/pages/profile_page.dart';
 import 'package:teachme_app/pages/settings_page.dart';
 import 'package:teachme_app/widgets/card_class.dart';
+import 'package:teachme_app/widgets/other/tm_navigator.dart';
 
 int _currentIndex = 0;
-
-PageRouteBuilder _noAnimationRouter(Widget page) {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation1, animation2) => page,
-    transitionDuration: Duration.zero,
-    reverseTransitionDuration: Duration.zero,
-  );
-}
-
-void navigateTo(BuildContext context, Widget page) {
-  Navigator.pushReplacement(context, _noAnimationRouter(page));
-}
 
 class TMBottomNavigationBar extends StatefulWidget {
   const TMBottomNavigationBar({Key? key}) : super(key: key);
@@ -55,16 +44,16 @@ class _TMBottomNavigationBarState extends State<TMBottomNavigationBar> {
           });
           switch (_currentIndex) {
             case 0:
-              navigateTo(context, MyClass());
+              TMNavigator.navigateTo(context, MyClass());
               break;
             case 1:
               /*TODO: Navigation a Search */
               break;
             case 2:
-              navigateTo(context, TeacherProfilePage());
+              TMNavigator.navigateTo(context, TeacherProfilePage());
               break;
             case 3:
-              navigateTo(context, ProfilePage());
+              TMNavigator.navigateTo(context, ProfilePage());
               break;
           }
         });

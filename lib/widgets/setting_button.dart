@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
-
-PageRouteBuilder _noAnimationRouter(Widget page) {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation1, animation2) => page,
-    transitionDuration: Duration.zero,
-    reverseTransitionDuration: Duration.zero,
-  );
-}
+import 'other/tm_navigator.dart';
 
 class SettingButton extends StatelessWidget {
   const SettingButton(
@@ -28,8 +21,7 @@ class SettingButton extends StatelessWidget {
           TextButton(
               onPressed: () {
                 if (onPressedPage != null) {
-                  Navigator.pushReplacement(
-                      context, _noAnimationRouter(onPressedPage!));
+                  TMNavigator.navigateTo(context, onPressedPage!);
                 } else if (onPressedFunction != null) {
                   onPressedFunction!;
                 } else {
