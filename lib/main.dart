@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
                       stream: FirebaseAuth.instance.authStateChanges(),
                       builder: (_, snap) {
                         //final fcm = FirebaseMessaging.instance;
-
+                        print("[MAIN 51]: Buildeando stream...");
                         if (snap.connectionState == ConnectionState.waiting) {
                           //fcm.requestPermission();
                           return SplashPage();

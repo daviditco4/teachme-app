@@ -51,6 +51,7 @@ class AuthPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("[AUTH_PAGE 54]: Current user ${FirebaseAuth.instance.currentUser}");
     const verticalSpace = SizedBox(height: 18.0);
 
     return Scaffold(
