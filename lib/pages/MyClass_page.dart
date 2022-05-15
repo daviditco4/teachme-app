@@ -3,17 +3,6 @@ import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import 'package:teachme_app/widgets/card_class.dart';
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MyClass(),
-    );
-  }
-}
-
 class MyClass extends StatefulWidget {
   const MyClass({Key? key}) : super(key: key);
 
@@ -45,9 +34,8 @@ class _MyClass extends State<MyClass> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 5, bottom: 40),
-                    child: Text("Proximas clases",
-                        style: TextStyle(
-                            fontSize: 20)),
+                    child:
+                        Text("Proximas clases", style: TextStyle(fontSize: 20)),
                   ),
                   CardClass(
                       title:

@@ -1,6 +1,7 @@
 import 'dart:io' show File;
 
 import 'package:flutter/material.dart';
+import 'package:teachme_app/pages/recover_password.dart';
 
 import '../../helpers/snack_bars.dart';
 import 'auth_fields_column.dart';
@@ -58,6 +59,18 @@ class _AuthFormState extends State<AuthForm> {
     }
   }
 
+  PageRouteBuilder _noAnimationRouter(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation1, animation2) => page,
+      transitionDuration: Duration.zero,
+      reverseTransitionDuration: Duration.zero,
+    );
+  }
+
+  void _recoverAccount() {
+    Navigator.pushReplacement(context, _noAnimationRouter(RecoverPassword()));
+  }
+
   @override
   Widget build(BuildContext context) {
     final isSigninMode = (_authMode == AuthMode.signin);
@@ -110,13 +123,16 @@ class _AuthFormState extends State<AuthForm> {
                 children: [
                   Row(
                     children: [
-                      const Text(
-                        '¿Ha olvidado su contrazeña?',
-                        style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 12,
-                            fontWeight: FontWeight.w800,
-                            decoration: TextDecoration.underline),
+                      TextButton(
+                        child: const Text(
+                          '¿Ha olvidado su contrazeña?',
+                          style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 12,
+                              fontWeight: FontWeight.w800,
+                              decoration: TextDecoration.underline),
+                        ),
+                        onPressed: _recoverAccount,
                       ),
                       const Spacer(),
                       TextButton(
