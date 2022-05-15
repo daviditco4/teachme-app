@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
-
+import 'package:teachme_app/pages/settings_page.dart';
 import 'package:flutter/material.dart';
+import '../widgets/bottom_nav_bar.dart';
 
 class InfoUser extends StatefulWidget {
   const InfoUser({Key? key}) : super(key: key);
@@ -10,36 +11,56 @@ class InfoUser extends StatefulWidget {
   State<InfoUser> createState() => _InfoUser();
 }
 
+
 class _InfoUser extends State<InfoUser> {
+  Future<bool?> showWarning(BuildContext context) async => showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text('Seguro quiere realizar los cambios?'),
+      actions: [
+        ElevatedButton(onPressed:() => Navigator.pop(context, false), child: Text('No')),
+        ElevatedButton(onPressed:() => Navigator.pop(context, true), child: Text('Si'))
+      ],
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: () async {
+        print('Back Buttom');
+        final shouldPop = await showWarning(context);
+        return shouldPop ?? false;
+      },
+      child: Scaffold(
         backgroundColor: MyColors.background,
+        appBar: AppBar(
+          centerTitle: true,
+          automaticallyImplyLeading: true,
+          leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => navigateTo(context, const SettingsPage())
+          ),
+          title: const Text('Datos del usuario',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 25,
+                fontWeight: FontWeight.w900,
+              )),
+          backgroundColor: MyColors.background,
+          elevation: 0,
+        ),
         body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: const <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 5, bottom: 40),
-                  child: Text("Datos del perfil",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 30, fontWeight: FontWeight.bold)),
-                ),
-                ],
-              ),
-            ),
               const Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(25, 10, 40, 20),
                 child: TextField(
                   decoration: InputDecoration(
                     border: UnderlineInputBorder(),
+                    labelText: "Email",
                     hintText: 'Dejar mail existente',
                   ),
                 ),
@@ -49,6 +70,7 @@ class _InfoUser extends State<InfoUser> {
                 child: TextField(
                   decoration: InputDecoration(
                     border: UnderlineInputBorder(),
+                    labelText: "Usuario",
                     hintText: 'Dejar el user existente',
                   ),
                 ),
@@ -58,6 +80,7 @@ class _InfoUser extends State<InfoUser> {
                 child: TextField(
                   decoration: InputDecoration(
                     border: UnderlineInputBorder(),
+                    labelText: "Contraseña",
                     hintText: '********',
                   ),
                 ),
@@ -65,9 +88,8 @@ class _InfoUser extends State<InfoUser> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 130.0),
                 child: ElevatedButton(
-                  onPressed: () {
-                  },
-                  child: const Text('Cambios los datos'),
+                  onPressed: ()=> showWarning(context),
+                  child: const Text('Cambiar los datos'),
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
                           MyColors.buttonCardClass),
@@ -76,7 +98,8 @@ class _InfoUser extends State<InfoUser> {
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18),
                               side: const BorderSide(
-                                  color: Colors.white)))
+                                  color: Colors.white))
+                      )
                   ),
                 ),
                 ),
@@ -84,6 +107,7 @@ class _InfoUser extends State<InfoUser> {
           ),
         ),
       ),
+    ),
     );
   }
 }
