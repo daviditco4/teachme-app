@@ -14,7 +14,7 @@ Read this for downloading and installing the app from your mobile device.
 You'll need:
 
 ```
-- Android Jelly Bean or later (version 4.1, API level 16).
+- Android KitKat or later (version 4.4, API level 19).
 
 - Installation of apps from unknown sources permitted (see the "Setting up your device"
 section at https://www.cnet.com/tech/mobile/how-to-install-apps-outside-of-google-play/).
