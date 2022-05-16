@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/pages/MyClass_page.dart';
 import 'package:teachme_app/pages/lesson_search/teacher_profile_page.dart';
@@ -17,8 +18,25 @@ class TMBottomNavigationBar extends StatefulWidget {
 }
 
 class _TMBottomNavigationBarState extends State<TMBottomNavigationBar> {
+  late List<Widget> _pages;
+
+  //void _selectTab(int index) => setState(() => _currentIndex = index);
+
+  @override
+  void initState() {
+    super.initState();
+    _pages = [
+      MyClass(),
+      ProfilePage() /*TODO: CAMBIAR A SEARCH}*/,
+      TeacherProfilePage(),
+      ProfilePage()
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
+    //return Scaffold(
+    //child: _pages[_currentIndex],
     return BottomNavigationBar(
         currentIndex: _currentIndex,
         type: BottomNavigationBarType.fixed,
@@ -36,24 +54,10 @@ class _TMBottomNavigationBarState extends State<TMBottomNavigationBar> {
               icon: Icon(Icons.chat_bubble_outline_rounded), label: 'Chat'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile')
         ],
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-          switch (_currentIndex) {
-            case 0:
-              TMNavigator.navigateTo(context, MyClass());
-              break;
-            case 1:
-              /*TODO: Navigation a Search */
-              break;
-            case 2:
-              TMNavigator.navigateTo(context, TeacherProfilePage());
-              break;
-            case 3:
-              TMNavigator.navigateTo(context, ProfilePage());
-              break;
-          }
-        });
+        onTap: (index) => setState(() {
+              _currentIndex = index;
+              TMNavigator.navigateToPage(this.context, _pages[_currentIndex]);
+            }));
+    //);
   }
 }

@@ -4,8 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:teachme_app/firebase_options.dart';
 import 'package:teachme_app/pages/MyClass_page.dart';
 import 'package:teachme_app/pages/auth_page.dart';
+import 'package:teachme_app/pages/lesson_search/teacher_profile_page.dart';
+import 'package:teachme_app/pages/profile_page.dart';
 import 'package:teachme_app/pages/splash_page.dart';
 
+import 'pages/loading_page.dart';
+import 'pages/notifications_page.dart';
+import 'pages/settings_page.dart';
 
 const CHAT_TOPIC = 'public';
 
@@ -38,6 +43,15 @@ class MyApp extends StatelessWidget {
                 accentColor: Color(0xff00adb5),
                 backgroundColor: Color(0xffeeeeee),
               ),
+              routes: {
+                '/loading_page': (context) => const LoadingPage(),
+                '/authentication': (context) => AuthPage(),
+                '/class': (context) => const MyClass(),
+                '/notifications': (context) => const NotificationsPage(),
+                '/settings': (context) => const SettingsPage(),
+                '/profile': (context) => const ProfilePage(),
+                '/chat': (context) => const TeacherProfilePage()
+              },
               home: snapshot.connectionState != ConnectionState.done
                   ? SplashPage()
                   : StreamBuilder(

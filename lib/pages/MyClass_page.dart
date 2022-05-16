@@ -35,20 +35,20 @@ class _MyClass extends State<MyClass> {
             IconButton(
                 icon: const Icon(Icons.settings, color: Colors.black),
                 onPressed: () =>
-                    TMNavigator.navigateTo(context, const SettingsPage())),
+                    TMNavigator.navigateToPage(context, const SettingsPage())),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: IconButton(
                 icon: const Icon(Icons.notifications_none, color: Colors.black),
-                onPressed: () =>
-                    TMNavigator.navigateTo(context, const NotificationsPage()),
+                onPressed: () => TMNavigator.navigateToPage(
+                    context, const NotificationsPage()),
               ),
             ),
           ],
           backgroundColor: MyColors.background,
           elevation: 0,
         ),
-        bottomNavigationBar: TMBottomNavigationBar(),
+        bottomNavigationBar: const TMBottomNavigationBar(),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
