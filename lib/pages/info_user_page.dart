@@ -40,7 +40,7 @@ class _InfoUser extends State<InfoUser> {
           leading: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.black),
               onPressed: () => navigateTo(context, const SettingsPage())
-          ), 
+          ),
           title: const Text('Datos del usuario',
               style: TextStyle(
                 color: Colors.black,
@@ -96,9 +96,7 @@ class _InfoUser extends State<InfoUser> {
                       shape: MaterialStateProperty.all<
                           RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18),
-                              side: const BorderSide(
-                                  color: Colors.white))
+                              borderRadius: BorderRadius.circular(18), side: const BorderSide(color: Colors.white))
                       )
                   ),
                 ),
