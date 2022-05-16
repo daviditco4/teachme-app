@@ -56,7 +56,7 @@ class _TMBottomNavigationBarState extends State<TMBottomNavigationBar> {
         ],
         onTap: (index) => setState(() {
               _currentIndex = index;
-              TMNavigator.navigateTo(this.context, _pages[_currentIndex]);
+              TMNavigator.navigateToPage(this.context, _pages[_currentIndex]);
             }));
     //);
   }

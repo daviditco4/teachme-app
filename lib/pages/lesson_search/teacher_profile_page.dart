@@ -15,34 +15,34 @@ class TeacherProfilePage extends StatelessWidget {
       backgroundColor: MyColors.background,
       bottomNavigationBar: const TMBottomNavigationBar(),
       appBar: AppBar(
-          leading: const ImageIcon(
-            AssetImage("assets/images/teach_me_logo.png"),
-            color: MyColors.black,
-          ),
-          centerTitle: true,
-          title: const Text('Chat',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 25,
-                fontWeight: FontWeight.w900,
-              )),
-          actions: [
-            IconButton(
-                icon: const Icon(Icons.settings, color: Colors.black),
-                onPressed: () =>
-                    TMNavigator.navigateTo(context, const SettingsPage())),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: IconButton(
-                icon: const Icon(Icons.notifications_none, color: Colors.black),
-                onPressed: () =>
-                    TMNavigator.navigateTo(context, const NotificationsPage()),
-              ),
-            ),
-          ],
-          backgroundColor: MyColors.background,
-          elevation: 0,
+        leading: const ImageIcon(
+          AssetImage("assets/images/teach_me_logo.png"),
+          color: MyColors.black,
         ),
+        centerTitle: true,
+        title: const Text('Chat',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 25,
+              fontWeight: FontWeight.w900,
+            )),
+        actions: [
+          IconButton(
+              icon: const Icon(Icons.settings, color: Colors.black),
+              onPressed: () =>
+                  TMNavigator.navigateToPage(context, const SettingsPage())),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: IconButton(
+              icon: const Icon(Icons.notifications_none, color: Colors.black),
+              onPressed: () => TMNavigator.navigateToPage(
+                  context, const NotificationsPage()),
+            ),
+          ),
+        ],
+        backgroundColor: MyColors.background,
+        elevation: 0,
+      ),
       body: Card(
         margin: const EdgeInsets.all(20.0),
         shape: RoundedRectangleBorder(

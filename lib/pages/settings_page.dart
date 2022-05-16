@@ -19,7 +19,7 @@ class _SettingsPageState extends State<SettingsPage> {
         FirebaseAuth.instance.currentUser!.email!);
     FirebaseAuth.instance
         .signOut()
-        .then((value) => TMNavigator.navigateTo(context, AuthPage()));
+        .then((value) => TMNavigator.navigateToPage(context, AuthPage()));
   }
 
   @override

@@ -21,7 +21,7 @@ class SettingButton extends StatelessWidget {
           TextButton(
               onPressed: () {
                 if (onPressedPage != null) {
-                  TMNavigator.navigateTo(context, onPressedPage!);
+                  TMNavigator.navigateToPage(context, onPressedPage!);
                 } else if (onPressedFunction != null) {
                   onPressedFunction!();
                 } else {

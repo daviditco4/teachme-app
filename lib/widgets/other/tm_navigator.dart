@@ -7,8 +7,15 @@ class TMNavigator {
   /*  Funcion a la que deberemos llamar para movernos de pagina.
       Recibe el contexto (simplemente escribir "context") y la pagina
       (el Widget) a la que queremos ir */
-  static void navigateTo(BuildContext context, Widget page) {
+  static void navigateToPage(BuildContext context, Widget page) {
     Navigator.pushReplacement(context, _noAnimationRouter(page));
+  }
+
+  /*  Funcion adicional para movernos de pagina. Recibe el contexto
+      (simplemente escribir "context") y la ruta de la pagina a la 
+      que queremos ir. VIENE CON ANIMACION */
+  static void navigateToRoute(BuildContext context, String routeName) {
+    Navigator.pushReplacementNamed(context, routeName);
   }
 
   /*  Esta funcion devuelve un PageRouteBuilder sin animacion de transicion,
