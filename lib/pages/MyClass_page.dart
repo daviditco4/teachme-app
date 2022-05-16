@@ -48,7 +48,7 @@ class _MyClass extends State<MyClass> {
           backgroundColor: MyColors.background,
           elevation: 0,
         ),
-        bottomNavigationBar: TMBottomNavigationBar(),
+        bottomNavigationBar: const TMBottomNavigationBar(),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
