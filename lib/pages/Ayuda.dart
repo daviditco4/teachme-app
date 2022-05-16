@@ -24,6 +24,10 @@ class _Ayuda extends State<Ayuda> {
     ),
   );
 
+  bool _expanded1 = false;
+  bool _expanded2 = false;
+  bool _expanded3 = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,17 +53,83 @@ class _Ayuda extends State<Ayuda> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(25, 10, 40, 20),
-                  child: Text('Reportar un problema'),
+                Container(
+                  child: ExpansionPanelList(
+                    animationDuration: Duration(milliseconds: 500),
+                    children: [
+                      ExpansionPanel(
+                        headerBuilder: (context, isExpanded) {
+                          return ListTile(
+                            title: Text('Reportar un problema', style: TextStyle(color: Colors.black),),
+                          );
+                        },
+                        body:ListTile(
+                          title: Text('Description text',style: TextStyle(color: Colors.black)),
+                        ),
+                        isExpanded: _expanded1,
+                        backgroundColor: MyColors.background,
+                        canTapOnHeader: true,
+                      ),
+                    ],
+                    dividerColor: MyColors.bottomNavBarBackground,
+                    expansionCallback: (panelIndex, isExpanded) {
+                      _expanded1 = !_expanded1;
+                      setState(() {
+                      });
+                    },
                   ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(25, 10, 40, 20),
-                  child: Text('Solicitudes de ayuda'),
                 ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(25, 10, 40, 20),
-                  child: Text('Ayuda sobre privacidad y seguridad'),
+                Container(
+                  child: ExpansionPanelList(
+                    animationDuration: Duration(milliseconds: 500),
+                    children: [
+                      ExpansionPanel(
+                        headerBuilder: (context, isExpanded) {
+                          return ListTile(
+                            title: Text('Solicitudes de ayuda', style: TextStyle(color: Colors.black),),
+                          );
+                        },
+                        body:ListTile(
+                          title: Text('Description text',style: TextStyle(color: Colors.black)),
+                        ),
+                        isExpanded: _expanded2,
+                        backgroundColor: MyColors.background,
+                        canTapOnHeader: true,
+                      ),
+                    ],
+                    dividerColor: MyColors.bottomNavBarBackground,
+                    expansionCallback: (panelIndex, isExpanded) {
+                      _expanded2 = !_expanded2;
+                      setState(() {
+                      });
+                    },
+                  ),
+                ),
+                Container(
+                  child: ExpansionPanelList(
+                    animationDuration: Duration(milliseconds: 500),
+                    children: [
+                      ExpansionPanel(
+                        headerBuilder: (context, isExpanded) {
+                          return ListTile(
+                              title: Text('Ayuda sobre privacidad y seguridad', style: TextStyle(color: Colors.black),),
+                          );
+                        },
+                        body:ListTile(
+                          title: Text('Description text',style: TextStyle(color: Colors.black)),
+                        ),
+                        isExpanded: _expanded3,
+                        backgroundColor: MyColors.background,
+                        canTapOnHeader: true,
+                      ),
+                    ],
+                    dividerColor: MyColors.bottomNavBarBackground,
+                    expansionCallback: (panelIndex, isExpanded) {
+                      _expanded3 = !_expanded3;
+                      setState(() {
+                      });
+                    },
+                  ),
                 ),
               ],
             ),
@@ -67,6 +137,4 @@ class _Ayuda extends State<Ayuda> {
         ),
     );
   }
-}
-
 }
