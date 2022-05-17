@@ -19,9 +19,7 @@ class TeacherProfileOverview extends StatelessWidget {
           const TeacherProfileMiddleInfo(),
           verticalSpace,
           ElevatedButton(
-            onPressed: () {
-              // TODO: Navigate to chat page
-            },
+            onPressed: () => Navigator.pushNamed(context, '/chat'),
             child: const Text('Ir a la sala'),
           ),
         ],
