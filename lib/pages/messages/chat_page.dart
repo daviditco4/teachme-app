@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:teachme_app/constants/theme.dart';
 
 import '../../main.dart' show chatTopic;
 import '../../widgets/chat/messages_list_view.dart';
@@ -13,6 +14,7 @@ class ChatPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: MyColors.bottomNavBarBackground,
         title: const Text('Chat'),
       ),
       body: Column(

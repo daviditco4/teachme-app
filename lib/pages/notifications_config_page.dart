@@ -43,30 +43,23 @@ class _NotificationConfig extends State<NotificationConfig> {
     return Scaffold(
       backgroundColor: MyColors.background,
       appBar: AppBar(
+        backgroundColor: MyColors.background,
+        title: const Text('Notificaciones',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 25,
+                fontWeight: FontWeight.w900,
+              )),
         centerTitle: true,
         automaticallyImplyLeading: true,
         leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () =>
                 TMNavigator.navigateToPage(context, const SettingsPage())),
+        elevation: 0,
       ),
       body: Column(
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: const <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 5, bottom: 40),
-                  child: Text("Notificaciones",
-                      textAlign: TextAlign.center,
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                ),
-              ],
-            ),
-          ),
           SwitchListTile(
             title: const Text('Mensajes'),
             value: _mensajes,
