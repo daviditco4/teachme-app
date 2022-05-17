@@ -3,6 +3,7 @@ import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/pages/settings_page.dart';
 
 import '../widgets/bottom_nav_bar.dart';
+import '../widgets/other/tm_navigator.dart';
 
 /*
 class NotificationConfig extends StatelessWidget {
@@ -40,16 +41,17 @@ class _NotificationConfig extends State<NotificationConfig> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: MyColors.background,
-        appBar: AppBar(
-          centerTitle: true,
-          automaticallyImplyLeading: true,
-          leading: IconButton(
+      backgroundColor: MyColors.background,
+      appBar: AppBar(
+        centerTitle: true,
+        automaticallyImplyLeading: true,
+        leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => navigateTo(context, const SettingsPage())
-          ),
-        ),
-        body: Column(children: <Widget>[
+            onPressed: () =>
+                TMNavigator.navigateToPage(context, const SettingsPage())),
+      ),
+      body: Column(
+        children: <Widget>[
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
             child: Column(
@@ -59,29 +61,27 @@ class _NotificationConfig extends State<NotificationConfig> {
                   padding: EdgeInsets.only(top: 5, bottom: 40),
                   child: Text("Notificaciones",
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 30, fontWeight: FontWeight.bold)),
-
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                 ),
               ],
             ),
           ),
           SwitchListTile(
-              title: const Text('Mensajes'),
-              value: _mensajes,
-              onChanged: (bool value) {
-                setState(() {
-                  _mensajes = value;
-                });
-              },
-            ),
-
+            title: const Text('Mensajes'),
+            value: _mensajes,
+            onChanged: (bool value) {
+              setState(() {
+                _mensajes = value;
+              });
+            },
+          ),
           SwitchListTile(
             title: const Text('Recordatorios'),
             value: _recordatorio,
             onChanged: (bool value) {
               setState(() {
-                _recordatorio= value;
+                _recordatorio = value;
               });
             },
           ),
@@ -90,7 +90,7 @@ class _NotificationConfig extends State<NotificationConfig> {
             value: _proxClase,
             onChanged: (bool value) {
               setState(() {
-                _proxClase= value;
+                _proxClase = value;
               });
             },
           ),
@@ -99,12 +99,12 @@ class _NotificationConfig extends State<NotificationConfig> {
             value: _pagos,
             onChanged: (bool value) {
               setState(() {
-                _pagos= value;
+                _pagos = value;
               });
             },
           ),
-          ],
-        ),
+        ],
+      ),
     );
   }
 }
