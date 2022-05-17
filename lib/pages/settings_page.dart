@@ -2,9 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/pages/auth_page.dart';
+import 'package:teachme_app/pages/Ayuda.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import 'package:teachme_app/widgets/other/tm_navigator.dart';
 import 'package:teachme_app/widgets/setting_button.dart';
+import 'package:teachme_app/pages/notifications_page.dart';
+import 'package:teachme_app/pages/info_user_page.dart';
+import 'package:teachme_app/pages/notifications_config_page.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -42,11 +46,14 @@ class _SettingsPageState extends State<SettingsPage> {
                         style: TextStyle(
                             fontSize: 30, fontWeight: FontWeight.bold)),
                   ),
-                  const SettingButton(text: 'Datos de Perfil'),
-                  const SettingButton(text: 'Privacidad'),
-                  const SettingButton(text: 'Notificaciones'),
-                  const SettingButton(text: 'Métodos de Pago'),
-                  const SettingButton(text: 'Ayuda'),
+                  SettingButton(
+                      text: 'Datos de Perfil', onPressedPage: InfoUser()),
+                  SettingButton(text: 'Privacidad'),
+                  SettingButton(
+                      text: 'Notificaciones',
+                      onPressedPage: NotificationConfig()),
+                  SettingButton(text: 'Métodos de Pago'),
+                  SettingButton(text: 'Ayuda', onPressedPage: Ayuda()),
                   SettingButton(
                       text: 'Cerrar Sesión', onPressedFunction: signout)
                 ],
