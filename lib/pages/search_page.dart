@@ -4,7 +4,7 @@ import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 
-void main() {
+/*void main() {
   runApp(const MyApp());
 }
 
@@ -21,6 +21,8 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+ */
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -78,10 +80,10 @@ class _SearchPage extends State<SearchPage> {
       appBar: AppBar(
         leading: const ImageIcon(
           AssetImage("assets/images/teach_me_logo.png"),
-          color: MyColors.black,
+          color: MyColors.buttonCardClass,
         ),
         centerTitle: true,
-        title: const Text('Mi Perfil',
+        title: const Text('Busca tu clase',
             style: TextStyle(
               color: Colors.black,
               fontSize: 25,
