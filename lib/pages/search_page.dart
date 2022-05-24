@@ -112,10 +112,39 @@ class _SearchPage extends State<SearchPage> {
             TextField(
               onChanged: (value) => _runFilter(value),
               decoration: const InputDecoration(
-                  labelText: 'Search', suffixIcon: Icon(Icons.search)),
+                  labelText: 'Buscar', suffixIcon: Icon(Icons.search)),
             ),
             const SizedBox(
               height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+               ElevatedButton(
+                  onPressed: (){   },
+                  child: const Text('Filtrar por: '),
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(MyColors.buttonCardClass),
+                      shape: MaterialStateProperty.all<
+                          RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18), side: const BorderSide(color: Colors.white))
+                      )
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: (){   },
+                  child: const Text('Ordenar por distancia'),
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(MyColors.buttonCardClass),
+                      shape: MaterialStateProperty.all<
+                          RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18), side: const BorderSide(color: Colors.white))
+                      )
+                  ),
+                ),
+              ],
             ),
             Expanded(
               child: _foundUsers.isNotEmpty
@@ -160,7 +189,6 @@ class _SearchPage extends State<SearchPage> {
                                     print(rating);
                                   },
                                 ),
-
                               ],
                             ),
                             ],
