@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:teachme_app/constants/theme.dart';
+import 'package:teachme_app/pages/notifications_page.dart';
+import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -70,10 +72,35 @@ class _SearchPage extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: MyColors.background,
+      bottomNavigationBar: TMBottomNavigationBar(),
       appBar: AppBar(
-        title: const Text('Search'),
+        leading: const ImageIcon(
+          AssetImage("assets/images/teach_me_logo.png"),
+          color: MyColors.black,
+        ),
+        centerTitle: true,
+        title: const Text('Mi Perfil',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 25,
+              fontWeight: FontWeight.w900,
+            )),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: IconButton(
+              icon: const Icon(Icons.notifications_none, color: Colors.black),
+              onPressed: () => navigateTo(context, const NotificationsPage()),
+            ),
+          ),
+        ],
+        backgroundColor: MyColors.background,
+        elevation: 0,
       ),
-      body: Padding(
+      body: SafeArea(
+      child: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
@@ -146,6 +173,7 @@ class _SearchPage extends State<SearchPage> {
             ),
           ],
         ),
+      ),
       ),
     );
   }

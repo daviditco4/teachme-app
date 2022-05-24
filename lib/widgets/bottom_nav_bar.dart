@@ -8,6 +8,8 @@ import 'package:teachme_app/pages/profile_page.dart';
 import 'package:teachme_app/pages/settings_page.dart';
 import 'package:teachme_app/widgets/card_class.dart';
 
+import '../pages/search_page.dart';
+
 int _currentIndex = 0;
 
 PageRouteBuilder _noAnimationRouter(Widget page) {
@@ -58,7 +60,7 @@ class _TMBottomNavigationBarState extends State<TMBottomNavigationBar> {
               navigateTo(context, MyClass());
               break;
             case 1:
-              /*TODO: Navigation a Search */
+              navigateTo(context, SearchPage());
               break;
             case 2:
               navigateTo(context, TeacherProfilePage());
