@@ -27,8 +27,7 @@ class _PaymentMethod extends State<PaymentMethod> {
               ],
             ),
       );
-  bool _value = false;
-  int val = -1;
+  int? val = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -75,8 +74,12 @@ class _PaymentMethod extends State<PaymentMethod> {
                     leading: Radio(
                       value: 1,
                       groupValue: val,
-                      onChanged: (value) {},
-                      activeColor: Colors.green,
+                      onChanged: (int? value) {
+                        setState(() {
+                          val = value;
+                        });
+                      },
+                      activeColor: MyColors.buttonCardClass,
                     ),
                   ),
                 ),
