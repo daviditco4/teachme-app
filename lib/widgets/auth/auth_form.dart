@@ -97,8 +97,8 @@ class _AuthFormState extends State<AuthForm> {
           mainAxisSize: MainAxisSize.min,
           children: [
             _buildAnimatedChildVisibleOnCondition(
-              onInvisibleWidget: const SizedBox(height: 6.0),
-              verticalSpace: SizedBox(height: 18.0),
+              onInvisibleWidget: const SizedBox(height: 4.0),
+              verticalSpace: SizedBox(height: 12.0),
               verticalSpaceLocation: VerticalDirection.down,
               condition: isSigninMode,
               child: _buildAnimatedChildVisibleOnCondition(
@@ -110,8 +110,8 @@ class _AuthFormState extends State<AuthForm> {
                     children: const [
                       Image(
                           image: AssetImage("assets/images/teach_me_logo.png"),
-                          width: 200,
-                          height: 200,
+                          width: 150,
+                          height: 150,
                           fit: BoxFit.fill),
                       Text('Inicia sesión',
                           style: TextStyle(
@@ -120,7 +120,7 @@ class _AuthFormState extends State<AuthForm> {
                               fontFamily: 'Poppins')),
                     ],
                   ),
-                  verticalSpace: SizedBox(height: 18))
+                  verticalSpace: SizedBox(height: 9))
             ),
             AuthFieldsColumn(
               authMode: _authMode,
@@ -132,7 +132,7 @@ class _AuthFormState extends State<AuthForm> {
               enabled: !_isLoading,
               onSubmitted: (_) => _submit(),
             ),
-            const SizedBox(height: 24.0),
+            const SizedBox(height: 12.0),
             if (_isLoading)
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 30.0),
