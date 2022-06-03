@@ -1,6 +1,7 @@
 import 'dart:io' show File;
 
 import 'package:flutter/material.dart';
+import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:teachme_app/pages/recover_password.dart';
 
 import '../../helpers/snack_bars.dart';
@@ -28,6 +29,7 @@ class _AuthFormState extends State<AuthForm> {
   final _userInput = <String, String>{};
   var _authMode = AuthMode.signin;
   var _isLoading = false;
+  var isKeyboardOpen = false;
 
   void _switchAuthMode() {
     setState(() {
@@ -71,6 +73,19 @@ class _AuthFormState extends State<AuthForm> {
     Navigator.pushReplacement(context, _noAnimationRouter(RecoverPassword()));
   }
 
+  @protected
+  void initState() {
+    super.initState();
+
+    KeyboardVisibilityNotification().addNewListener(
+      onChange: (bool visible) {
+        setState(() {
+          isKeyboardOpen = visible;
+        });
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isSigninMode = (_authMode == AuthMode.signin);
@@ -86,21 +101,26 @@ class _AuthFormState extends State<AuthForm> {
               verticalSpace: SizedBox(height: 18.0),
               verticalSpaceLocation: VerticalDirection.down,
               condition: isSigninMode,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  Image(
-                      image: AssetImage("assets/images/teach_me_logo.png"),
-                      width: 200,
-                      height: 200,
-                      fit: BoxFit.fill),
-                  Text('Inicia sesión',
-                      style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Poppins')),
-                ],
-              ),
+              child: _buildAnimatedChildVisibleOnCondition(
+                  condition: !isKeyboardOpen,
+                  onInvisibleWidget: const SizedBox(height: 6.0),
+                  verticalSpaceLocation: VerticalDirection.down,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Image(
+                          image: AssetImage("assets/images/teach_me_logo.png"),
+                          width: 200,
+                          height: 200,
+                          fit: BoxFit.fill),
+                      Text('Inicia sesión',
+                          style: TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Poppins')),
+                    ],
+                  ),
+                  verticalSpace: SizedBox(height: 18))
             ),
             AuthFieldsColumn(
               authMode: _authMode,
