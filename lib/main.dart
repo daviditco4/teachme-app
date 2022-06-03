@@ -62,12 +62,12 @@ class MyApp extends StatelessWidget {
                         if (snap.connectionState == ConnectionState.waiting) {
                           //fcm.requestPermission();
                           return SplashPage();
-                        } else if (!snap.hasData) {
+                        } else if (snap.hasData) {
                           //fcm.unsubscribeFromTopic(CHAT_TOPIC);
+                          return const MyClass();
+                        } else {
                           return AuthPage();
                         }
-                        //fcm.subscribeToTopic(CHAT_TOPIC);
-                        return const MyClass();
                       },
                     ),
             ));

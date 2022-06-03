@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
+import 'package:teachme_app/main.dart';
 import 'package:teachme_app/pages/auth_page.dart';
 import 'package:teachme_app/pages/Ayuda.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
@@ -17,12 +18,13 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  void signout() {
+  Future signout() async {
     print("[SETTINGS_PAGE 19]Deslogueando la cuenta " +
         FirebaseAuth.instance.currentUser!.email!);
-    FirebaseAuth.instance
-        .signOut()
-        .then((value) => TMNavigator.navigateToPage(context, AuthPage()));
+
+    await FirebaseAuth.instance.signOut().catchError((error){
+      print(error.toString());
+    }).then((value) =>    Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp())));
   }
 
   @override

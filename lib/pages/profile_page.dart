@@ -6,8 +6,6 @@ import 'package:teachme_app/pages/settings_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import '../widgets/other/tm_navigator.dart';
 
-FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -16,6 +14,14 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -187,18 +193,21 @@ class _ProfilePageState extends State<ProfilePage> {
           )
         ]));
   }
-}
 
-String _getUsername() {
-  String? username = firebaseAuth.currentUser!.displayName;
-  return username ?? "ERROR";
-}
-
-ImageProvider _getUserImage() {
-  String? userImageUrl = firebaseAuth.currentUser!.photoURL;
-  if (userImageUrl != null) {
-    return NetworkImage(userImageUrl);
-  } else {
-    return const AssetImage("assets/images/hasbulla.png");
+  String _getUsername() {
+    String? username = firebaseAuth.currentUser!.displayName;
+    return username ?? "ERROR";
   }
+
+  ImageProvider _getUserImage() {
+    String? userImageUrl = firebaseAuth.currentUser!.photoURL;
+    if (userImageUrl != null) {
+      return NetworkImage(userImageUrl);
+    } else {
+      return const AssetImage("assets/images/hasbulla.png");
+    }
+  }
+
 }
+
+
