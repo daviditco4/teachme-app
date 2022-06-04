@@ -3,6 +3,7 @@ import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 import '../widgets/bottom_nav_bar.dart';
+import '../widgets/other/tm_navigator.dart';
 
 class PaymentMethod extends StatefulWidget {
   const PaymentMethod({Key? key}) : super(key: key);
@@ -11,21 +12,20 @@ class PaymentMethod extends StatefulWidget {
   State<PaymentMethod> createState() => _PaymentMethod();
 }
 
-
 class _PaymentMethod extends State<PaymentMethod> {
-  Future<bool?> showWarning(BuildContext context) async =>
-      showDialog<bool>(
+  Future<bool?> showWarning(BuildContext context) async => showDialog<bool>(
         context: context,
-        builder: (context) =>
-            AlertDialog(
-              title: Text('Seguro quiere realizar los cambios?'),
-              actions: [
-                ElevatedButton(onPressed: () => Navigator.pop(context, false),
-                    child: Text('No')),
-                ElevatedButton(onPressed: () => Navigator.pop(context, true),
-                    child: Text('Si'))
-              ],
-            ),
+        builder: (context) => AlertDialog(
+          title: const Text('Seguro quiere realizar los cambios?'),
+          actions: [
+            ElevatedButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('No')),
+            ElevatedButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('Si'))
+          ],
+        ),
       );
   int? val = -1;
 
@@ -44,8 +44,8 @@ class _PaymentMethod extends State<PaymentMethod> {
           automaticallyImplyLeading: true,
           leading: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.black),
-              onPressed: () => navigateTo(context, const SettingsPage())
-          ),
+              onPressed: () =>
+                  TMNavigator.navigateToPage(context, const SettingsPage())),
           title: const Text('Medio de Pagos',
               style: TextStyle(
                 color: Colors.black,
@@ -60,16 +60,16 @@ class _PaymentMethod extends State<PaymentMethod> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text("Podes agregar tu cuenta de Marcado pago: ",
-                style: const TextStyle(
-                  color: MyColors.black,
-                  fontSize: 15,)
-                ),
-
+                const Text("Podes agregar tu cuenta de Marcado pago: ",
+                    style: TextStyle(
+                      color: MyColors.black,
+                      fontSize: 15,
+                    )),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(25, 10, 40, 20),
+                  padding: const EdgeInsetsDirectional.fromSTEB(25, 10, 40, 20),
                   child: ListTile(
-                    title: Text("Mercado Pago",
+                    title: const Text(
+                      "Mercado Pago",
                     ),
                     leading: Radio(
                       value: 1,
@@ -86,17 +86,15 @@ class _PaymentMethod extends State<PaymentMethod> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 130.0),
                   child: ElevatedButton(
-                    onPressed: ()=> showWarning(context),
+                    onPressed: () => showWarning(context),
                     child: const Text('Agregar metodo de pago'),
                     style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                            MyColors.buttonCardClass),
-                        shape: MaterialStateProperty.all<
-                            RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18), side: const BorderSide(color: Colors.white))
-                        )
-                    ),
+                        backgroundColor:
+                            MaterialStateProperty.all(MyColors.buttonCardClass),
+                        shape: MaterialStateProperty
+                            .all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18),
+                                side: const BorderSide(color: Colors.white)))),
                   ),
                 ),
               ],

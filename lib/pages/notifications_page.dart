@@ -4,6 +4,8 @@ import 'package:teachme_app/pages/MyClass_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import 'package:teachme_app/widgets/notification.dart';
 
+import '../widgets/other/tm_navigator.dart';
+
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({Key? key}) : super(key: key);
 
@@ -22,8 +24,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
           automaticallyImplyLeading: true,
           leading: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.black),
-              onPressed: () => navigateTo(context, const MyClass())
-          ),
+              onPressed: () =>
+                  TMNavigator.navigateToPage(context, const MyClass())),
           title: const Text('Notificaciones',
               style: TextStyle(
                 color: Colors.black,

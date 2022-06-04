@@ -3,6 +3,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
+import 'package:teachme_app/widgets/other/tm_navigator.dart';
 
 /*void main() {
   runApp(const MyApp());
@@ -60,7 +61,7 @@ class _SearchPage extends State<SearchPage> {
     } else {
       results = _allUsers
           .where((user) =>
-          user["name"].toLowerCase().contains(enteredKeyword.toLowerCase()))
+              user["name"].toLowerCase().contains(enteredKeyword.toLowerCase()))
           .toList();
       // we use the toLowerCase() method to make it case-insensitive
     }
@@ -94,7 +95,8 @@ class _SearchPage extends State<SearchPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
               icon: const Icon(Icons.notifications_none, color: Colors.black),
-              onPressed: () => navigateTo(context, const NotificationsPage()),
+              onPressed: () => TMNavigator.navigateToPage(
+                  context, const NotificationsPage()),
             ),
           ),
         ],
@@ -102,108 +104,107 @@ class _SearchPage extends State<SearchPage> {
         elevation: 0,
       ),
       body: SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 20,
-            ),
-            TextField(
-              onChanged: (value) => _runFilter(value),
-              decoration: const InputDecoration(
-                  labelText: 'Buscar', suffixIcon: Icon(Icons.search)),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-               ElevatedButton(
-                  onPressed: (){   },
-                  child: const Text('Filtrar por: '),
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(MyColors.buttonCardClass),
-                      shape: MaterialStateProperty.all<
-                          RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18), side: const BorderSide(color: Colors.white))
-                      )
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 20,
+              ),
+              TextField(
+                onChanged: (value) => _runFilter(value),
+                decoration: const InputDecoration(
+                    labelText: 'Buscar', suffixIcon: Icon(Icons.search)),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: const Text('Filtrar por: '),
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(MyColors.buttonCardClass),
+                        shape: MaterialStateProperty
+                            .all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18),
+                                side: const BorderSide(color: Colors.white)))),
                   ),
-                ),
-                ElevatedButton(
-                  onPressed: (){   },
-                  child: const Text('Ordenar por distancia'),
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(MyColors.buttonCardClass),
-                      shape: MaterialStateProperty.all<
-                          RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18), side: const BorderSide(color: Colors.white))
-                      )
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: const Text('Ordenar por distancia'),
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(MyColors.buttonCardClass),
+                        shape: MaterialStateProperty
+                            .all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18),
+                                side: const BorderSide(color: Colors.white)))),
                   ),
-                ),
-              ],
-            ),
-            Expanded(
-              child: _foundUsers.isNotEmpty
-                  ? ListView.builder(
-                    itemCount: _foundUsers.length,
-                    itemBuilder: (context, index) => Card(
-                      key: ValueKey(_foundUsers[index]["id"]),
-                      color: MyColors.cardClass,
-                      elevation: 4,
-                      margin: const EdgeInsets.symmetric(vertical: 10),
-                      child: Container(
-                        child: Column(
-                          children: <Widget>[
-                            ListTile(
-                              leading: Text(
-                                _foundUsers[index]["id"].toString(),
-                                style: const TextStyle(fontSize: 24),
-                              ),
-                              title: Text(_foundUsers[index]['name']),
-                              subtitle: Text('Se encuentra a '
-                                  '${_foundUsers[index]["km"].toString()} km'),
-                              trailing: Text('\$ '
-                                  '${_foundUsers[index]["price"].toString()}') ,
-                            ),
-
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                ],
+              ),
+              Expanded(
+                child: _foundUsers.isNotEmpty
+                    ? ListView.builder(
+                        itemCount: _foundUsers.length,
+                        itemBuilder: (context, index) => Card(
+                          key: ValueKey(_foundUsers[index]["id"]),
+                          color: MyColors.cardClass,
+                          elevation: 4,
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          child: Container(
+                            child: Column(
                               children: <Widget>[
-                                RatingBar.builder(
-                                  initialRating: 3,
-                                  itemSize : 25,
-                                  minRating: 1,
-                                  direction: Axis.horizontal,
-                                  allowHalfRating: true,
-                                  itemCount: 5,
-                                  itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
-                                  itemBuilder: (context, _) => Icon(
-                                    Icons.star,
-                                    color: MyColors.white,
+                                ListTile(
+                                  leading: Text(
+                                    _foundUsers[index]["id"].toString(),
+                                    style: const TextStyle(fontSize: 24),
                                   ),
-                                  onRatingUpdate: (rating) {
-                                    print(rating);
-                                  },
+                                  title: Text(_foundUsers[index]['name']),
+                                  subtitle: Text('Se encuentra a '
+                                      '${_foundUsers[index]["km"].toString()} km'),
+                                  trailing: Text('\$ '
+                                      '${_foundUsers[index]["price"].toString()}'),
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: <Widget>[
+                                    RatingBar.builder(
+                                      initialRating: 3,
+                                      itemSize: 25,
+                                      minRating: 1,
+                                      direction: Axis.horizontal,
+                                      allowHalfRating: true,
+                                      itemCount: 5,
+                                      itemPadding: const EdgeInsets.symmetric(
+                                          horizontal: 2.0),
+                                      itemBuilder: (context, _) => const Icon(
+                                        Icons.star,
+                                        color: MyColors.white,
+                                      ),
+                                      onRatingUpdate: (rating) {
+                                        print(rating);
+                                      },
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                            ],
+                          ),
                         ),
+                      )
+                    : const Text(
+                        'No results found',
+                        style: TextStyle(fontSize: 24),
                       ),
-                    ),
-                  )
-                  : const Text(
-                'No results found',
-                style: TextStyle(fontSize: 24),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
