@@ -4,6 +4,8 @@ import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/main.dart';
 import 'package:teachme_app/pages/auth_page.dart';
 import 'package:teachme_app/pages/Ayuda.dart';
+import 'package:teachme_app/pages/payment_methods_page.dart';
+import 'package:teachme_app/pages/profile_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import 'package:teachme_app/widgets/other/tm_navigator.dart';
 import 'package:teachme_app/widgets/setting_button.dart';
@@ -22,9 +24,10 @@ class _SettingsPageState extends State<SettingsPage> {
     print("[SETTINGS_PAGE 19]Deslogueando la cuenta " +
         FirebaseAuth.instance.currentUser!.email!);
 
-    await FirebaseAuth.instance.signOut().catchError((error){
+    await FirebaseAuth.instance.signOut().catchError((error) {
       print(error.toString());
-    }).then((value) =>    Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp())));
+    }).then((value) => Navigator.push(
+        context, MaterialPageRoute(builder: (context) => MyApp())));
   }
 
   @override
@@ -32,6 +35,21 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
         backgroundColor: MyColors.background,
         bottomNavigationBar: const TMBottomNavigationBar(),
+        appBar: AppBar(
+          centerTitle: true,
+          automaticallyImplyLeading: true,
+          leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () {}),
+          title: const Text('Configuración',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 25,
+                fontWeight: FontWeight.w900,
+              )),
+          backgroundColor: MyColors.background,
+          elevation: 0,
+        ),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
@@ -40,21 +58,15 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  const Padding(
-                    padding: EdgeInsets.only(top: 5, bottom: 40),
-                    child: Text("Configuración",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 30, fontWeight: FontWeight.bold)),
-                  ),
-                  SettingButton(
+                  const SettingButton(
                       text: 'Datos de Perfil', onPressedPage: InfoUser()),
-                  SettingButton(text: 'Privacidad'),
-                  SettingButton(
+                  const SettingButton(text: 'Privacidad'),
+                  const SettingButton(
                       text: 'Notificaciones',
                       onPressedPage: NotificationConfig()),
-                  SettingButton(text: 'Métodos de Pago'),
-                  SettingButton(text: 'Ayuda', onPressedPage: Ayuda()),
+                  const SettingButton(
+                      text: 'Metodos de pago', onPressedPage: PaymentMethod()),
+                  const SettingButton(text: 'Ayuda', onPressedPage: Ayuda()),
                   SettingButton(
                       text: 'Cerrar Sesión', onPressedFunction: signout)
                 ],

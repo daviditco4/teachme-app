@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+// TODO: Chequear esto
+//import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/pages/settings_page.dart';
@@ -14,7 +17,6 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   @override
@@ -26,7 +28,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return StreamBuilder(
         stream: FirebaseAuth.instance.userChanges(),
-        builder: (_ , snap) {
+        builder: (_, snap) {
           print(snap.data);
           return Scaffold(
               extendBodyBehindAppBar: true,
@@ -47,12 +49,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 actions: [
                   IconButton(
                       icon: const Icon(Icons.settings, color: Colors.black),
-                      onPressed: () =>
-                          TMNavigator.navigateToPage(context, const SettingsPage())),
+                      onPressed: () => TMNavigator.navigateToPage(
+                          context, const SettingsPage())),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: IconButton(
-                      icon: const Icon(Icons.notifications_none, color: Colors.black),
+                      icon: const Icon(Icons.notifications_none,
+                          color: Colors.black),
                       onPressed: () => TMNavigator.navigateToPage(
                           context, const NotificationsPage()),
                     ),
@@ -65,8 +68,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 SafeArea(
                   child: ListView(children: [
                     Padding(
-                      padding:
-                      const EdgeInsets.only(left: 16.0, right: 16.0, top: 74.0),
+                      padding: const EdgeInsets.only(
+                          left: 16.0, right: 16.0, top: 74.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
@@ -74,8 +77,8 @@ class _ProfilePageState extends State<ProfilePage> {
                             Container(
                               decoration: BoxDecoration(
                                 color: MyColors.cardClass,
-                                borderRadius:
-                                const BorderRadius.all(Radius.circular(30.0)),
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(30.0)),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.grey.withOpacity(0.1),
@@ -92,8 +95,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                   clipBehavior: Clip.antiAliasWithSaveLayer,
                                   elevation: .0,
                                   shape: const RoundedRectangleBorder(
-                                      borderRadius:
-                                      BorderRadius.all(Radius.circular(30.0))),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(30.0))),
                                   child: Padding(
                                     padding: const EdgeInsets.only(
                                         top: 85.0, bottom: 20.0),
@@ -108,7 +111,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     style: const TextStyle(
                                                         color: MyColors.black,
                                                         fontSize: 28.0,
-                                                        fontWeight: FontWeight.bold)),
+                                                        fontWeight:
+                                                            FontWeight.bold)),
                                               ),
                                               const SizedBox(height: 10.0),
                                               const Divider(
@@ -123,12 +127,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 child: Align(
                                                   child: Text(
                                                       "Hola!!! Actualmente estoy cursando el tercer año de ingeniería mecánica",
-                                                      textAlign: TextAlign.center,
+                                                      textAlign:
+                                                          TextAlign.center,
                                                       style: TextStyle(
                                                           color: MyColors.black,
                                                           fontSize: 17.0,
                                                           fontWeight:
-                                                          FontWeight.w200)),
+                                                              FontWeight.w200)),
                                                 ),
                                               ),
                                               const SizedBox(height: 25.0),
@@ -137,14 +142,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     right: 25.0, left: 25.0),
                                                 child: Row(
                                                   mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: const [
                                                     Text(
                                                       "Calificación",
                                                       style: TextStyle(
-                                                          fontWeight: FontWeight.bold,
+                                                          fontWeight:
+                                                              FontWeight.bold,
                                                           fontSize: 20.0,
-                                                          color: MyColors.black),
+                                                          color:
+                                                              MyColors.black),
                                                     ),
                                                   ],
                                                 ),
@@ -155,14 +163,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     right: 25.0, left: 25.0),
                                                 child: Row(
                                                   mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: const [
                                                     Text(
                                                       "Comentarios",
                                                       style: TextStyle(
-                                                          fontWeight: FontWeight.bold,
+                                                          fontWeight:
+                                                              FontWeight.bold,
                                                           fontSize: 20.0,
-                                                          color: MyColors.black),
+                                                          color:
+                                                              MyColors.black),
                                                     ),
                                                   ],
                                                 ),
@@ -196,7 +207,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ]),
                 )
               ]));
-    });
+        });
   }
 
   String _getUsername() {
@@ -212,7 +223,4 @@ class _ProfilePageState extends State<ProfilePage> {
       return const AssetImage("assets/images/hasbulla.png");
     }
   }
-
 }
-
-

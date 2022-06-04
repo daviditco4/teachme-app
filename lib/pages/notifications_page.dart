@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
+import 'package:teachme_app/pages/MyClass_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import 'package:teachme_app/widgets/notification.dart';
 
@@ -16,6 +17,22 @@ class _NotificationsPageState extends State<NotificationsPage> {
     return Scaffold(
         backgroundColor: MyColors.background,
         bottomNavigationBar: const TMBottomNavigationBar(),
+        appBar: AppBar(
+          centerTitle: true,
+          automaticallyImplyLeading: true,
+          leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => navigateTo(context, const MyClass())
+          ),
+          title: const Text('Notificaciones',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 25,
+                fontWeight: FontWeight.w900,
+              )),
+          backgroundColor: MyColors.background,
+          elevation: 0,
+        ),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
@@ -24,13 +41,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: const <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 5, bottom: 40),
-                    child: Text("Notificaciones",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 30, fontWeight: FontWeight.bold)),
-                  ),
                   TMNotification(
                       professorName: "John Doe",
                       professorImage: AssetImage("assets/images/test.jpg"),
