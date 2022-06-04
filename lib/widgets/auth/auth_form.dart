@@ -73,19 +73,6 @@ class _AuthFormState extends State<AuthForm> {
     Navigator.pushReplacement(context, _noAnimationRouter(RecoverPassword()));
   }
 
-  @protected
-  void initState() {
-    super.initState();
-
-    KeyboardVisibilityNotification().addNewListener(
-      onChange: (bool visible) {
-        setState(() {
-          isKeyboardOpen = visible;
-        });
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final isSigninMode = (_authMode == AuthMode.signin);
@@ -101,11 +88,7 @@ class _AuthFormState extends State<AuthForm> {
               verticalSpace: SizedBox(height: 12.0),
               verticalSpaceLocation: VerticalDirection.down,
               condition: isSigninMode,
-              child: _buildAnimatedChildVisibleOnCondition(
-                  condition: !isKeyboardOpen,
-                  onInvisibleWidget: const SizedBox(height: 6.0),
-                  verticalSpaceLocation: VerticalDirection.down,
-                  child: Column(
+              child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: const [
                       Image(
@@ -119,8 +102,7 @@ class _AuthFormState extends State<AuthForm> {
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Poppins')),
                     ],
-                  ),
-                  verticalSpace: SizedBox(height: 9))
+                  )
             ),
             AuthFieldsColumn(
               authMode: _authMode,
