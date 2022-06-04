@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
-import 'package:teachme_app/pages/MyClass_page.dart';
+import 'package:teachme_app/pages/my_classes_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import 'package:teachme_app/widgets/notification.dart';
 

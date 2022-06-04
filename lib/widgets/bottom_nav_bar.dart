@@ -1,11 +1,10 @@
 // ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:teachme_app/constants/theme.dart';
-import 'package:teachme_app/pages/MyClass_page.dart';
-import 'package:teachme_app/pages/lesson_search/teacher_profile_page.dart';
-import 'package:teachme_app/pages/profile_page.dart';
+import 'package:teachme_app/pages/my_classes_page.dart';
+import 'package:teachme_app/pages/messages/chat_room.dart';
+import 'package:teachme_app/pages/student_profile_page.dart';
 import 'package:teachme_app/widgets/other/tm_navigator.dart';
 
 import '../pages/search_page.dart';
@@ -30,7 +29,7 @@ class _TMBottomNavigationBarState extends State<TMBottomNavigationBar> {
     _pages = [
       MyClass(),
       SearchPage() /*TODO: CAMBIAR A SEARCH */,
-      TeacherProfilePage(),
+      ChatRoom(),
       ProfilePage()
     ];
   }

@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:teachme_app/constants/theme.dart';
@@ -136,6 +135,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 ),
                                               ),
                                               const SizedBox(height: 25.0),
+                                              const Divider(
+                                                height: 40.0,
+                                                thickness: 1.5,
+                                                indent: 32.0,
+                                                endIndent: 32.0,
+                                              ),
                                               Padding(
                                                 padding: const EdgeInsets.only(
                                                     right: 25.0, left: 25.0),
@@ -179,6 +184,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 ),
                                               ),
                                               const SizedBox(height: 50.0),
+                                              const Divider(
+                                                height: 20.0,
+                                                thickness: 1.5,
+                                                indent: 32.0,
+                                                endIndent: 32.0,
+                                              ),
                                               Padding(
                                                 padding: const EdgeInsets.only(
                                                     right: 25.0, left: 25.0),

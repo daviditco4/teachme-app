@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/main.dart';
 import 'package:teachme_app/pages/auth_page.dart';
-import 'package:teachme_app/pages/Ayuda.dart';
+import 'package:teachme_app/pages/help.dart';
 import 'package:teachme_app/pages/payment_methods_page.dart';
-import 'package:teachme_app/pages/profile_page.dart';
+import 'package:teachme_app/pages/student_profile_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import 'package:teachme_app/widgets/other/tm_navigator.dart';
 import 'package:teachme_app/widgets/setting_button.dart';
@@ -66,7 +66,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       onPressedPage: NotificationConfig()),
                   const SettingButton(
                       text: 'Metodos de pago', onPressedPage: PaymentMethod()),
-                  const SettingButton(text: 'Ayuda', onPressedPage: Ayuda()),
+                  const SettingButton(text: 'Help', onPressedPage: Help()),
                   SettingButton(
                       text: 'Cerrar Sesión', onPressedFunction: signout)
                 ],
