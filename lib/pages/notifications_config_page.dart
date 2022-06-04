@@ -45,11 +45,11 @@ class _NotificationConfig extends State<NotificationConfig> {
       appBar: AppBar(
         backgroundColor: MyColors.background,
         title: const Text('Notificaciones',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 25,
-                fontWeight: FontWeight.w900,
-              )),
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 25,
+              fontWeight: FontWeight.w900,
+            )),
         centerTitle: true,
         automaticallyImplyLeading: true,
         leading: IconButton(

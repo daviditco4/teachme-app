@@ -8,6 +8,8 @@ import 'package:teachme_app/pages/lesson_search/teacher_profile_page.dart';
 import 'package:teachme_app/pages/profile_page.dart';
 import 'package:teachme_app/widgets/other/tm_navigator.dart';
 
+import '../pages/search_page.dart';
+
 int _currentIndex = 0;
 
 class TMBottomNavigationBar extends StatefulWidget {
@@ -27,7 +29,7 @@ class _TMBottomNavigationBarState extends State<TMBottomNavigationBar> {
     super.initState();
     _pages = [
       MyClass(),
-      ProfilePage() /*TODO: CAMBIAR A SEARCH}*/,
+      ProfilePage() /*TODO: CAMBIAR A SEARCH */,
       TeacherProfilePage(),
       ProfilePage()
     ];

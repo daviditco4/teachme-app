@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
+import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import 'package:teachme_app/widgets/card_class.dart';
 import '../widgets/other/tm_navigator.dart';
@@ -19,7 +20,6 @@ class _MyClass extends State<MyClass> {
     return Scaffold(
         extendBodyBehindAppBar: true,
         backgroundColor: MyColors.background,
-        appBar: AppBar(
           leading: const ImageIcon(
             AssetImage("assets/images/teach_me_logo.png"),
             color: MyColors.black,
@@ -50,27 +50,6 @@ class _MyClass extends State<MyClass> {
         ),
         bottomNavigationBar: const TMBottomNavigationBar(),
         body: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: const <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 5, bottom: 40),
-                    child:
-                        Text("Próximas clases", style: TextStyle(fontSize: 20)),
-                  ),
-                  CardClass(
-                      title:
-                          'Aún no tienes clases agendadas, busca tu próxima clase',
-                      textButton: 'Próxima clase',
-                      schedule: '',
-                      direction: ''),
-                ],
-              ),
-            ),
           ),
         ));
   }
