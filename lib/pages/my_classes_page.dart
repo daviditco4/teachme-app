@@ -59,13 +59,13 @@ class _MyClass extends State<MyClass> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: const <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(top: 5, bottom: 40),
+                    padding: EdgeInsets.only(top: 5, bottom: 20),
                     child:
-                        Text("Próximas clases", style: TextStyle(fontSize: 20)),
+                        Text("Próximas clases", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   ),
                   CardClass(
                       title:
-                          'Aún no tienes clases agendadas, busca tu próxima clase',
+                          'Aún no tienes clases agendadas, busca tu próxima clase.',
                       textButton: 'Próxima clase',
                       schedule: '',
                       direction: ''),

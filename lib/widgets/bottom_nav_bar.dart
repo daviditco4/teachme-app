@@ -5,6 +5,7 @@ import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/pages/my_classes_page.dart';
 import 'package:teachme_app/pages/messages/chat_room.dart';
 import 'package:teachme_app/pages/student_profile_page.dart';
+import 'package:teachme_app/pages/teacher_profile_page.dart';
 import 'package:teachme_app/widgets/other/tm_navigator.dart';
 
 import '../pages/search_page.dart';
@@ -30,7 +31,7 @@ class _TMBottomNavigationBarState extends State<TMBottomNavigationBar> {
       MyClass(),
       SearchPage() /*TODO: CAMBIAR A SEARCH */,
       ChatRoom(),
-      ProfilePage()
+      TeacherProfilePage()
     ];
   }
 

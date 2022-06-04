@@ -49,22 +49,19 @@ class CardClass extends StatelessWidget {
                 color: MyColors.white,
                 fontSize: 15,
               )),
-      Row(
-        children: <Widget>[
-        TextButton(
-        onPressed: () => onPressed(textButton),
-
-        child: Text(textButton,
-        style: const TextStyle(
-        color: MyColors.white,
-        fontSize: 12,
-        )),
-        style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(MyColors.buttonCardClass),
-        ),
-        ),
-        ],
-        ),
+          Padding(
+             padding: const EdgeInsets.only(left: 360.0, bottom: 10.0),
+             child: Row(
+                    children: <Widget>[
+                    TextButton(onPressed: () => onPressed(textButton),
+                    child: Text(textButton,
+                    style: const TextStyle(color: MyColors.white, fontSize: 12)),
+                    style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(MyColors.buttonCardClass),
+                            ),
+                    ),
+                  ],
+        ), ),
       ],
       ),
     ),

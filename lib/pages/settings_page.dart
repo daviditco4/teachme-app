@@ -66,7 +66,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       onPressedPage: NotificationConfig()),
                   const SettingButton(
                       text: 'Metodos de pago', onPressedPage: PaymentMethod()),
-                  const SettingButton(text: 'Help', onPressedPage: Help()),
+                  const SettingButton(text: 'Ayuda', onPressedPage: Help()),
                   SettingButton(
                       text: 'Cerrar Sesión', onPressedFunction: signout)
                 ],
