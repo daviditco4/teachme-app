@@ -58,7 +58,36 @@ class _UserImagePickerState extends State<UserImagePicker> {
     const imgR = 48.0;
     final sch = Theme.of(context).colorScheme;
 
-    return Column(
+    return Row(
+      children: [
+        Expanded(child: CircleAvatar(
+          radius: imgR,
+          backgroundColor: sch.primary,
+          foregroundImage: _pickedImg == null ? null : FileImage(_pickedImg!),
+          child: Icon(Icons.person_rounded, size: imgR * 2, color: sch.surface),
+        ),),
+        Expanded(child: TextButton.icon(
+          icon: const Icon(Icons.camera),
+          label: const Text('Take Picture'),
+          onPressed: widget.enabled
+              ? () => _pickImage(source: p.ImageSource.camera)
+              : null,
+        )),
+        Expanded(child: TextButton.icon(
+          icon: const Icon(Icons.photo_library),
+          label: const Text('Choose From Gallery'),
+          onPressed: widget.enabled
+              ? () => _pickImage(source: p.ImageSource.gallery)
+              : null,
+          ))
+      ],
+    );
+  }
+}
+
+/*
+
+Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         CircleAvatar(
@@ -84,5 +113,5 @@ class _UserImagePickerState extends State<UserImagePicker> {
         ),
       ],
     );
-  }
-}
+
+ */

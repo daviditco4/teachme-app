@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import 'package:teachme_app/constants/theme.dart';
-import '../../widgets/other/teacher_profile_overview.dart';
+import '../../widgets/other/chat_room_overview.dart';
 import '../../widgets/other/tm_navigator.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/pages/settings_page.dart';
 
-class TeacherProfilePage extends StatelessWidget {
-  const TeacherProfilePage({Key? key}) : super(key: key);
+class ChatRoom extends StatelessWidget {
+  const ChatRoom({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class TeacherProfilePage extends StatelessWidget {
         ),
         child: const Padding(
           padding: EdgeInsets.all(20.0),
-          child: TeacherProfileOverview(),
+          child: ChatRoomOverview(),
         ),
       ),
     );
