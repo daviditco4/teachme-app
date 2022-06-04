@@ -61,6 +61,7 @@ class _AuthFormState extends State<AuthForm> {
     }
   }
 
+  /* FIXME: Cambiar esto al nuevo Navigator */
   PageRouteBuilder _noAnimationRouter(Widget page) {
     return PageRouteBuilder(
       pageBuilder: (context, animation1, animation2) => page,
