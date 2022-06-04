@@ -29,7 +29,7 @@ class _TMBottomNavigationBarState extends State<TMBottomNavigationBar> {
     super.initState();
     _pages = [
       MyClass(),
-      ProfilePage() /*TODO: CAMBIAR A SEARCH */,
+      SearchPage() /*TODO: CAMBIAR A SEARCH */,
       TeacherProfilePage(),
       ProfilePage()
     ];
