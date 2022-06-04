@@ -211,8 +211,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   String _getUsername() {
-    String? username = firebaseAuth.currentUser!.email;
-    return username ?? "ERROR";
+    String? username = firebaseAuth.currentUser!.displayName;
+    return username ?? "";
   }
 
   ImageProvider _getUserImage() {
