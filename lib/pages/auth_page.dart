@@ -1,12 +1,20 @@
 import 'dart:io' show File;
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path show extension;
+import 'package:teachme_app/helpers/students_keys.dart';
 
 import '../helpers/snack_bars.dart';
+import '../helpers/teachers_keys.dart';
 import '../widgets/auth/auth_form.dart' show AuthForm;
+
+const studentsCollectionPath = 'students';
+const teachersCollectionPath = 'teachers';
+const student = 0;
+const teacher = 1;
 
 class AuthPage extends StatelessWidget {
   Future<bool> _authenticate({
@@ -92,5 +100,36 @@ class AuthPage extends StatelessWidget {
             ),
           ),
         ));
+  }
+
+  /* Crea una entrada en la tabla de teachers o students, segun corresponda */
+  void _updateUsersTable() async {
+    /*TODO: Switch entre alumno y profesor */
+    try {
+      final user = FirebaseAuth.instance.currentUser!;
+      const int userCategory = 0;
+      const String userCategoryPath = studentsCollectionPath;
+
+      if (userCategory == student) {
+        await FirebaseFirestore.instance.collection(userCategoryPath).add({
+          StudentsKeys.name: user.displayName,
+          StudentsKeys.photoUrl: user.photoURL,
+          StudentsKeys.uid: user.uid,
+          /* TODO: 
+          StudentsKeys.uid: user.address*/
+        });
+      } else {
+        await FirebaseFirestore.instance.collection(userCategoryPath).add({
+          TeachersKeys.name: user.displayName,
+          TeachersKeys.photoUrl: user.photoURL,
+          TeachersKeys.uid: user.uid
+          /* TODO: 
+           * StudentsKeys.uid: user.address
+          */
+        });
+      }
+    } on Exception catch (e) {
+      print(e);
+    }
   }
 }

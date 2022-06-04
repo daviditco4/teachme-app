@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:teachme_app/widgets/other/tm_navigator.dart';
 
 import '../info/teacher_profile_middle_info.dart';
 import '../info/teacher_profile_top_info.dart';
 
-class TeacherProfileOverview extends StatelessWidget {
-  const TeacherProfileOverview({Key? key}) : super(key: key);
+class ChatRoomOverview extends StatelessWidget {
+  const ChatRoomOverview({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class TeacherProfileOverview extends StatelessWidget {
           const TeacherProfileMiddleInfo(),
           verticalSpace,
           ElevatedButton(
-            onPressed: () => Navigator.pushNamed(context, '/chat'),
+            onPressed: () => TMNavigator.navigateToRoute(context, '/chat'),
             child: const Text('Ir a la sala'),
           ),
         ],

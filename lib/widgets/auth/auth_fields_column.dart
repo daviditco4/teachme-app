@@ -7,6 +7,8 @@ import 'confirm_password_form_field.dart';
 import 'password_form_field.dart';
 import 'user_image_picker.dart';
 
+enum AccountMode { teacher, student }
+
 class AuthFieldsColumn extends StatefulWidget {
   const AuthFieldsColumn({
     required this.authMode,
@@ -33,6 +35,8 @@ class AuthFieldsColumn extends StatefulWidget {
 }
 
 class _AuthFieldsColumnState extends State<AuthFieldsColumn> {
+  AccountMode _accountMode = AccountMode.student;
+
   static final _emailRegExp = RegExp(
     r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$",
   );
@@ -143,15 +147,35 @@ class _AuthFieldsColumnState extends State<AuthFieldsColumn> {
           _buildAnimatedChildVisibleOnCondition(
             condition: !isSigninMode,
             verticalSpace: verticalSpace,
-            child: ConfirmPasswordFormField(
-              validator: (value) {
-                if (value == _passwordController.text) return null;
-                return 'Passwords do not match.';
-              },
-              enabled: widget.enabled,
-              onFieldSubmitted: widget.onSubmitted,
-              onSaved: widget.onPasswordSaved,
-            ),
+            child: Column(
+              children: [
+                ConfirmPasswordFormField(
+                  validator: (value) {
+                    if (value == _passwordController.text) return null;
+                    return 'Passwords do not match.';
+                  },
+                  enabled: widget.enabled,
+                  onFieldSubmitted: widget.onSubmitted,
+                  onSaved: widget.onPasswordSaved,
+                ),
+                ListTile(
+                    title: const Text('Estudiante'),
+                    leading: Radio<AccountMode>(value: AccountMode.student, groupValue: _accountMode, onChanged: (AccountMode? value) {
+                      setState(() {
+                        _accountMode = value!;
+                      });
+                    })
+                ),
+                ListTile(
+                    title: const Text('Maestro'),
+                    leading: Radio<AccountMode>(value: AccountMode.teacher, groupValue: _accountMode, onChanged: (AccountMode? value) {
+                      setState(() {
+                        _accountMode = value!;
+                      });
+                    })
+                ),
+              ],
+            )
           ),
         ],
       ),

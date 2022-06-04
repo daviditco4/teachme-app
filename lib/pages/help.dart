@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/pages/settings_page.dart';
-import '../widgets/bottom_nav_bar.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../widgets/other/tm_navigator.dart';
 
-class Ayuda extends StatefulWidget {
-  const Ayuda({Key? key}) : super(key: key);
+class Help extends StatefulWidget {
+  const Help({Key? key}) : super(key: key);
 
   @override
-  State<Ayuda> createState() => _Ayuda();
+  State<Help> createState() => _Help();
 }
 
-class _Ayuda extends State<Ayuda> {
+class _Help extends State<Help> {
   bool _expanded1 = false;
   bool _expanded2 = false;
   bool _expanded3 = false;
@@ -29,7 +28,7 @@ class _Ayuda extends State<Ayuda> {
             icon: const Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () =>
                 TMNavigator.navigateToPage(context, const SettingsPage())),
-        title: const Text('Ayuda',
+        title: const Text('Help',
             style: TextStyle(
               color: Colors.black,
               fontSize: 25,
@@ -143,7 +142,7 @@ class _Ayuda extends State<Ayuda> {
                       headerBuilder: (context, isExpanded) {
                         return ListTile(
                           title: Text(
-                            'Ayuda sobre privacidad y seguridad',
+                            'Help sobre privacidad y seguridad',
                             style: TextStyle(color: Colors.black),
                           ),
                         );
