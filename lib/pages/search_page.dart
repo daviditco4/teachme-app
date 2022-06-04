@@ -3,6 +3,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
+import 'package:teachme_app/widgets/custom_autocomplete.dart';
 import 'package:teachme_app/widgets/other/tm_navigator.dart';
 
 /*void main() {
@@ -41,6 +42,13 @@ class _SearchPage extends State<SearchPage> {
     {"id": 3, "name": "Juan Gutierrez", "km": 3, "price": 900},
     {"id": 4, "name": "Martina Ramirez", "km": 5.3, "price": 1000},
     {"id": 5, "name": "Federico Botti", "km": 1.1, "price": 1500},
+  ];
+
+  final List<String> subjects = [
+    "Analisis matematico 1",
+    "Biologia eucariota",
+    "Catequesis",
+    "otras mas"
   ];
 
   // This list holds the data for the list view
@@ -116,6 +124,7 @@ class _SearchPage extends State<SearchPage> {
                 decoration: const InputDecoration(
                     labelText: 'Buscar', suffixIcon: Icon(Icons.search)),
               ),
+              CustomAutocomplete(kOptions: subjects),
               const SizedBox(
                 height: 20,
               ),
