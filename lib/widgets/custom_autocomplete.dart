@@ -1,11 +1,11 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomAutocomplete extends StatelessWidget {
   final List<String> kOptions;
 
-  CustomAutocomplete({Key? key, required List<String> this.kOptions}) : super(key: key);
+  CustomAutocomplete({Key? key, required List<String> this.kOptions})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,9 @@ class CustomAutocomplete extends StatelessWidget {
           return const Iterable<String>.empty();
         }
         return kOptions.where((String option) {
-          return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
+          return option
+              .toLowerCase()
+              .contains(textEditingValue.text.toLowerCase());
         });
       },
       onSelected: (String selection) {

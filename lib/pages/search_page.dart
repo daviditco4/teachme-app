@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/helpers/SubjectsKeys.dart';
+import 'package:teachme_app/helpers/classes_keys.dart';
 import 'package:teachme_app/helpers/teachers_keys.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
@@ -39,6 +41,21 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPage extends State<SearchPage> {
+  Future<bool?> showWarning(BuildContext context) async => showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Seguro quiere recibir la clase del Profesor?'),
+          actions: [
+            ElevatedButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('No')),
+            ElevatedButton(
+                onPressed: () => _handleBookedClass(context),
+                child: const Text('Si'))
+          ],
+        ),
+      );
+
   // This holds a list of fiction users
   // You can use data fetched from a database or a server as well
   final List<Map<String, dynamic>> _allUsers = [
@@ -129,17 +146,18 @@ class _SearchPage extends State<SearchPage> {
               const SizedBox(
                 height: 20,
               ),
-              TextField(
+              /* TextField(
                 onChanged: (value) => _runFilter(value),
                 decoration: const InputDecoration(
                     labelText: 'Buscar', suffixIcon: Icon(Icons.search)),
-              ),
-              // FIXME: Falta ver la forma de hacer un retrieve de la colección subjects.
+              ), */
               StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                   stream: subjectsCollec.snapshots(),
                   builder: (_, snap) {
-                    final isWaiting = snap.connectionState == ConnectionState.waiting;
-                    if (isWaiting) return const Center(child: CircularProgressIndicator());
+                    final isWaiting =
+                        snap.connectionState == ConnectionState.waiting;
+                    if (isWaiting)
+                      return const Center(child: CircularProgressIndicator());
                     if (snap.hasData) {
                       final docs = snap.data!.docs;
 
@@ -155,9 +173,7 @@ class _SearchPage extends State<SearchPage> {
                         height: 200,
                       );
                     }
-
-                  }
-              ),
+                  }),
               const SizedBox(
                 height: 20,
               ),
@@ -255,6 +271,21 @@ class _SearchPage extends State<SearchPage> {
                                               print(rating);
                                             },
                                           ),
+                                          ElevatedButton(
+                                            onPressed: () => showWarning(context),
+                                            child: const Text('Reservar clases'),
+                                            style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        MyColors.buttonCardClass),
+                                                shape: MaterialStateProperty.all<
+                                                        RoundedRectangleBorder>(
+                                                    RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(18),
+                                                        side: const BorderSide(
+                                                            color: Colors.white)))),
+                                          ),
                                         ],
                                       ),
                                     ],
@@ -276,5 +307,28 @@ class _SearchPage extends State<SearchPage> {
         ),
       ),
     );
+  }
+
+  void _updateClassesCollection() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser!;
+
+      await FirebaseFirestore.instance
+          .collection(ClassesKeys.collectionName)
+          .add({
+        ClassesKeys.studentUid: user.uid,
+        ClassesKeys.teacherUid: 'placeholder',
+        ClassesKeys.time: 'placeholder',
+        ClassesKeys.subjectId: 'placeholder'
+      });
+    } on Exception catch (e) {
+      /* print("MALARDOOOO"); */
+      print(e);
+    }
+  }
+
+  void _handleBookedClass(BuildContext context) {
+    Navigator.pop(context, true);
+    _updateClassesCollection();
   }
 }
