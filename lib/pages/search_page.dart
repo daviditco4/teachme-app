@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:teachme_app/constants/theme.dart';
@@ -39,6 +40,22 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPage extends State<SearchPage> {
+
+  Future<bool?> showWarning(BuildContext context) async => showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Seguro quiere recibir la clase del Profesor?'),
+      actions: [
+        ElevatedButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('No')),
+        ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Si'))
+      ],
+    ),
+  );
+
   // This holds a list of fiction users
   // You can use data fetched from a database or a server as well
   final List<Map<String, dynamic>> _allUsers = [
@@ -211,7 +228,7 @@ class _SearchPage extends State<SearchPage> {
                                 ),
                                 Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                      MainAxisAlignment.spaceEvenly,
                                   children: <Widget>[
                                     RatingBar.builder(
                                       initialRating: 3,
@@ -229,6 +246,17 @@ class _SearchPage extends State<SearchPage> {
                                       onRatingUpdate: (rating) {
                                         print(rating);
                                       },
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () => showWarning(context),
+                                      child: const Text('Reservar clases'),
+                                      style: ButtonStyle(
+                                          backgroundColor:
+                                          MaterialStateProperty.all(MyColors.buttonCardClass),
+                                          shape: MaterialStateProperty
+                                              .all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(18),
+                                              side: const BorderSide(color: Colors.white)))),
                                     ),
                                   ],
                                 ),
@@ -267,3 +295,5 @@ class _SearchPage extends State<SearchPage> {
     }
   }
 }
+
+
