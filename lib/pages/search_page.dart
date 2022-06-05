@@ -41,7 +41,9 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPage extends State<SearchPage> {
-  Future<bool?> showWarning(BuildContext context) async => showDialog<bool>(
+  Future<bool?> showWarning(
+          BuildContext context, String teacherUid, String subjectId) async =>
+      showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Seguro quiere recibir la clase del Profesor?'),
@@ -50,7 +52,8 @@ class _SearchPage extends State<SearchPage> {
                 onPressed: () => Navigator.pop(context, false),
                 child: const Text('No')),
             ElevatedButton(
-                onPressed: () => _handleBookedClass(context),
+                onPressed: () =>
+                    _handleBookedClass(context, teacherUid, subjectId),
                 child: const Text('Si'))
           ],
         ),
@@ -204,11 +207,14 @@ class _SearchPage extends State<SearchPage> {
                   ),
                 ],
               ),
-              Expanded(child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+              Expanded(
+                  child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: teachersCollec.snapshots(),
                 builder: (_, snapshot) {
-                  final isWaiting = snapshot.connectionState == ConnectionState.waiting;
-                  if (isWaiting) return const Center(child: CircularProgressIndicator());
+                  final isWaiting =
+                      snapshot.connectionState == ConnectionState.waiting;
+                  if (isWaiting)
+                    return const Center(child: CircularProgressIndicator());
 
                   if (snapshot.hasData) {
                     final docs = snapshot.data!.docs;
@@ -220,8 +226,9 @@ class _SearchPage extends State<SearchPage> {
                           // Documento que tiene las propiedades  de Teacher
                           final document = docs[index];
                           final documentData = document.data();
-                          final subjectsData = documentData[TeachersKeys
-                              .subjects] as List<dynamic>;
+                          final subjectsData =
+                              documentData[TeachersKeys.subjects]
+                                  as List<dynamic>;
 
                           /*
                           FIXME: Tomar el nombre/sid de la materia desde el custom
@@ -232,8 +239,8 @@ class _SearchPage extends State<SearchPage> {
                                 key: ValueKey(documentData[TeachersKeys.uid]),
                                 color: MyColors.cardClass,
                                 elevation: 4,
-                                margin: const EdgeInsets.symmetric(
-                                    vertical: 10),
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 10),
                                 child: Container(
                                   child: Column(
                                     children: <Widget>[
@@ -246,11 +253,12 @@ class _SearchPage extends State<SearchPage> {
                                             documentData[TeachersKeys.name]),
                                         subtitle: Text(
                                             'Se encuentra a ${subject["price"]} km'),
-                                        trailing: Text('\$ ${subject["price"]}'),
+                                        trailing:
+                                            Text('\$ ${subject["price"]}'),
                                       ),
                                       Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
+                                            MainAxisAlignment.spaceAround,
                                         children: <Widget>[
                                           RatingBar.builder(
                                             initialRating: 1,
@@ -258,12 +266,14 @@ class _SearchPage extends State<SearchPage> {
                                             minRating: 1,
                                             direction: Axis.horizontal,
                                             allowHalfRating: true,
-                                            itemCount: documentData[TeachersKeys.rating].round(),
-                                            itemPadding: const EdgeInsets
-                                                .symmetric(
-                                                horizontal: 2.0),
+                                            itemCount: documentData[
+                                                    TeachersKeys.rating]
+                                                .round(),
+                                            itemPadding:
+                                                const EdgeInsets.symmetric(
+                                                    horizontal: 2.0),
                                             itemBuilder: (context, _) =>
-                                            const Icon(
+                                                const Icon(
                                               Icons.star,
                                               color: MyColors.white,
                                             ),
@@ -272,19 +282,26 @@ class _SearchPage extends State<SearchPage> {
                                             },
                                           ),
                                           ElevatedButton(
-                                            onPressed: () => showWarning(context),
-                                            child: const Text('Reservar clases'),
+                                            onPressed: () => showWarning(
+                                                context,
+                                                documentData[TeachersKeys.uid],
+                                                subject['sid']),
+                                            child:
+                                                const Text('Reservar clases'),
                                             style: ButtonStyle(
                                                 backgroundColor:
                                                     MaterialStateProperty.all(
-                                                        MyColors.buttonCardClass),
+                                                        MyColors
+                                                            .buttonCardClass),
                                                 shape: MaterialStateProperty.all<
                                                         RoundedRectangleBorder>(
                                                     RoundedRectangleBorder(
                                                         borderRadius:
-                                                            BorderRadius.circular(18),
+                                                            BorderRadius
+                                                                .circular(18),
                                                         side: const BorderSide(
-                                                            color: Colors.white)))),
+                                                            color: Colors
+                                                                .white)))),
                                           ),
                                         ],
                                       ),
@@ -295,10 +312,9 @@ class _SearchPage extends State<SearchPage> {
                             }
                           }
                           return const SizedBox(width: 0, height: 0);
-                        }
-                    );
+                        });
                   } else {
-                    return const SizedBox(width: 200,height: 200);
+                    return const SizedBox(width: 200, height: 200);
                   }
                 },
               ))
@@ -309,7 +325,7 @@ class _SearchPage extends State<SearchPage> {
     );
   }
 
-  void _updateClassesCollection() async {
+  void _updateClassesCollection(String teacherUid, String subjectId) async {
     try {
       final user = FirebaseAuth.instance.currentUser!;
 
@@ -317,9 +333,9 @@ class _SearchPage extends State<SearchPage> {
           .collection(ClassesKeys.collectionName)
           .add({
         ClassesKeys.studentUid: user.uid,
-        ClassesKeys.teacherUid: 'placeholder',
+        ClassesKeys.teacherUid: teacherUid,
         ClassesKeys.time: 'placeholder',
-        ClassesKeys.subjectId: 'placeholder'
+        ClassesKeys.subjectId: subjectId
       });
     } on Exception catch (e) {
       /* print("MALARDOOOO"); */
@@ -327,8 +343,9 @@ class _SearchPage extends State<SearchPage> {
     }
   }
 
-  void _handleBookedClass(BuildContext context) {
+  void _handleBookedClass(
+      BuildContext context, String teacherUid, String subjectId) {
     Navigator.pop(context, true);
-    _updateClassesCollection();
+    _updateClassesCollection(teacherUid, subjectId);
   }
 }
