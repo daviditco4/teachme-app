@@ -3,12 +3,14 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:path/path.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/helpers/SubjectsKeys.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import 'package:teachme_app/widgets/custom_autocomplete.dart';
 import 'package:teachme_app/widgets/other/tm_navigator.dart';
+import 'package:teachme_app/widgets/alertClass.dart';
 
 /*void main() {
   runApp(const MyApp());
@@ -39,20 +41,16 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPage extends State<SearchPage> {
 
-  Future<bool?> showWarning(BuildContext context) async => showDialog<bool>(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('Seguro quiere recibir la clase del Profesor?'),
-      actions: [
-        ElevatedButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('No')),
-        ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Si'))
-      ],
-    ),
-  );
+  Future<bool?> showWarning(BuildContext context) async {
+
+    showDialog<bool>(
+      context: context,
+      builder: (context) => AlertClass(
+            title: 'Queres reservar la clase de Matematica Discreta?',
+            subTitle: 'Seleccionar un horario disponible: ',
+          ),
+    );
+  }
 
   // This holds a list of fiction users
   // You can use data fetched from a database or a server as well
@@ -248,7 +246,7 @@ class _SearchPage extends State<SearchPage> {
                                     ),
                                     ElevatedButton(
                                       onPressed: () => showWarning(context),
-                                      child: const Text('Reservar clases'),
+                                      child: const Text('Reservar clase'),
                                       style: ButtonStyle(
                                           backgroundColor:
                                           MaterialStateProperty.all(MyColors.buttonCardClass),
