@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/helpers/SubjectsKeys.dart';
+import 'package:teachme_app/helpers/teachers_keys.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import 'package:teachme_app/widgets/custom_autocomplete.dart';
@@ -86,7 +88,9 @@ class _SearchPage extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     final firestore = FirebaseFirestore.instance;
+
     final subjectsCollec = firestore.collection("subjects");
+    final teachersCollec = firestore.collection("teachers");
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -138,7 +142,6 @@ class _SearchPage extends State<SearchPage> {
                     if (isWaiting) return const Center(child: CircularProgressIndicator());
                     if (snap.hasData) {
                       final docs = snap.data!.docs;
-                      final n = docs.length;
 
                       List<String> subjects = [];
                       for (var document in docs) {
@@ -185,62 +188,89 @@ class _SearchPage extends State<SearchPage> {
                   ),
                 ],
               ),
-              Expanded(
-                child: _foundUsers.isNotEmpty
-                    ? ListView.builder(
-                        itemCount: _foundUsers.length,
-                        itemBuilder: (context, index) => Card(
-                          key: ValueKey(_foundUsers[index]["id"]),
-                          color: MyColors.cardClass,
-                          elevation: 4,
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          child: Container(
-                            child: Column(
-                              children: <Widget>[
-                                ListTile(
-                                  leading: Text(
-                                    _foundUsers[index]["id"].toString(),
-                                    style: const TextStyle(fontSize: 24),
-                                  ),
-                                  title: Text(_foundUsers[index]['name']),
-                                  subtitle: Text('Se encuentra a '
-                                      '${_foundUsers[index]["km"].toString()} km'),
-                                  trailing: Text('\$ '
-                                      '${_foundUsers[index]["price"].toString()}'),
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: <Widget>[
-                                    RatingBar.builder(
-                                      initialRating: 3,
-                                      itemSize: 25,
-                                      minRating: 1,
-                                      direction: Axis.horizontal,
-                                      allowHalfRating: true,
-                                      itemCount: 5,
-                                      itemPadding: const EdgeInsets.symmetric(
-                                          horizontal: 2.0),
-                                      itemBuilder: (context, _) => const Icon(
-                                        Icons.star,
-                                        color: MyColors.white,
+              Expanded(child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                stream: teachersCollec.snapshots(),
+                builder: (_, snapshot) {
+                  final isWaiting = snapshot.connectionState == ConnectionState.waiting;
+                  if (isWaiting) return const Center(child: CircularProgressIndicator());
+
+                  if (snapshot.hasData) {
+                    final docs = snapshot.data!.docs;
+                    final n = docs.length;
+
+                    return ListView.builder(
+                        itemCount: n,
+                        itemBuilder: (context, index) {
+                          // Documento que tiene las propiedades  de Teacher
+                          final document = docs[index];
+                          final documentData = document.data();
+                          final subjectsData = documentData[TeachersKeys
+                              .subjects] as List<dynamic>;
+
+                          /*
+                          FIXME: Tomar el nombre/sid de la materia desde el custom
+                           */
+                          for (var subject in subjectsData) {
+                            if (subject["sid"] == "LTtGqXljp13JMSk1jDA1") {
+                              return Card(
+                                key: ValueKey(documentData[TeachersKeys.uid]),
+                                color: MyColors.cardClass,
+                                elevation: 4,
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 10),
+                                child: Container(
+                                  child: Column(
+                                    children: <Widget>[
+                                      ListTile(
+                                        leading: Text(
+                                          documentData[TeachersKeys.name],
+                                          style: const TextStyle(fontSize: 24),
+                                        ),
+                                        title: Text(
+                                            documentData[TeachersKeys.name]),
+                                        subtitle: Text(
+                                            'Se encuentra a ${subject["price"]} km'),
+                                        trailing: Text('\$ ${subject["price"]}'),
                                       ),
-                                      onRatingUpdate: (rating) {
-                                        print(rating);
-                                      },
-                                    ),
-                                  ],
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                        children: <Widget>[
+                                          RatingBar.builder(
+                                            initialRating: 1,
+                                            itemSize: 25,
+                                            minRating: 1,
+                                            direction: Axis.horizontal,
+                                            allowHalfRating: true,
+                                            itemCount: documentData[TeachersKeys.rating].round(),
+                                            itemPadding: const EdgeInsets
+                                                .symmetric(
+                                                horizontal: 2.0),
+                                            itemBuilder: (context, _) =>
+                                            const Icon(
+                                              Icons.star,
+                                              color: MyColors.white,
+                                            ),
+                                            onRatingUpdate: (rating) {
+                                              print(rating);
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      )
-                    : const Text(
-                        'No results found',
-                        style: TextStyle(fontSize: 24),
-                      ),
-              ),
+                              );
+                            }
+                          }
+                          return const SizedBox(width: 0, height: 0);
+                        }
+                    );
+                  } else {
+                    return const SizedBox(width: 200,height: 200);
+                  }
+                },
+              ))
             ],
           ),
         ),
