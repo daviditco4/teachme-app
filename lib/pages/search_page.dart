@@ -1,8 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:teachme_app/constants/theme.dart';
+import 'package:teachme_app/helpers/SubjectsKeys.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
+import 'package:teachme_app/widgets/custom_autocomplete.dart';
 import 'package:teachme_app/widgets/other/tm_navigator.dart';
 
 /*void main() {
@@ -43,6 +47,13 @@ class _SearchPage extends State<SearchPage> {
     {"id": 5, "name": "Federico Botti", "km": 1.1, "price": 1500},
   ];
 
+  final List<String> subjects = [
+    "Analisis matematico 1",
+    "Biologia eucariota",
+    "Catequesis",
+    "otras mas"
+  ];
+
   // This list holds the data for the list view
   List<Map<String, dynamic>> _foundUsers = [];
   @override
@@ -74,6 +85,9 @@ class _SearchPage extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    final firestore = FirebaseFirestore.instance;
+    final subjectsCollec = firestore.collection("subjects");
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: MyColors.background,
@@ -115,6 +129,31 @@ class _SearchPage extends State<SearchPage> {
                 onChanged: (value) => _runFilter(value),
                 decoration: const InputDecoration(
                     labelText: 'Buscar', suffixIcon: Icon(Icons.search)),
+              ),
+              // FIXME: Falta ver la forma de hacer un retrieve de la colección subjects.
+              StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                  stream: subjectsCollec.snapshots(),
+                  builder: (_, snap) {
+                    final isWaiting = snap.connectionState == ConnectionState.waiting;
+                    if (isWaiting) return const Center(child: CircularProgressIndicator());
+                    if (snap.hasData) {
+                      final docs = snap.data!.docs;
+                      final n = docs.length;
+
+                      List<String> subjects = [];
+                      for (var document in docs) {
+                        final data = document.data();
+                        subjects.add(data[SubjectsKeys.name]);
+                      }
+                      return CustomAutocomplete(kOptions: subjects);
+                    } else {
+                      return const SizedBox(
+                        width: 200,
+                        height: 200,
+                      );
+                    }
+
+                  }
               ),
               const SizedBox(
                 height: 20,
