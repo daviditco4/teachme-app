@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,8 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:path/path.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/helpers/SubjectsKeys.dart';
+import 'package:teachme_app/helpers/classes_keys.dart';
+import 'package:teachme_app/helpers/teachers_keys.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import 'package:teachme_app/widgets/custom_autocomplete.dart';
@@ -101,7 +104,9 @@ class _SearchPage extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     final firestore = FirebaseFirestore.instance;
+
     final subjectsCollec = firestore.collection("subjects");
+    final teachersCollec = firestore.collection("teachers");
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -140,20 +145,20 @@ class _SearchPage extends State<SearchPage> {
               const SizedBox(
                 height: 20,
               ),
-              TextField(
+              /* TextField(
                 onChanged: (value) => _runFilter(value),
                 decoration: const InputDecoration(
                     labelText: 'Buscar', suffixIcon: Icon(Icons.search)),
-              ),
-              // FIXME: Falta ver la forma de hacer un retrieve de la colección subjects.
+              ), */
               StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                   stream: subjectsCollec.snapshots(),
                   builder: (_, snap) {
-                    final isWaiting = snap.connectionState == ConnectionState.waiting;
-                    if (isWaiting) return const Center(child: CircularProgressIndicator());
+                    final isWaiting =
+                        snap.connectionState == ConnectionState.waiting;
+                    if (isWaiting)
+                      return const Center(child: CircularProgressIndicator());
                     if (snap.hasData) {
                       final docs = snap.data!.docs;
-                      final n = docs.length;
 
                       List<String> subjects = [];
                       for (var document in docs) {
@@ -167,9 +172,7 @@ class _SearchPage extends State<SearchPage> {
                         height: 200,
                       );
                     }
-
-                  }
-              ),
+                  }),
               const SizedBox(
                 height: 20,
               ),
@@ -200,79 +203,131 @@ class _SearchPage extends State<SearchPage> {
                   ),
                 ],
               ),
-              Expanded(
-                child: _foundUsers.isNotEmpty
-                    ? ListView.builder(
-                        itemCount: _foundUsers.length,
-                        itemBuilder: (context, index) => Card(
-                          key: ValueKey(_foundUsers[index]["id"]),
-                          color: MyColors.cardClass,
-                          elevation: 4,
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          child: Container(
-                            child: Column(
-                              children: <Widget>[
-                                ListTile(
-                                  leading: Text(
-                                    _foundUsers[index]["id"].toString(),
-                                    style: const TextStyle(fontSize: 24),
-                                  ),
-                                  title: Text(_foundUsers[index]['name']),
-                                  subtitle: Text('Se encuentra a '
-                                      '${_foundUsers[index]["km"].toString()} km'),
-                                  trailing: Text('\$ '
-                                      '${_foundUsers[index]["price"].toString()}'),
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: <Widget>[
-                                    RatingBar.builder(
-                                      initialRating: 3,
-                                      itemSize: 25,
-                                      minRating: 1,
-                                      direction: Axis.horizontal,
-                                      allowHalfRating: true,
-                                      itemCount: 5,
-                                      itemPadding: const EdgeInsets.symmetric(
-                                          horizontal: 2.0),
-                                      itemBuilder: (context, _) => const Icon(
-                                        Icons.star,
-                                        color: MyColors.white,
+              Expanded(child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                stream: teachersCollec.snapshots(),
+                builder: (_, snapshot) {
+                  final isWaiting = snapshot.connectionState == ConnectionState.waiting;
+                  if (isWaiting) return const Center(child: CircularProgressIndicator());
+
+                  if (snapshot.hasData) {
+                    final docs = snapshot.data!.docs;
+                    final n = docs.length;
+
+                    return ListView.builder(
+                        itemCount: n,
+                        itemBuilder: (context, index) {
+                          // Documento que tiene las propiedades  de Teacher
+                          final document = docs[index];
+                          final documentData = document.data();
+                          final subjectsData = documentData[TeachersKeys
+                              .subjects] as List<dynamic>;
+
+                          /*
+                          FIXME: Tomar el nombre/sid de la materia desde el custom
+                           */
+                          for (var subject in subjectsData) {
+                            if (subject["sid"] == "LTtGqXljp13JMSk1jDA1") {
+                              return Card(
+                                key: ValueKey(documentData[TeachersKeys.uid]),
+                                color: MyColors.cardClass,
+                                elevation: 4,
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 10),
+                                child: Container(
+                                  child: Column(
+                                    children: <Widget>[
+                                      ListTile(
+                                        leading: Text(
+                                          documentData[TeachersKeys.name],
+                                          style: const TextStyle(fontSize: 24),
+                                        ),
+                                        title: Text(
+                                            documentData[TeachersKeys.name]),
+                                        subtitle: Text(
+                                            'Se encuentra a ${subject["price"]} km'),
+                                        trailing: Text('\$ ${subject["price"]}'),
                                       ),
-                                      onRatingUpdate: (rating) {
-                                        print(rating);
-                                      },
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () => showWarning(context),
-                                      child: const Text('Reservar clase'),
-                                      style: ButtonStyle(
-                                          backgroundColor:
-                                          MaterialStateProperty.all(MyColors.buttonCardClass),
-                                          shape: MaterialStateProperty
-                                              .all<RoundedRectangleBorder>(RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(18),
-                                              side: const BorderSide(color: Colors.white)))),
-                                    ),
-                                  ],
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                        children: <Widget>[
+                                          RatingBar.builder(
+                                            initialRating: 1,
+                                            itemSize: 25,
+                                            minRating: 1,
+                                            direction: Axis.horizontal,
+                                            allowHalfRating: true,
+                                            itemCount: documentData[TeachersKeys.rating].round(),
+                                            itemPadding: const EdgeInsets
+                                                .symmetric(
+                                                horizontal: 2.0),
+                                            itemBuilder: (context, _) =>
+                                            const Icon(
+                                              Icons.star,
+                                              color: MyColors.white,
+                                            ),
+                                            onRatingUpdate: (rating) {
+                                              print(rating);
+                                            },
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () => showWarning(context),
+                                            child: const Text('Reservar clases'),
+                                            style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        MyColors.buttonCardClass),
+                                                shape: MaterialStateProperty.all<
+                                                        RoundedRectangleBorder>(
+                                                    RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(18),
+                                                        side: const BorderSide(
+                                                            color: Colors.white)))),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      )
-                    : const Text(
-                        'No results found',
-                        style: TextStyle(fontSize: 24),
-                      ),
-              ),
+                              );
+                            }
+                          }
+                          return const SizedBox(width: 0, height: 0);
+                        }
+                    );
+                  } else {
+                    return const SizedBox(width: 200,height: 200);
+                  }
+                },
+              ))
             ],
           ),
         ),
       ),
     );
   }
+
+  void _updateClassesCollection() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser!;
+
+      await FirebaseFirestore.instance
+          .collection(ClassesKeys.collectionName)
+          .add({
+        ClassesKeys.studentUid: user.uid,
+        ClassesKeys.teacherUid: 'placeholder',
+        ClassesKeys.time: 'placeholder',
+        ClassesKeys.subjectId: 'placeholder'
+      });
+    } on Exception catch (e) {
+      /* print("MALARDOOOO"); */
+      print(e);
+    }
+  }
+
+  void _handleBookedClass(BuildContext context) {
+    Navigator.pop(context, true);
+    _updateClassesCollection();
+  }
 }
-
-
