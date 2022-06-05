@@ -40,21 +40,20 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPage extends State<SearchPage> {
-
   Future<bool?> showWarning(BuildContext context) async => showDialog<bool>(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('Seguro quiere recibir la clase del Profesor?'),
-      actions: [
-        ElevatedButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('No')),
-        ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Si'))
-      ],
-    ),
-  );
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Seguro quiere recibir la clase del Profesor?'),
+          actions: [
+            ElevatedButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('No')),
+            ElevatedButton(
+                onPressed: () => _handleBookedClass(context),
+                child: const Text('Si'))
+          ],
+        ),
+      );
 
   // This holds a list of fiction users
   // You can use data fetched from a database or a server as well
@@ -252,11 +251,15 @@ class _SearchPage extends State<SearchPage> {
                                       child: const Text('Reservar clases'),
                                       style: ButtonStyle(
                                           backgroundColor:
-                                          MaterialStateProperty.all(MyColors.buttonCardClass),
-                                          shape: MaterialStateProperty
-                                              .all<RoundedRectangleBorder>(RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(18),
-                                              side: const BorderSide(color: Colors.white)))),
+                                              MaterialStateProperty.all(
+                                                  MyColors.buttonCardClass),
+                                          shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(18),
+                                                  side: const BorderSide(
+                                                      color: Colors.white)))),
                                     ),
                                   ],
                                 ),
@@ -294,6 +297,9 @@ class _SearchPage extends State<SearchPage> {
       print(e);
     }
   }
+
+  void _handleBookedClass(BuildContext context) {
+    Navigator.pop(context, true);
+    _updateClassesCollection();
+  }
 }
-
-
