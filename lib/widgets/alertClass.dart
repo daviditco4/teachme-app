@@ -1,19 +1,29 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/Theme.dart';
+import '../helpers/classes_keys.dart';
 
 class AlertClass extends StatefulWidget {
   final String title;
   final String subTitle;
+  final String teacherUid;
+  final String subjectId;
 
-  const AlertClass({Key? key, required String this.title, required String this.subTitle}) : super(key: key);
+  const AlertClass(
+      {Key? key,
+      required this.title,
+      required this.subTitle,
+      required this.teacherUid,
+      required this.subjectId})
+      : super(key: key);
 
   @override
   State<AlertClass> createState() => _AlertClass();
 }
 
-class _AlertClass extends State<AlertClass>  {
-
+class _AlertClass extends State<AlertClass> {
   String dropdownValue = '12:30';
 
   @override
@@ -32,7 +42,8 @@ class _AlertClass extends State<AlertClass>  {
                 dropdownValue = newValue!;
               });
             },
-            items: <String>['12:30', '13:30', '14:30', '15:30'].map<DropdownMenuItem<String>>((String value) {
+            items: <String>['12:30', '13:30', '14:30', '15:30']
+                .map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(value),
@@ -46,16 +57,35 @@ class _AlertClass extends State<AlertClass>  {
           onPressed: () => Navigator.pop(context, false),
           child: const Text('No'),
           style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(
-                  MyColors.buttonCardClass)),
+              backgroundColor:
+                  MaterialStateProperty.all(MyColors.buttonCardClass)),
         ),
         ElevatedButton(
           onPressed: () => Navigator.pop(context, true),
           child: const Text('Si'),
-          style: ButtonStyle(backgroundColor: MaterialStateProperty.all(
-              MyColors.buttonCardClass)),
+          style: ButtonStyle(
+              backgroundColor:
+                  MaterialStateProperty.all(MyColors.buttonCardClass)),
         ),
       ],
     );
+  }
+}
+
+void _updateClassesCollection(String teacherUid, String subjectId) async {
+  try {
+    final user = FirebaseAuth.instance.currentUser!;
+
+    await FirebaseFirestore.instance
+        .collection(ClassesKeys.collectionName)
+        .add({
+      ClassesKeys.studentUid: user.uid,
+      ClassesKeys.teacherUid: teacherUid,
+      ClassesKeys.time: 'placeholder',
+      ClassesKeys.subjectId: subjectId
+    });
+  } on Exception catch (e) {
+    /* print("MALARDOOOO"); */
+    print(e);
   }
 }
