@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:teachme_app/firebase_options.dart';
 import 'package:teachme_app/pages/my_classes_page.dart';
@@ -7,12 +8,17 @@ import 'package:teachme_app/pages/auth_page.dart';
 import 'package:teachme_app/pages/messages/chat_page.dart';
 import 'package:teachme_app/pages/student_profile_page.dart';
 import 'package:teachme_app/pages/splash_page.dart';
+import 'package:provider/provider.dart';
 
 import 'pages/loading_page.dart';
 import 'pages/notifications_page.dart';
 import 'pages/settings_page.dart';
 
 const chatTopic = 'public';
+
+enum ProfileType { student, teacher, missing }
+
+var userProfileType = ProfileType.missing;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +30,25 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  void _getUserProfileType() {
+    try {
+      final user = FirebaseAuth.instance.currentUser!;
+      FirebaseFirestore.instance
+          .collection("usersProfileType")
+          .where("uid", isEqualTo: user.uid)
+          .get()
+          .then((value) {
+        if (value.docs[0].data()["type"] == "student") {
+          userProfileType = ProfileType.student;
+        } else if (value.docs[0].data()["type"] == "teacher") {
+          userProfileType = ProfileType.teacher;
+        }
+      });
+    } catch (e) {
+      userProfileType = ProfileType.missing;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,8 +89,10 @@ class MyApp extends StatelessWidget {
                           return SplashPage();
                         } else if (snap.hasData) {
                           //fcm.unsubscribeFromTopic(CHAT_TOPIC);
+                          _getUserProfileType();
                           return const MyClass();
                         } else {
+                          userProfileType = ProfileType.missing;
                           return AuthPage();
                         }
                       },
