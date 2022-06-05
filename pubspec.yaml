@@ -41,6 +41,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   #flutter_keyboard_visibility: ^5.2.0
   flutter_rating_bar: ^4.0.1
+  provider: ^6.0.3
 
 
 dev_dependencies:
