@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:teachme_app/constants/theme.dart';
+import 'package:teachme_app/helpers/SubjectsKeys.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import 'package:teachme_app/widgets/custom_autocomplete.dart';
@@ -82,6 +85,9 @@ class _SearchPage extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    final firestore = FirebaseFirestore.instance;
+    final subjectsCollec = firestore.collection("subjects");
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: MyColors.background,
@@ -124,7 +130,31 @@ class _SearchPage extends State<SearchPage> {
                 decoration: const InputDecoration(
                     labelText: 'Buscar', suffixIcon: Icon(Icons.search)),
               ),
-              CustomAutocomplete(kOptions: subjects),
+              // FIXME: Falta ver la forma de hacer un retrieve de la colección subjects.
+              StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                  stream: subjectsCollec.snapshots(),
+                  builder: (_, snap) {
+                    final isWaiting = snap.connectionState == ConnectionState.waiting;
+                    if (isWaiting) return const Center(child: CircularProgressIndicator());
+                    if (snap.hasData) {
+                      final docs = snap.data!.docs;
+                      final n = docs.length;
+
+                      List<String> subjects = [];
+                      for (var document in docs) {
+                        final data = document.data();
+                        subjects.add(data[SubjectsKeys.name]);
+                      }
+                      return CustomAutocomplete(kOptions: subjects);
+                    } else {
+                      return const SizedBox(
+                        width: 200,
+                        height: 200,
+                      );
+                    }
+
+                  }
+              ),
               const SizedBox(
                 height: 20,
               ),
