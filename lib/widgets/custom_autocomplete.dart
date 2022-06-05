@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 
 class CustomAutocomplete extends StatelessWidget {
   final List<String> kOptions;
+  final void Function(String) onSelected;
 
-  CustomAutocomplete({Key? key, required List<String> this.kOptions})
+  CustomAutocomplete({Key? key, required List<String> this.kOptions, required void Function(String) this.onSelected})
       : super(key: key);
 
   @override
@@ -20,9 +21,7 @@ class CustomAutocomplete extends StatelessWidget {
               .contains(textEditingValue.text.toLowerCase());
         });
       },
-      onSelected: (String selection) {
-        debugPrint('You just selected $selection');
-      },
+      onSelected: onSelected
     );
   }
 }
