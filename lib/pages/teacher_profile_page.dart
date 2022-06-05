@@ -4,6 +4,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/pages/settings_page.dart';
+import 'package:teachme_app/widgets/addSubject.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import '../widgets/other/tm_navigator.dart';
 
@@ -15,6 +16,7 @@ class TeacherProfilePage extends StatefulWidget {
 }
 
 class _TeacherProfilePage extends State<TeacherProfilePage> {
+
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   @override
@@ -142,22 +144,28 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                 endIndent: 32.0,
                                               ),
                                               Padding(
-                                                padding: const EdgeInsets.only(
-                                                    right: 25.0, left: 25.0),
+                                                padding: const  EdgeInsets.only(right: 25.0, left: 25.0),
                                                 child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children:const <Widget>[
-                                                    Text(
-                                                      "Materias",
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: <Widget>[
+                                                    const Text("Materias",
                                                       style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
+                                                          fontWeight: FontWeight.bold,
                                                           fontSize: 20.0,
-                                                          color:
-                                                              MyColors.black),
-                                                    )
+                                                          color: MyColors.black),
+                                                    ),
+                                                    ElevatedButton(
+                                                      onPressed: () => addSubject(context),
+                                                      child: const Text('Agregar'),
+                                                      style: ButtonStyle(
+                                                          backgroundColor:
+                                                          MaterialStateProperty.all(MyColors.buttonCardClass),
+                                                          shape: MaterialStateProperty
+                                                              .all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                                              borderRadius: BorderRadius.circular(18),
+                                                              side: const BorderSide(color: Colors.white)))
+                                                      ),
+                                                    ),
                                                   ],
                                                 ),
                                               ),
@@ -167,6 +175,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                 child: Row(
                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                  children:const <Widget>[
+
                                                     Chip(
                                                       elevation: 20,
                                                       padding: EdgeInsets.all(8),
@@ -196,7 +205,8 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                         'Lógica',
                                                         style: TextStyle(fontSize: 16),
                                                       ), //Text
-                                                    ), //C //Chip
+                                                    ),
+                                                   //C //Chip
                                                   ],
                                                 ),
                                               ),
@@ -321,4 +331,12 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
       return const AssetImage("assets/images/hasbulla.png");
     }
   }
+
+  void addSubject(BuildContext context) async {
+    showDialog<bool>(
+        context: context,
+        builder: (context) => AddSubject()
+    );
+  }
+
 }
