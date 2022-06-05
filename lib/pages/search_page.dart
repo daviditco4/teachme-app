@@ -4,14 +4,17 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:path/path.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/helpers/SubjectsKeys.dart';
 import 'package:teachme_app/helpers/classes_keys.dart';
 import 'package:teachme_app/helpers/teachers_keys.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
+import 'package:teachme_app/widgets/auth/auth_form.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import 'package:teachme_app/widgets/custom_autocomplete.dart';
 import 'package:teachme_app/widgets/other/tm_navigator.dart';
+import 'package:teachme_app/widgets/alertClass.dart';
 
 /*void main() {
   runApp(const MyApp());
@@ -41,23 +44,17 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPage extends State<SearchPage> {
-  Future<bool?> showWarning(
-          BuildContext context, String teacherUid, String subjectId) async =>
-      showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Seguro quiere recibir la clase del Profesor?'),
-          actions: [
-            ElevatedButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: const Text('No')),
-            ElevatedButton(
-                onPressed: () =>
-                    _handleBookedClass(context, teacherUid, subjectId),
-                child: const Text('Si'))
-          ],
-        ),
-      );
+  void showWarning(
+      BuildContext context, String teacherUid, String subjectId) async {
+    showDialog<bool>(
+      context: context,
+      builder: (context) => AlertClass(
+          title: 'Queres reservar la clase de Matematica Discreta?',
+          subTitle: 'Seleccionar un horario disponible: ',
+          teacherUid: teacherUid,
+          subjectId: subjectId),
+    );
+  }
 
   // This holds a list of fiction users
   // You can use data fetched from a database or a server as well
@@ -323,29 +320,5 @@ class _SearchPage extends State<SearchPage> {
         ),
       ),
     );
-  }
-
-  void _updateClassesCollection(String teacherUid, String subjectId) async {
-    try {
-      final user = FirebaseAuth.instance.currentUser!;
-
-      await FirebaseFirestore.instance
-          .collection(ClassesKeys.collectionName)
-          .add({
-        ClassesKeys.studentUid: user.uid,
-        ClassesKeys.teacherUid: teacherUid,
-        ClassesKeys.time: 'placeholder',
-        ClassesKeys.subjectId: subjectId
-      });
-    } on Exception catch (e) {
-      /* print("MALARDOOOO"); */
-      print(e);
-    }
-  }
-
-  void _handleBookedClass(
-      BuildContext context, String teacherUid, String subjectId) {
-    Navigator.pop(context, true);
-    _updateClassesCollection(teacherUid, subjectId);
   }
 }
