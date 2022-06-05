@@ -1,13 +1,24 @@
 import 'dart:io' show File;
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:teachme_app/pages/recover_password.dart';
 
 import '../../helpers/snack_bars.dart';
+import '../../helpers/students_keys.dart';
+import '../../helpers/teachers_keys.dart';
+import '../../helpers/users_profile_type_keys.dart';
 import 'auth_fields_column.dart';
 
 enum AuthMode { signin, signup }
+
+const studentsCollectionPath = 'students';
+const teachersCollectionPath = 'teachers';
+const usersProfileTypeCollectionPath = 'usersProfileType';
+const student = 0;
+const teacher = 1;
 
 class AuthForm extends StatefulWidget {
   const AuthForm(this.onFormSubmitted);
@@ -50,17 +61,31 @@ class _AuthFormState extends State<AuthForm> {
       form.save();
       setState(() => _isLoading = true);
 
-      final success = await widget.onFormSubmitted(
+      bool success;
+      success = await widget.onFormSubmitted(
         context: context,
         userImage: _pickedUserImage,
         authData: _userInput,
         signup: _authMode == AuthMode.signup,
       );
 
-      if (!success) setState(() => _isLoading = false);
+      /* print("DATARDOS DEL USUARIO:");
+      print(FirebaseAuth.instance.currentUser!.displayName);
+      print(FirebaseAuth.instance.currentUser!.uid); */
+
+      if (!success) {
+        setState(() => _isLoading = false);
+      } else {
+        if (_userInput['type'] == null) {
+          print("El tipo de cuenta es NULL");
+        }
+        _updateUsersProfileTypesCollection(_userInput['type']!);
+        _updateStudentsOrTeachersCollection(_userInput['type']!);
+      }
     }
   }
 
+  /* FIXME: Cambiar esto al nuevo Navigator */
   PageRouteBuilder _noAnimationRouter(Widget page) {
     return PageRouteBuilder(
       pageBuilder: (context, animation1, animation2) => page,
@@ -116,6 +141,8 @@ class _AuthFormState extends State<AuthForm> {
               onEmailSaved: (newValue) => _userInput['email'] = newValue!,
               onUsernameSaved: (newValue) => _userInput['username'] = newValue!,
               onPasswordSaved: (newValue) => _userInput['password'] = newValue!,
+              onUserProfileTypeSaved: (newValue) =>
+                  _userInput['type'] = newValue!,
               currentUserImage: _pickedUserImage,
               enabled: !_isLoading,
               onSubmitted: (_) => _submit(),
@@ -196,4 +223,52 @@ Widget _buildAnimatedChildVisibleOnCondition({
       ],
     ),
   );
+}
+
+/* Crea una entrada en la tabla de teachers o students, segun corresponda */
+void _updateStudentsOrTeachersCollection(String userType) async {
+  /*TODO: Switch entre alumno y profesor */
+  try {
+    final user = FirebaseAuth.instance.currentUser!;
+    /* print(" DATOS DEL USUARIO 2");
+    print(user); */
+    final String userCategoryPath =
+        userType == 'student' ? studentsCollectionPath : teachersCollectionPath;
+
+    if (userType == student) {
+      await FirebaseFirestore.instance.collection(userCategoryPath).add({
+        StudentsKeys.name: user.displayName,
+        StudentsKeys.photoUrl: user.photoURL,
+        StudentsKeys.uid: user.uid,
+        StudentsKeys.address: 'placeholder'
+      });
+    } else {
+      await FirebaseFirestore.instance.collection(userCategoryPath).add({
+        TeachersKeys.name: user.displayName,
+        TeachersKeys.photoUrl: user.photoURL,
+        TeachersKeys.uid: user.uid,
+        TeachersKeys.address: 'placeholder'
+      });
+    }
+  } on Exception catch (e) {
+    /* print("MALARDOOOO 2"); */
+    print(e);
+  }
+}
+
+void _updateUsersProfileTypesCollection(String userType) async {
+  try {
+    final user = FirebaseAuth.instance.currentUser!;
+    /* print(" DATOS DEL USUARIO");
+    print(user); */
+    await FirebaseFirestore.instance
+        .collection(usersProfileTypeCollectionPath)
+        .add({
+      UsersProfileTypeKeys.uid: user.uid,
+      UsersProfileTypeKeys.type: userType
+    });
+  } on Exception catch (e) {
+    /* print("MALARDOOOO"); */
+    print(e);
+  }
 }

@@ -7,7 +7,7 @@ import 'confirm_password_form_field.dart';
 import 'password_form_field.dart';
 import 'user_image_picker.dart';
 
-enum AccountMode { teacher, student }
+enum ProfileType { student, teacher }
 
 class AuthFieldsColumn extends StatefulWidget {
   const AuthFieldsColumn({
@@ -16,6 +16,7 @@ class AuthFieldsColumn extends StatefulWidget {
     required this.onEmailSaved,
     required this.onUsernameSaved,
     required this.onPasswordSaved,
+    required this.onUserProfileTypeSaved,
     this.currentUserImage,
     this.enabled,
     this.onSubmitted,
@@ -26,6 +27,7 @@ class AuthFieldsColumn extends StatefulWidget {
   final void Function(String? newValue) onEmailSaved;
   final void Function(String? newValue) onUsernameSaved;
   final void Function(String? newValue) onPasswordSaved;
+  final void Function(String? newValue) onUserProfileTypeSaved;
   final File? currentUserImage;
   final bool? enabled;
   final void Function(String value)? onSubmitted;
@@ -35,7 +37,7 @@ class AuthFieldsColumn extends StatefulWidget {
 }
 
 class _AuthFieldsColumnState extends State<AuthFieldsColumn> {
-  AccountMode _accountMode = AccountMode.student;
+  ProfileType _profileType = ProfileType.student;
 
   static final _emailRegExp = RegExp(
     r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$",
@@ -145,38 +147,45 @@ class _AuthFieldsColumnState extends State<AuthFieldsColumn> {
             onSaved: isSigninMode ? widget.onPasswordSaved : null,
           ),
           _buildAnimatedChildVisibleOnCondition(
-            condition: !isSigninMode,
-            verticalSpace: verticalSpace,
-            child: Column(
-              children: [
-                ConfirmPasswordFormField(
-                  validator: (value) {
-                    if (value == _passwordController.text) return null;
-                    return 'Passwords do not match.';
-                  },
-                  enabled: widget.enabled,
-                  onFieldSubmitted: widget.onSubmitted,
-                  onSaved: widget.onPasswordSaved,
-                ),
-                ListTile(
-                    title: const Text('Estudiante'),
-                    leading: Radio<AccountMode>(value: AccountMode.student, groupValue: _accountMode, onChanged: (AccountMode? value) {
-                      setState(() {
-                        _accountMode = value!;
-                      });
-                    })
-                ),
-                ListTile(
-                    title: const Text('Maestro'),
-                    leading: Radio<AccountMode>(value: AccountMode.teacher, groupValue: _accountMode, onChanged: (AccountMode? value) {
-                      setState(() {
-                        _accountMode = value!;
-                      });
-                    })
-                ),
-              ],
-            )
-          ),
+              condition: !isSigninMode,
+              verticalSpace: verticalSpace,
+              child: Column(
+                children: [
+                  ConfirmPasswordFormField(
+                    validator: (value) {
+                      if (value == _passwordController.text) return null;
+                      return 'Passwords do not match.';
+                    },
+                    enabled: widget.enabled,
+                    onFieldSubmitted: widget.onSubmitted,
+                    onSaved: widget.onPasswordSaved,
+                  ),
+                  ListTile(
+                      title: const Text('Estudiante'),
+                      leading: Radio<ProfileType>(
+                          value: ProfileType.student,
+                          groupValue: _profileType,
+                          onChanged: (ProfileType? value) {
+                            setState(() {
+                              _profileType = value!;
+                              widget.onUserProfileTypeSaved(
+                                  profileTypeToString(_profileType));
+                            });
+                          })),
+                  ListTile(
+                      title: const Text('Maestro'),
+                      leading: Radio<ProfileType>(
+                          value: ProfileType.teacher,
+                          groupValue: _profileType,
+                          onChanged: (ProfileType? value) {
+                            setState(() {
+                              _profileType = value!;
+                              widget.onUserProfileTypeSaved(
+                                  profileTypeToString(_profileType));
+                            });
+                          })),
+                ],
+              )),
         ],
       ),
     );
@@ -186,5 +195,9 @@ class _AuthFieldsColumnState extends State<AuthFieldsColumn> {
   void dispose() {
     _passwordController.dispose();
     super.dispose();
+  }
+
+  String profileTypeToString(ProfileType pt) {
+    return pt == ProfileType.student ? 'student' : 'teacher';
   }
 }

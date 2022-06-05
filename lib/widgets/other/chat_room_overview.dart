@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:teachme_app/widgets/other/tm_navigator.dart';
 
 import '../info/teacher_profile_middle_info.dart';
 import '../info/teacher_profile_top_info.dart';
@@ -19,7 +20,7 @@ class ChatRoomOverview extends StatelessWidget {
           const TeacherProfileMiddleInfo(),
           verticalSpace,
           ElevatedButton(
-            onPressed: () => Navigator.pushNamed(context, '/chat'),
+            onPressed: () => TMNavigator.navigateToRoute(context, '/chat'),
             child: const Text('Ir a la sala'),
           ),
         ],
