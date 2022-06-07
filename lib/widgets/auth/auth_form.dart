@@ -3,7 +3,7 @@ import 'dart:io' show File;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-//import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:teachme_app/main.dart';
 import 'package:teachme_app/pages/recover_password.dart';
 
 import '../../helpers/snack_bars.dart';
@@ -37,6 +37,7 @@ class AuthForm extends StatefulWidget {
 class _AuthFormState extends State<AuthForm> {
   final _formKey = GlobalKey<FormState>();
   File? _pickedUserImage;
+  ProfileType _profileType = ProfileType.student;
   final _userInput = <String, String>{};
   var _authMode = AuthMode.signin;
   var _isLoading = false;
@@ -76,11 +77,9 @@ class _AuthFormState extends State<AuthForm> {
       if (!success) {
         setState(() => _isLoading = false);
       } else {
-        if (_userInput['type'] == null) {
-          print("El tipo de cuenta es NULL");
-        }
-        _updateUsersProfileTypesCollection(_userInput['type']!);
-        _updateStudentsOrTeachersCollection(_userInput['type']!);
+        _updateUsersProfileTypesCollection(_profileTypeToString(_profileType));
+        _updateStudentsOrTeachersCollection(_profileTypeToString(_profileType));
+        userProfileType.value = _profileTypeToString(_profileType).toLowerCase() == "student" ? ProfileType.student : ProfileType.teacher;
       }
     }
   }
@@ -134,15 +133,14 @@ class _AuthFormState extends State<AuthForm> {
                                 fontFamily: 'Poppins')),
                       ],
                     ),
-                    verticalSpace: SizedBox(height: 9))),
+                    verticalSpace: const SizedBox(height: 9))),
             AuthFieldsColumn(
               authMode: _authMode,
               onUserImageSaved: (newValue) => _pickedUserImage = newValue,
               onEmailSaved: (newValue) => _userInput['email'] = newValue!,
               onUsernameSaved: (newValue) => _userInput['username'] = newValue!,
               onPasswordSaved: (newValue) => _userInput['password'] = newValue!,
-              onUserProfileTypeSaved: (newValue) =>
-                  _userInput['type'] = newValue!,
+              onUserProfileTypeSaved: (newValue) => _profileType = newValue!,
               currentUserImage: _pickedUserImage,
               enabled: !_isLoading,
               onSubmitted: (_) => _submit(),
@@ -225,6 +223,11 @@ Widget _buildAnimatedChildVisibleOnCondition({
   );
 }
 
+//epa
+String _profileTypeToString(ProfileType pt) {
+  return pt == ProfileType.student ? 'student' : 'teacher';
+}
+
 /* Crea una entrada en la tabla de teachers o students, segun corresponda */
 void _updateStudentsOrTeachersCollection(String userType) async {
   /*TODO: Switch entre alumno y profesor */
@@ -247,6 +250,7 @@ void _updateStudentsOrTeachersCollection(String userType) async {
         TeachersKeys.name: user.displayName,
         TeachersKeys.photoUrl: user.photoURL,
         TeachersKeys.uid: user.uid,
+        TeachersKeys.subjects: [],
         TeachersKeys.address: 'placeholder'
       });
     }
@@ -272,3 +276,5 @@ void _updateUsersProfileTypesCollection(String userType) async {
     print(e);
   }
 }
+
+

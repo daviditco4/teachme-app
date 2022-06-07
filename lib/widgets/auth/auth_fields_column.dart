@@ -1,13 +1,12 @@
 import 'dart:io' show File;
 
 import 'package:flutter/material.dart';
+import 'package:teachme_app/main.dart';
 
 import 'auth_form.dart' show AuthMode;
 import 'confirm_password_form_field.dart';
 import 'password_form_field.dart';
 import 'user_image_picker.dart';
-
-enum ProfileType { student, teacher }
 
 class AuthFieldsColumn extends StatefulWidget {
   const AuthFieldsColumn({
@@ -27,7 +26,7 @@ class AuthFieldsColumn extends StatefulWidget {
   final void Function(String? newValue) onEmailSaved;
   final void Function(String? newValue) onUsernameSaved;
   final void Function(String? newValue) onPasswordSaved;
-  final void Function(String? newValue) onUserProfileTypeSaved;
+  final void Function(ProfileType? newValue) onUserProfileTypeSaved;
   final File? currentUserImage;
   final bool? enabled;
   final void Function(String value)? onSubmitted;
@@ -37,7 +36,7 @@ class AuthFieldsColumn extends StatefulWidget {
 }
 
 class _AuthFieldsColumnState extends State<AuthFieldsColumn> {
-  ProfileType _profileType = ProfileType.student;
+  ProfileType _internal_profileType = ProfileType.student;
 
   static final _emailRegExp = RegExp(
     r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$",
@@ -164,24 +163,22 @@ class _AuthFieldsColumnState extends State<AuthFieldsColumn> {
                       title: const Text('Estudiante'),
                       leading: Radio<ProfileType>(
                           value: ProfileType.student,
-                          groupValue: _profileType,
+                          groupValue: _internal_profileType,
                           onChanged: (ProfileType? value) {
                             setState(() {
-                              _profileType = value!;
-                              widget.onUserProfileTypeSaved(
-                                  profileTypeToString(_profileType));
+                              _internal_profileType = value!;
+                              widget.onUserProfileTypeSaved(value);
                             });
                           })),
                   ListTile(
                       title: const Text('Maestro'),
                       leading: Radio<ProfileType>(
                           value: ProfileType.teacher,
-                          groupValue: _profileType,
+                          groupValue: _internal_profileType,
                           onChanged: (ProfileType? value) {
                             setState(() {
-                              _profileType = value!;
-                              widget.onUserProfileTypeSaved(
-                                  profileTypeToString(_profileType));
+                              _internal_profileType = value!;
+                              widget.onUserProfileTypeSaved(value);
                             });
                           })),
                 ],
@@ -197,7 +194,4 @@ class _AuthFieldsColumnState extends State<AuthFieldsColumn> {
     super.dispose();
   }
 
-  String profileTypeToString(ProfileType pt) {
-    return pt == ProfileType.student ? 'student' : 'teacher';
-  }
 }

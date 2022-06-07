@@ -29,7 +29,6 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
     return StreamBuilder(
         stream: FirebaseAuth.instance.userChanges(),
         builder: (_, snap) {
-          print(snap.data);
           return Scaffold(
               extendBodyBehindAppBar: true,
               backgroundColor: MyColors.background,

@@ -9,6 +9,7 @@ import 'package:teachme_app/pages/messages/chat_page.dart';
 import 'package:teachme_app/pages/student_profile_page.dart';
 import 'package:teachme_app/pages/splash_page.dart';
 import 'package:provider/provider.dart';
+import 'package:teachme_app/pages/teacher_profile_page.dart';
 
 import 'pages/loading_page.dart';
 import 'pages/notifications_page.dart';
@@ -18,7 +19,8 @@ const chatTopic = 'public';
 
 enum ProfileType { student, teacher, missing }
 
-var userProfileType = ProfileType.missing;
+// var userProfileType = ProfileType.missing;
+ValueNotifier<ProfileType> userProfileType = ValueNotifier<ProfileType>(ProfileType.missing);
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,13 +42,13 @@ class MyApp extends StatelessWidget {
           .get()
           .then((value) {
         if (value.docs[0].data()["type"] == "student") {
-          userProfileType = ProfileType.student;
+          userProfileType.value = ProfileType.student;
         } else if (value.docs[0].data()["type"] == "teacher") {
-          userProfileType = ProfileType.teacher;
+          userProfileType.value = ProfileType.teacher;
         }
       });
     } catch (e) {
-      userProfileType = ProfileType.missing;
+      userProfileType.value = ProfileType.missing;
     }
   }
 
@@ -74,7 +76,8 @@ class MyApp extends StatelessWidget {
                 '/class': (context) => const MyClass(),
                 '/notifications': (context) => const NotificationsPage(),
                 '/settings': (context) => const SettingsPage(),
-                '/profile': (context) => const ProfilePage(),
+                '/teacher_profile': (context) => const TeacherProfilePage(),
+                '/student_profile': (context) => const StudentProfilePage(),
                 '/chat': (context) => const ChatPage(),
               },
               home: snapshot.connectionState != ConnectionState.done
@@ -92,7 +95,7 @@ class MyApp extends StatelessWidget {
                           _getUserProfileType();
                           return const MyClass();
                         } else {
-                          userProfileType = ProfileType.missing;
+                          userProfileType.value = ProfileType.missing;
                           return AuthPage();
                         }
                       },

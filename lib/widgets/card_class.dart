@@ -50,7 +50,7 @@ class CardClass extends StatelessWidget {
                 fontSize: 15,
               )),
           Padding(
-             padding: const EdgeInsets.only(left: 360.0, bottom: 10.0),
+             padding: const EdgeInsets.only(left: 20.0, bottom: 10.0),
              child: Row(
                     children: <Widget>[
                     TextButton(onPressed: () => onPressed(textButton),

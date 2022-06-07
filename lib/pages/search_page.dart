@@ -44,6 +44,8 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPage extends State<SearchPage> {
+  //late String selectedValue;
+
   void showWarning(
       BuildContext context, String teacherUid, String subjectId) async {
     showDialog<bool>(
