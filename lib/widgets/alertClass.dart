@@ -1,9 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
+import 'package:teachme_app/helpers/teachers_keys.dart';
 
 import '../constants/Theme.dart';
 import '../helpers/classes_keys.dart';
+import '../helpers/students_keys.dart';
 
 class AlertClass extends StatefulWidget {
   final String title;
@@ -61,7 +65,8 @@ class _AlertClass extends State<AlertClass> {
                   MaterialStateProperty.all(MyColors.buttonCardClass)),
         ),
         ElevatedButton(
-          onPressed: () => Navigator.pop(context, true),
+          onPressed: () => _handleBookedClass(
+              context, widget.teacherUid, widget.subjectId, dropdownValue),
           child: const Text('Si'),
           style: ButtonStyle(
               backgroundColor:
@@ -72,17 +77,39 @@ class _AlertClass extends State<AlertClass> {
   }
 }
 
-void _updateClassesCollection(String teacherUid, String subjectId) async {
+void _handleBookedClass(
+    BuildContext context, String teacherUid, String subjectId, String time) {
+  Navigator.pop(context, true);
+  _updateClassesCollection(teacherUid, subjectId, time);
+}
+
+void _updateClassesCollection(
+    String teacherUid, String subjectId, String time) async {
   try {
     final user = FirebaseAuth.instance.currentUser!;
+    // TODO: El horario deberia ser un timestamp
+    await FirebaseFirestore.instance
+        .collection(StudentsKeys.collectionName)
+        .doc(user.uid)
+        .collection(ClassesKeys.collectionName)
+        .add({
+      //ClassesKeys.studentUid: user.uid,
+      ClassesKeys.teacherUid: teacherUid,
+      ClassesKeys.time: time,
+      ClassesKeys.subjectId: subjectId,
+      ClassesKeys.cost: 'to be determined'
+    });
 
     await FirebaseFirestore.instance
+        .collection(TeachersKeys.collectionName)
+        .doc(teacherUid)
         .collection(ClassesKeys.collectionName)
         .add({
       ClassesKeys.studentUid: user.uid,
-      ClassesKeys.teacherUid: teacherUid,
-      ClassesKeys.time: 'placeholder',
-      ClassesKeys.subjectId: subjectId
+      //ClassesKeys.teacherUid: teacherUid,
+      ClassesKeys.time: time,
+      ClassesKeys.subjectId: subjectId,
+      ClassesKeys.cost: 'to be determined'
     });
   } on Exception catch (e) {
     /* print("MALARDOOOO"); */
