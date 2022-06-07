@@ -4,4 +4,5 @@ class ClassesKeys {
   static const teacherUid = 'teacherUid';
   static const subjectId = 'subjectId';
   static const time = 'time';
+  static const cost = 'cost';
 }
