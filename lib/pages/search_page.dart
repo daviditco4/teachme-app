@@ -51,7 +51,7 @@ class _SearchPage extends State<SearchPage> {
     showDialog<bool>(
       context: context,
       builder: (context) => AlertClass(
-          title: 'Queres reservar la clase de Matematica Discreta?',
+          title: 'Queres reservar la clase?',
           subTitle: 'Seleccionar un horario disponible: ',
           teacherUid: teacherUid,
           subjectId: subjectId),

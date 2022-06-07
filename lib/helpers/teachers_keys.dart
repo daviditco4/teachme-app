@@ -5,4 +5,5 @@ class TeachersKeys {
   static const uid = 'uid';
   static const rating = 'rating';
   static const subjects = 'subjects';
+  static const collectionName = 'teachers';
 }

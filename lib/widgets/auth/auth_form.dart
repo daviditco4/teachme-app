@@ -239,14 +239,20 @@ void _updateStudentsOrTeachersCollection(String userType) async {
         userType == 'student' ? studentsCollectionPath : teachersCollectionPath;
 
     if (userType == student) {
-      await FirebaseFirestore.instance.collection(userCategoryPath).add({
+      await FirebaseFirestore.instance
+          .collection(userCategoryPath)
+          .doc(user.uid)
+          .set({
         StudentsKeys.name: user.displayName,
         StudentsKeys.photoUrl: user.photoURL,
         StudentsKeys.uid: user.uid,
         StudentsKeys.address: 'placeholder'
       });
     } else {
-      await FirebaseFirestore.instance.collection(userCategoryPath).add({
+      await FirebaseFirestore.instance
+          .collection(userCategoryPath)
+          .doc(user.uid)
+          .set({
         TeachersKeys.name: user.displayName,
         TeachersKeys.photoUrl: user.photoURL,
         TeachersKeys.uid: user.uid,
@@ -267,7 +273,8 @@ void _updateUsersProfileTypesCollection(String userType) async {
     print(user); */
     await FirebaseFirestore.instance
         .collection(usersProfileTypeCollectionPath)
-        .add({
+        .doc(user.uid)
+        .set({
       UsersProfileTypeKeys.uid: user.uid,
       UsersProfileTypeKeys.type: userType
     });
