@@ -19,9 +19,13 @@ class TeacherProfilePage extends StatefulWidget {
 
 class _TeacherProfilePage extends State<TeacherProfilePage> {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  User user = FirebaseAuth.instance.currentUser!;
+  String availableFrom = "...";
+  String availableUpTo = "...";
 
   @override
   void initState() {
+    _getAvailableHours();
     super.initState();
   }
 
@@ -328,12 +332,15 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                                           .white)))),
                                                       onPressed: () =>
                                                           _setAvailableHours(
-                                                              "12:00", "16:00"),
+                                                              "12:00", "14:00"),
                                                     )
                                                   ],
                                                 ),
                                               ),
-                                              Text(_getAvailableHours(),
+                                              Text(
+                                                  availableFrom +
+                                                      " a " +
+                                                      availableUpTo,
                                                   style: const TextStyle(
                                                       fontSize: 18.0,
                                                       color: MyColors.black),
@@ -371,12 +378,12 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   }
 
   String _getUsername() {
-    String? username = firebaseAuth.currentUser!.displayName;
+    String? username = user.displayName;
     return username ?? "ERROR";
   }
 
   ImageProvider _getUserImage() {
-    String? userImageUrl = firebaseAuth.currentUser!.photoURL;
+    String? userImageUrl = user.photoURL;
     if (userImageUrl != null) {
       return NetworkImage(userImageUrl);
     } else {
@@ -384,18 +391,20 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
     }
   }
 
-  String _getAvailableHours() {
-    String out;
-
-    /* Obtengo Horario de Firebase */
-    out = "00:00" + " a " + "23:00";
-
-    return out;
+  void _getAvailableHours() async {
+    var document = await FirebaseFirestore.instance
+        .collection(TeachersKeys.collectionName)
+        .doc(user.uid);
+    document.get().then((document) => {
+          setState(() {
+            availableFrom = document[TeachersKeys.availableFrom];
+            availableUpTo = document[TeachersKeys.availableUpTo];
+          })
+        });
   }
 
   void _setAvailableHours(String from, String to) async {
     try {
-      final user = firebaseAuth.currentUser!;
       await FirebaseFirestore.instance
           .collection(TeachersKeys.collectionName)
           .doc(user.uid)
@@ -407,6 +416,8 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
       /* print("MALARDOOOO"); */
       print(e);
     }
+
+    _getAvailableHours();
   }
 
   void addSubject(BuildContext context) async {
