@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:teachme_app/constants/theme.dart';
+import 'package:teachme_app/helpers/teachers_keys.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/pages/settings_page.dart';
 import 'package:teachme_app/widgets/addSubject.dart';
@@ -16,7 +18,6 @@ class TeacherProfilePage extends StatefulWidget {
 }
 
 class _TeacherProfilePage extends State<TeacherProfilePage> {
-
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   @override
@@ -143,73 +144,99 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                 endIndent: 32.0,
                                               ),
                                               Padding(
-                                                padding: const  EdgeInsets.only(right: 25.0, left: 25.0),
+                                                padding: const EdgeInsets.only(
+                                                    right: 25.0, left: 25.0),
                                                 child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: <Widget>[
-                                                    const Text("Materias",
+                                                    const Text(
+                                                      "Materias",
                                                       style: TextStyle(
-                                                          fontWeight: FontWeight.bold,
+                                                          fontWeight:
+                                                              FontWeight.bold,
                                                           fontSize: 20.0,
-                                                          color: MyColors.black),
+                                                          color:
+                                                              MyColors.black),
                                                     ),
                                                     ElevatedButton(
-                                                      onPressed: () => addSubject(context),
-                                                      child: const Text('Agregar'),
+                                                      onPressed: () =>
+                                                          addSubject(context),
+                                                      child:
+                                                          const Text('Agregar'),
                                                       style: ButtonStyle(
                                                           backgroundColor:
-                                                          MaterialStateProperty.all(MyColors.buttonCardClass),
-                                                          shape: MaterialStateProperty
-                                                              .all<RoundedRectangleBorder>(RoundedRectangleBorder(
-                                                              borderRadius: BorderRadius.circular(18),
-                                                              side: const BorderSide(color: Colors.white)))
-                                                      ),
+                                                              MaterialStateProperty
+                                                                  .all(MyColors
+                                                                      .buttonCardClass),
+                                                          shape: MaterialStateProperty.all<
+                                                                  RoundedRectangleBorder>(
+                                                              RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                          18),
+                                                                  side: const BorderSide(
+                                                                      color: Colors
+                                                                          .white)))),
                                                     ),
                                                   ],
                                                 ),
                                               ),
                                               Padding(
                                                 padding: const EdgeInsets.only(
-                                                    right: 25.0, left: 25.0, top: 15.0),
+                                                    right: 25.0,
+                                                    left: 25.0,
+                                                    top: 15.0),
                                                 child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                 children:const <Widget>[
-
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: const <Widget>[
                                                     Chip(
                                                       elevation: 20,
-                                                      padding: EdgeInsets.all(8),
-                                                      backgroundColor: MyColors.background,
+                                                      padding:
+                                                          EdgeInsets.all(8),
+                                                      backgroundColor:
+                                                          MyColors.background,
                                                       shadowColor: Colors.black,
                                                       label: Text(
                                                         'Álgebra',
-                                                        style: TextStyle(fontSize: 16),
+                                                        style: TextStyle(
+                                                            fontSize: 16),
                                                       ), //Text
                                                     ),
                                                     Chip(
                                                       elevation: 20,
-                                                      padding: EdgeInsets.all(8),
-                                                      backgroundColor: MyColors.background,
+                                                      padding:
+                                                          EdgeInsets.all(8),
+                                                      backgroundColor:
+                                                          MyColors.background,
                                                       shadowColor: Colors.black,
                                                       label: Text(
                                                         'Física',
-                                                        style: TextStyle(fontSize: 16),
+                                                        style: TextStyle(
+                                                            fontSize: 16),
                                                       ), //Text
                                                     ), //C
                                                     Chip(
                                                       elevation: 20,
-                                                      padding: EdgeInsets.all(8),
-                                                      backgroundColor: MyColors.background,
+                                                      padding:
+                                                          EdgeInsets.all(8),
+                                                      backgroundColor:
+                                                          MyColors.background,
                                                       shadowColor: Colors.black,
                                                       label: Text(
                                                         'Lógica',
-                                                        style: TextStyle(fontSize: 16),
+                                                        style: TextStyle(
+                                                            fontSize: 16),
                                                       ), //Text
                                                     ),
-                                                   //C //Chip
+                                                    //C //Chip
                                                   ],
                                                 ),
                                               ),
-                                               const SizedBox(height: 25.0),
+                                              const SizedBox(height: 25.0),
                                               const Divider(
                                                 height: 40.0,
                                                 thickness: 1.5,
@@ -272,9 +299,9 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
                                                           .spaceBetween,
-                                                  children: const [
-                                                    Text(
-                                                      "Comentarios",
+                                                  children: <Widget>[
+                                                    const Text(
+                                                      "Horarios Disponibles",
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold,
@@ -282,9 +309,35 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                           color:
                                                               MyColors.black),
                                                     ),
+                                                    ElevatedButton(
+                                                      child:
+                                                          const Text('Editar'),
+                                                      style: ButtonStyle(
+                                                          backgroundColor:
+                                                              MaterialStateProperty
+                                                                  .all(MyColors
+                                                                      .buttonCardClass),
+                                                          shape: MaterialStateProperty.all<
+                                                                  RoundedRectangleBorder>(
+                                                              RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                          18),
+                                                                  side: const BorderSide(
+                                                                      color: Colors
+                                                                          .white)))),
+                                                      onPressed: () =>
+                                                          _setAvailableHours(
+                                                              "12:00", "16:00"),
+                                                    )
                                                   ],
                                                 ),
                                               ),
+                                              Text(_getAvailableHours(),
+                                                  style: const TextStyle(
+                                                      fontSize: 18.0,
+                                                      color: MyColors.black),
+                                                  textAlign: TextAlign.left),
                                               const SizedBox(
                                                 height: 200,
                                                 // child: GridView.count(),
@@ -331,11 +384,32 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
     }
   }
 
-  void addSubject(BuildContext context) async {
-    showDialog<bool>(
-        context: context,
-        builder: (context) => AddSubject()
-    );
+  String _getAvailableHours() {
+    String out;
+
+    /* Obtengo Horario de Firebase */
+    out = "00:00" + " a " + "23:00";
+
+    return out;
   }
 
+  void _setAvailableHours(String from, String to) async {
+    try {
+      final user = firebaseAuth.currentUser!;
+      await FirebaseFirestore.instance
+          .collection(TeachersKeys.collectionName)
+          .doc(user.uid)
+          .update({
+        TeachersKeys.availableFrom: from,
+        TeachersKeys.availableUpTo: to
+      });
+    } on Exception catch (e) {
+      /* print("MALARDOOOO"); */
+      print(e);
+    }
+  }
+
+  void addSubject(BuildContext context) async {
+    showDialog<bool>(context: context, builder: (context) => AddSubject());
+  }
 }

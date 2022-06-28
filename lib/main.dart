@@ -8,7 +8,6 @@ import 'package:teachme_app/pages/auth_page.dart';
 import 'package:teachme_app/pages/messages/chat_page.dart';
 import 'package:teachme_app/pages/student_profile_page.dart';
 import 'package:teachme_app/pages/splash_page.dart';
-import 'package:provider/provider.dart';
 import 'package:teachme_app/pages/teacher_profile_page.dart';
 
 import 'pages/loading_page.dart';
@@ -20,7 +19,8 @@ const chatTopic = 'public';
 enum ProfileType { student, teacher, missing }
 
 // var userProfileType = ProfileType.missing;
-ValueNotifier<ProfileType> userProfileType = ValueNotifier<ProfileType>(ProfileType.missing);
+ValueNotifier<ProfileType> userProfileType =
+    ValueNotifier<ProfileType>(ProfileType.missing);
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

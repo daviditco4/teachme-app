@@ -79,7 +79,10 @@ class _AuthFormState extends State<AuthForm> {
       } else {
         _updateUsersProfileTypesCollection(_profileTypeToString(_profileType));
         _updateStudentsOrTeachersCollection(_profileTypeToString(_profileType));
-        userProfileType.value = _profileTypeToString(_profileType).toLowerCase() == "student" ? ProfileType.student : ProfileType.teacher;
+        userProfileType.value =
+            _profileTypeToString(_profileType).toLowerCase() == "student"
+                ? ProfileType.student
+                : ProfileType.teacher;
       }
     }
   }
@@ -257,7 +260,9 @@ void _updateStudentsOrTeachersCollection(String userType) async {
         TeachersKeys.photoUrl: user.photoURL,
         TeachersKeys.uid: user.uid,
         TeachersKeys.subjects: [],
-        TeachersKeys.address: 'placeholder'
+        TeachersKeys.address: 'placeholder',
+        TeachersKeys.availableFrom: "10:00",
+        TeachersKeys.availableUpTo: "18:00"
       });
     }
   } on Exception catch (e) {
@@ -283,5 +288,3 @@ void _updateUsersProfileTypesCollection(String userType) async {
     print(e);
   }
 }
-
-
