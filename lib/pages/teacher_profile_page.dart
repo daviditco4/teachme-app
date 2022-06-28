@@ -332,7 +332,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                                           .white)))),
                                                       onPressed: () =>
                                                           _setAvailableHours(
-                                                              "12:00", "14:00"),
+                                                              "12", "14"),
                                                     )
                                                   ],
                                                 ),
@@ -391,14 +391,21 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
     }
   }
 
+  String _roundHourFromString(String s) {
+    return s + ":00";
+  }
+
   void _getAvailableHours() async {
     var document = await FirebaseFirestore.instance
         .collection(TeachersKeys.collectionName)
         .doc(user.uid);
+
     document.get().then((document) => {
           setState(() {
-            availableFrom = document[TeachersKeys.availableFrom];
-            availableUpTo = document[TeachersKeys.availableUpTo];
+            availableFrom =
+                _roundHourFromString(document[TeachersKeys.availableFrom]);
+            availableUpTo =
+                _roundHourFromString(document[TeachersKeys.availableUpTo]);
           })
         });
   }

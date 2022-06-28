@@ -261,8 +261,8 @@ void _updateStudentsOrTeachersCollection(String userType) async {
         TeachersKeys.uid: user.uid,
         TeachersKeys.subjects: [],
         TeachersKeys.address: 'placeholder',
-        TeachersKeys.availableFrom: "10:00",
-        TeachersKeys.availableUpTo: "18:00"
+        TeachersKeys.availableFrom: "10",
+        TeachersKeys.availableUpTo: "18"
       });
     }
   } on Exception catch (e) {
