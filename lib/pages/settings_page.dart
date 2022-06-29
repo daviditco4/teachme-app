@@ -5,7 +5,7 @@ import 'package:teachme_app/main.dart';
 import 'package:teachme_app/pages/auth_page.dart';
 import 'package:teachme_app/pages/help.dart';
 import 'package:teachme_app/pages/payment_methods_page.dart';
-import 'package:teachme_app/pages/student_profile_page.dart';
+import 'package:teachme_app/pages/profile/student_profile_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import 'package:teachme_app/widgets/other/tm_navigator.dart';
 import 'package:teachme_app/widgets/setting_button.dart';

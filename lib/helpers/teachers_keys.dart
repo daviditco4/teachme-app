@@ -7,5 +7,6 @@ class TeachersKeys {
   static const subjects = 'subjects';
   static const availableFrom = 'availableFrom';
   static const availableUpTo = 'availableUpTo';
+  static const description = 'description';
   static const collectionName = 'teachers';
 }

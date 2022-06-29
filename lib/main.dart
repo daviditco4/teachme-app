@@ -6,9 +6,10 @@ import 'package:teachme_app/firebase_options.dart';
 import 'package:teachme_app/pages/my_classes_page.dart';
 import 'package:teachme_app/pages/auth_page.dart';
 import 'package:teachme_app/pages/messages/chat_page.dart';
-import 'package:teachme_app/pages/student_profile_page.dart';
+import 'package:teachme_app/pages/profile/student_profile_page.dart';
 import 'package:teachme_app/pages/splash_page.dart';
-import 'package:teachme_app/pages/teacher_profile_page.dart';
+import 'package:provider/provider.dart';
+import 'package:teachme_app/pages/profile/teacher_profile_page.dart';
 
 import 'pages/loading_page.dart';
 import 'pages/notifications_page.dart';

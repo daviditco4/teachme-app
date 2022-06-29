@@ -3,5 +3,6 @@ class StudentsKeys {
   static const address = 'address';
   static const photoUrl = 'photoUrl';
   static const uid = 'uid';
+  static const description = "description";
   static const collectionName = 'students';
 }
