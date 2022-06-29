@@ -138,20 +138,35 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                   indent: 32.0,
                                                   endIndent: 32.0,
                                                 ),
-                                                const Padding(
-                                                  padding: EdgeInsets.only(
+                                                Padding(
+                                                  padding: const EdgeInsets.only(
                                                       left: 32.0, right: 32.0),
                                                   child: Align(
-                                                    child: Text(
-                                                        "Licenciado en Ciencias Exactas en la Universidad de Buenos Aires.",
-                                                        textAlign:
-                                                        TextAlign.center,
-                                                        style: TextStyle(
-                                                            color: MyColors
-                                                                .black,
-                                                            fontSize: 17.0,
-                                                            fontWeight:
-                                                            FontWeight.w200)),
+                                                    child: Row(
+                                                        children: [
+                                                          Expanded(
+                                                              child: !_isEditingText
+                                                                  ? Text(initialText)
+                                                                  : TextFormField(
+                                                                  initialValue: initialText,
+                                                                  textInputAction: TextInputAction.done,
+                                                                  onFieldSubmitted: (value) {
+                                                                    _profileService.updateDescription(value);
+                                                                    setState(() => {
+                                                                      _isEditingText = false, initialText = value
+                                                                    });
+                                                                  }
+                                                              )
+                                                          ),
+                                                          IconButton(
+                                                            icon: Icon(Icons.edit),
+                                                            onPressed: () {
+                                                              setState(() => {
+                                                                _isEditingText = true,
+                                                              });
+                                                            },
+                                                          )
+                                                        ]),
                                                   ),
                                                 ),
                                                 const SizedBox(height: 25.0),
@@ -392,37 +407,5 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
     );
   }
 
-
-  Widget _editTextField() {
-    if (_isEditingText) {
-      return Center(
-        child: TextField(
-          onSubmitted: (newValue) {
-            _profileService.updateDescription(newValue);
-            setState(() {
-              initialText = newValue;
-              _isEditingText = false;
-            });
-          },
-          autofocus: true,
-          controller: _editingController,
-        ),
-      );
-    }
-    return InkWell(
-        onTap: () {
-          setState(() {
-            _isEditingText = true;
-          });
-        },
-        child: Text(
-          initialText,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 18.0,
-          ),
-        )
-    );
-  }
 
 }

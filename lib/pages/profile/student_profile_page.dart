@@ -150,7 +150,31 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                                       left: 32.0, right: 32.0),
                                                   child: Align(
                                                       child: Center(
-                                                        child: _editTextField(),
+                                                        child: Row(
+                                                            children: [
+                                                              Expanded(
+                                                                  child: !_isEditingText
+                                                                      ? Text(initialText)
+                                                                      : TextFormField(
+                                                                      initialValue: initialText,
+                                                                      textInputAction: TextInputAction.done,
+                                                                      onFieldSubmitted: (value) {
+                                                                        _profileService.updateDescription(value);
+                                                                        setState(() => {
+                                                                          _isEditingText = false, initialText = value
+                                                                        });
+                                                                      }
+                                                                      )
+                                                              ),
+                                                              IconButton(
+                                                                icon: Icon(Icons.edit),
+                                                                onPressed: () {
+                                                                  setState(() => {
+                                                                    _isEditingText = true,
+                                                                  });
+                                                                },
+                                                              )
+                                                        ]),
                                                       )
                                                   ),
                                                 ),
@@ -277,55 +301,4 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
   }
 
 
-  Widget _editTextField() {
-    if (_isEditingText) {
-      return Center(
-        child: TextField(
-          onSubmitted: (newValue){
-            _profileService.updateDescription(newValue);
-            setState(() {
-              initialText = newValue;
-              _isEditingText = false;
-            });
-          },
-          autofocus: true,
-          controller: _editingController,
-        ),
-      );
-    }
-    return InkWell(
-        onTap: () {
-      setState(() {
-        _isEditingText = true;
-      });
-    },
-    child: Text(
-    initialText,
-    style: const TextStyle(
-    color: Colors.black,
-    fontSize: 18.0,
-    ),
-    )
-    );
-  }
-
-
-
 }
-
-
-
-
-/*
-
-Text(
-                                                      "Hola!!! Actualmente estoy cursando el tercer año de ingeniería mecánica",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                          color: MyColors.black,
-                                                          fontSize: 17.0,
-                                                          fontWeight:
-                                                              FontWeight.w200)),
-
- */
