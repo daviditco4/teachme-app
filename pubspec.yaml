@@ -43,6 +43,9 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   provider: ^6.0.3
 
+  geolocator: ^8.0.1
+  google_maps_flutter: ^2.0.6
+  flutter_google_places: ^0.3.0
 
 dev_dependencies:
   flutter_test:
