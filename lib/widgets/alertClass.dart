@@ -28,7 +28,14 @@ class AlertClass extends StatefulWidget {
 }
 
 class _AlertClass extends State<AlertClass> {
-  String dropdownValue = '12:30';
+  String dropdownValue = 'hh:mm';
+  List<String> availableHours = ['hh:mm'];
+
+  @override
+  void initState() {
+    _getTeacherAvailableHours();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +53,7 @@ class _AlertClass extends State<AlertClass> {
                 dropdownValue = newValue!;
               });
             },
-            items: <String>['12:30', '13:30', '14:30', '15:30']
-                .map<DropdownMenuItem<String>>((String value) {
+            items: availableHours.map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(value),
@@ -75,6 +81,27 @@ class _AlertClass extends State<AlertClass> {
       ],
     );
   }
+
+  void _getTeacherAvailableHours() async {
+    int availableFrom;
+    int availableUpTo;
+
+    var document = FirebaseFirestore.instance
+        .collection(TeachersKeys.collectionName)
+        .doc(widget.teacherUid);
+
+    await document.get().then((document) => {
+          availableFrom = int.parse(document[TeachersKeys.availableFrom]),
+          availableUpTo = int.parse(document[TeachersKeys.availableUpTo]),
+          setState(() {
+            availableHours = [];
+            for (int hour = availableFrom; hour <= availableUpTo; ++hour) {
+              availableHours.add(hour.toString() + ":00");
+            }
+            dropdownValue = availableHours[0];
+          })
+        });
+  }
 }
 
 void _handleBookedClass(
@@ -87,13 +114,14 @@ void _updateClassesCollection(
     String teacherUid, String subjectId, String time) async {
   try {
     final user = FirebaseAuth.instance.currentUser!;
-    // TODO: El horario deberia ser un timestamp
+
     await FirebaseFirestore.instance
         .collection(StudentsKeys.collectionName)
         .doc(user.uid)
         .collection(ClassesKeys.collectionName)
         .add({
       //ClassesKeys.studentUid: user.uid,
+      //TODO: Campo Date
       ClassesKeys.teacherUid: teacherUid,
       ClassesKeys.time: time,
       ClassesKeys.subjectId: subjectId,
