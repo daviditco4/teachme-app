@@ -8,5 +8,7 @@ class TeachersKeys {
   static const availableFrom = 'availableFrom';
   static const availableUpTo = 'availableUpTo';
   static const description = 'description';
+  static const positionLatitude = 'positionLatitude';
+  static const positionLongitude = 'positionLongitude';
   static const collectionName = 'teachers';
 }

@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:teachme_app/widgets/other/tm_navigator.dart';
 
 class CurrentLocationScreen extends StatefulWidget {
-  const CurrentLocationScreen({Key? key}) : super(key: key);
+  const CurrentLocationScreen({
+    required this.positionChanged
+  });
+
+  final void Function(Position) positionChanged;
 
   @override
   _CurrentLocationScreenState createState() => _CurrentLocationScreenState();
@@ -34,7 +39,7 @@ class _CurrentLocationScreenState extends State<CurrentLocationScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
-          Position positien = await _determinePosition();
+          Position position = await _determinePosition();
 
           googleMapController
               .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(position.latitude, position.longitude), zoom: 14)));
@@ -44,8 +49,13 @@ class _CurrentLocationScreenState extends State<CurrentLocationScreen> {
 
           markers.add(Marker(markerId: const MarkerId('currentLocation'),position: LatLng(position.latitude, position.longitude)));
 
-          setState(() {});
+          widget.positionChanged(position);
+          Navigator.of(context).pop();
 
+          /* setState(() {
+
+          });
+          */
         },
         label: const Text("Current Location"),
         icon: const Icon(Icons.location_history),
