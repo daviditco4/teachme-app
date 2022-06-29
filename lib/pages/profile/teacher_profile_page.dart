@@ -43,6 +43,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
               child: CircularProgressIndicator(),
             );
           } else {
+            initialText = snap.data![TeachersKeys.description];
             _editingController.text = snap.data![TeachersKeys.description];
 
             return Scaffold(
