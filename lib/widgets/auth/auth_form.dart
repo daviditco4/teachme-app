@@ -262,7 +262,10 @@ void _updateStudentsOrTeachersCollection(String userType) async {
         TeachersKeys.subjects: [],
         TeachersKeys.address: 'placeholder',
         TeachersKeys.availableFrom: "10",
-        TeachersKeys.availableUpTo: "18"
+        TeachersKeys.availableUpTo: "18",
+        TeachersKeys.description: "",
+        TeachersKeys.positionLatitude: "",
+        TeachersKeys.positionLongitude: ""
       });
     }
   } on Exception catch (e) {
