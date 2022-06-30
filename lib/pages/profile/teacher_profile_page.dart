@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -26,11 +28,44 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   bool _isEditingText = false;
   late TextEditingController _editingController;
   String initialText = "Initial Text";
+  User user = FirebaseAuth.instance.currentUser!;
+  String availableFrom = "...";
+  String availableUpTo = "...";
+  String dropdownValueFrom = "00:00";
+  String dropdownValueUpTo = "23:00";
+
+  static final List<String> availableHours = [
+    "00:00",
+    "01:00",
+    "02:00",
+    "03:00",
+    "04:00",
+    "05:00",
+    "06:00",
+    "07:00",
+    "08:00",
+    "09:00",
+    "10:00",
+    "11:00",
+    "12:00",
+    "13:00",
+    "14:00",
+    "15:00",
+    "16:00",
+    "17:00",
+    "18:00",
+    "19:00",
+    "20:00",
+    "21:00",
+    "22:00",
+    "23:00"
+  ];
 
   @override
   void initState() {
-    super.initState();
+    _getAvailableHours();
     _editingController = TextEditingController();
+    super.initState();
   }
 
   @override
@@ -66,17 +101,15 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                   actions: [
                     IconButton(
                         icon: const Icon(Icons.settings, color: Colors.black),
-                        onPressed: () =>
-                            TMNavigator.navigateToPage(
-                                context, const SettingsPage())),
+                        onPressed: () => TMNavigator.navigateToPage(
+                            context, const SettingsPage())),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: IconButton(
                         icon: const Icon(Icons.notifications_none,
                             color: Colors.black),
-                        onPressed: () =>
-                            TMNavigator.navigateToPage(
-                                context, const NotificationsPage()),
+                        onPressed: () => TMNavigator.navigateToPage(
+                            context, const NotificationsPage()),
                       ),
                     ),
                   ],
@@ -131,7 +164,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                           color: MyColors.black,
                                                           fontSize: 28.0,
                                                           fontWeight:
-                                                          FontWeight.bold)),
+                                                              FontWeight.bold)),
                                                 ),
                                                 ElevatedButton(
                                                     onPressed: () {
@@ -153,34 +186,43 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                   endIndent: 32.0,
                                                 ),
                                                 Padding(
-                                                  padding: const EdgeInsets.only(
-                                                      left: 32.0, right: 32.0),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 32.0,
+                                                          right: 32.0),
                                                   child: Align(
-                                                    child: Row(
-                                                        children: [
-                                                          Expanded(
-                                                              child: !_isEditingText
-                                                                  ? Text(initialText)
-                                                                  : TextFormField(
-                                                                  initialValue: initialText,
-                                                                  textInputAction: TextInputAction.done,
-                                                                  onFieldSubmitted: (value) {
-                                                                    _profileService.updateDescription(value);
-                                                                    setState(() => {
-                                                                      _isEditingText = false, initialText = value
-                                                                    });
-                                                                  }
-                                                              )
-                                                          ),
-                                                          IconButton(
-                                                            icon: Icon(Icons.edit),
-                                                            onPressed: () {
-                                                              setState(() => {
-                                                                _isEditingText = true,
+                                                    child: Row(children: [
+                                                      Expanded(
+                                                          child: !_isEditingText
+                                                              ? Text(
+                                                                  initialText)
+                                                              : TextFormField(
+                                                                  initialValue:
+                                                                      initialText,
+                                                                  textInputAction:
+                                                                      TextInputAction
+                                                                          .done,
+                                                                  onFieldSubmitted:
+                                                                      (value) {
+                                                                    _profileService
+                                                                        .updateDescription(
+                                                                            value);
+                                                                    setState(
+                                                                        () => {
+                                                                              _isEditingText = false,
+                                                                              initialText = value
+                                                                            });
+                                                                  })),
+                                                      IconButton(
+                                                        icon: Icon(Icons.edit),
+                                                        onPressed: () {
+                                                          setState(() => {
+                                                                _isEditingText =
+                                                                    true,
                                                               });
-                                                            },
-                                                          )
-                                                        ]),
+                                                        },
+                                                      )
+                                                    ]),
                                                   ),
                                                 ),
                                                 const SizedBox(height: 25.0),
@@ -191,20 +233,23 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                   endIndent: 32.0,
                                                 ),
                                                 Padding(
-                                                  padding: const EdgeInsets
-                                                      .only(
-                                                      right: 25.0, left: 25.0),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 25.0,
+                                                          left: 25.0),
                                                   child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment
-                                                        .spaceBetween,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
                                                     children: <Widget>[
-                                                      const Text("Materias",
+                                                      const Text(
+                                                        "Materias",
                                                         style: TextStyle(
-                                                            fontWeight: FontWeight
-                                                                .bold,
+                                                            fontWeight:
+                                                                FontWeight.bold,
                                                             fontSize: 20.0,
-                                                            color: MyColors
-                                                                .black),
+                                                            color:
+                                                                MyColors.black),
                                                       ),
                                                       ElevatedButton(
                                                         onPressed: () =>
@@ -213,43 +258,40 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                             'Agregar'),
                                                         style: ButtonStyle(
                                                             backgroundColor:
-                                                            MaterialStateProperty
-                                                                .all(MyColors
-                                                                .buttonCardClass),
-                                                            shape: MaterialStateProperty
-                                                                .all<
-                                                                RoundedRectangleBorder>(
+                                                                MaterialStateProperty
+                                                                    .all(MyColors
+                                                                        .buttonCardClass),
+                                                            shape: MaterialStateProperty.all<
+                                                                    RoundedRectangleBorder>(
                                                                 RoundedRectangleBorder(
-                                                                    borderRadius: BorderRadius
-                                                                        .circular(
-                                                                        18),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            18),
                                                                     side: const BorderSide(
                                                                         color: Colors
-                                                                            .white)))
-                                                        ),
+                                                                            .white)))),
                                                       ),
                                                     ],
                                                   ),
                                                 ),
                                                 Padding(
-                                                  padding: const EdgeInsets
-                                                      .only(
-                                                      right: 25.0,
-                                                      left: 25.0,
-                                                      top: 15.0),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 25.0,
+                                                          left: 25.0,
+                                                          top: 15.0),
                                                   child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment
-                                                        .spaceBetween,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
                                                     children: const <Widget>[
-
                                                       Chip(
-                                                        elevation: 20,
-                                                        padding: EdgeInsets.all(
-                                                            8),
-                                                        backgroundColor: MyColors
-                                                            .background,
-                                                        shadowColor: Colors
-                                                            .black,
+                                                        padding:
+                                                            EdgeInsets.all(8),
+                                                        backgroundColor:
+                                                            MyColors.background,
+                                                        shadowColor:
+                                                            Colors.black,
                                                         label: Text(
                                                           'Álgebra',
                                                           style: TextStyle(
@@ -257,13 +299,12 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                         ), //Text
                                                       ),
                                                       Chip(
-                                                        elevation: 20,
-                                                        padding: EdgeInsets.all(
-                                                            8),
-                                                        backgroundColor: MyColors
-                                                            .background,
-                                                        shadowColor: Colors
-                                                            .black,
+                                                        padding:
+                                                            EdgeInsets.all(8),
+                                                        backgroundColor:
+                                                            MyColors.background,
+                                                        shadowColor:
+                                                            Colors.black,
                                                         label: Text(
                                                           'Física',
                                                           style: TextStyle(
@@ -271,13 +312,12 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                         ), //Text
                                                       ), //C
                                                       Chip(
-                                                        elevation: 20,
-                                                        padding: EdgeInsets.all(
-                                                            8),
-                                                        backgroundColor: MyColors
-                                                            .background,
-                                                        shadowColor: Colors
-                                                            .black,
+                                                        padding:
+                                                            EdgeInsets.all(8),
+                                                        backgroundColor:
+                                                            MyColors.background,
+                                                        shadowColor:
+                                                            Colors.black,
                                                         label: Text(
                                                           'Lógica',
                                                           style: TextStyle(
@@ -296,43 +336,45 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                   endIndent: 32.0,
                                                 ),
                                                 Padding(
-                                                  padding: const EdgeInsets
-                                                      .only(
-                                                      right: 25.0, left: 25.0),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 25.0,
+                                                          left: 25.0),
                                                   child: Row(
                                                     mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
                                                     children: <Widget>[
                                                       const Text(
                                                         "Calificación",
                                                         style: TextStyle(
                                                             fontWeight:
-                                                            FontWeight.bold,
+                                                                FontWeight.bold,
                                                             fontSize: 20.0,
                                                             color:
-                                                            MyColors.black),
+                                                                MyColors.black),
                                                       ),
                                                       RatingBar.builder(
                                                         initialRating: 3,
                                                         itemSize: 25,
                                                         minRating: 1,
                                                         direction:
-                                                        Axis.horizontal,
+                                                            Axis.horizontal,
                                                         allowHalfRating: true,
                                                         itemCount: 5,
                                                         itemPadding:
-                                                        const EdgeInsets
-                                                            .symmetric(
-                                                            horizontal: 2.0),
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                horizontal:
+                                                                    2.0),
                                                         itemBuilder:
                                                             (context, _) =>
-                                                        const Icon(
+                                                                const Icon(
                                                           Icons.star,
                                                           color: MyColors.white,
                                                         ),
-                                                        onRatingUpdate: (
-                                                            rating) {
+                                                        onRatingUpdate:
+                                                            (rating) {
                                                           print(rating);
                                                         },
                                                       ),
@@ -347,30 +389,126 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                   endIndent: 32.0,
                                                 ),
                                                 Padding(
-                                                  padding: const EdgeInsets
-                                                      .only(
-                                                      right: 25.0, left: 25.0),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 25.0,
+                                                          left: 25.0),
                                                   child: Row(
                                                     mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                    children: const [
-                                                      Text(
-                                                        "Comentarios",
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: <Widget>[
+                                                      const Text(
+                                                        "Horarios Disponibles",
                                                         style: TextStyle(
                                                             fontWeight:
-                                                            FontWeight.bold,
+                                                                FontWeight.bold,
                                                             fontSize: 20.0,
                                                             color:
-                                                            MyColors.black),
+                                                                MyColors.black),
                                                       ),
+                                                      ElevatedButton(
+                                                        child: const Text(
+                                                            'Editar'),
+                                                        style: ButtonStyle(
+                                                            backgroundColor:
+                                                                MaterialStateProperty
+                                                                    .all(MyColors
+                                                                        .buttonCardClass),
+                                                            shape: MaterialStateProperty.all<
+                                                                    RoundedRectangleBorder>(
+                                                                RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            18),
+                                                                    side: const BorderSide(
+                                                                        color: Colors
+                                                                            .white)))),
+                                                        onPressed: () =>
+                                                            showDialog<bool>(
+                                                                context:
+                                                                    context,
+                                                                builder: (_) =>
+                                                                    AlertDialog(
+                                                                      title: const Text(
+                                                                          "Editar Horarios"),
+                                                                      content:
+                                                                          Column(
+                                                                        mainAxisSize:
+                                                                            MainAxisSize.min,
+                                                                        children: <
+                                                                            Widget>[
+                                                                          const Text(
+                                                                              "Seleccione de qué hora a qué hora se encuentra disponible"),
+                                                                          Row(
+                                                                            children: <Widget>[
+                                                                              DropdownButton<String>(
+                                                                                menuMaxHeight: 200.0,
+                                                                                value: dropdownValueFrom,
+                                                                                icon: const Icon(Icons.arrow_drop_down),
+                                                                                onChanged: (String? newValue) {
+                                                                                  setState(() {
+                                                                                    if (newValue != null) {
+                                                                                      dropdownValueFrom = newValue;
+                                                                                    }
+                                                                                  });
+                                                                                },
+                                                                                items: availableHours.map<DropdownMenuItem<String>>((String value) {
+                                                                                  return DropdownMenuItem<String>(
+                                                                                    value: value,
+                                                                                    child: Text(value),
+                                                                                  );
+                                                                                }).toList(),
+                                                                              ),
+                                                                              const Text("  a  "),
+                                                                              DropdownButton<String>(
+                                                                                value: dropdownValueUpTo,
+                                                                                icon: const Icon(Icons.arrow_drop_down),
+                                                                                onChanged: (String? newValue) {
+                                                                                  setState(() {
+                                                                                    if (newValue != null) {
+                                                                                      dropdownValueUpTo = newValue;
+                                                                                    }
+                                                                                  });
+                                                                                },
+                                                                                items: availableHours.map<DropdownMenuItem<String>>((String value) {
+                                                                                  return DropdownMenuItem<String>(
+                                                                                    value: value,
+                                                                                    child: Text(value),
+                                                                                  );
+                                                                                }).toList(),
+                                                                              )
+                                                                            ],
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                      actions: [
+                                                                        ElevatedButton(
+                                                                          onPressed: () =>
+                                                                              _handleChangedAvailableHours(),
+                                                                          child:
+                                                                              const Text('Aceptar'),
+                                                                          style:
+                                                                              ButtonStyle(backgroundColor: MaterialStateProperty.all(MyColors.buttonCardClass)),
+                                                                        ),
+                                                                      ],
+                                                                    )),
+                                                      )
                                                     ],
                                                   ),
                                                 ),
+                                                Text(
+                                                    availableFrom +
+                                                        " a " +
+                                                        availableUpTo,
+                                                    style: const TextStyle(
+                                                        fontSize: 18.0,
+                                                        color: MyColors.black),
+                                                    textAlign: TextAlign.left),
                                                 const SizedBox(
                                                   height: 200,
                                                   // child: GridView.count(),
-                                                )
+                                                ),
                                               ],
                                             ),
                                           ),
@@ -405,12 +543,12 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   }
 
   String _getUsername() {
-    String? username = firebaseAuth.currentUser!.displayName;
+    String? username = user.displayName;
     return username ?? "ERROR";
   }
 
   ImageProvider _getUserImage() {
-    String? userImageUrl = firebaseAuth.currentUser!.photoURL;
+    String? userImageUrl = user.photoURL;
     if (userImageUrl != null) {
       return NetworkImage(userImageUrl);
     } else {
@@ -418,12 +556,61 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
     }
   }
 
-  void addSubject(BuildContext context) async {
-    showDialog<bool>(
-        context: context,
-        builder: (context) => AddSubject()
-    );
+  String _roundHourFromString(String s) {
+    int aux = int.parse(s);
+
+    if (aux < 10) return "0" + s + ":00";
+
+    return s + ":00";
   }
 
+  void _getAvailableHours() async {
+    var document = await FirebaseFirestore.instance
+        .collection(TeachersKeys.collectionName)
+        .doc(user.uid);
 
+    document.get().then((document) => {
+          setState(() {
+            availableFrom =
+                _roundHourFromString(document[TeachersKeys.availableFrom]);
+            availableUpTo =
+                _roundHourFromString(document[TeachersKeys.availableUpTo]);
+            dropdownValueFrom = availableFrom;
+            dropdownValueUpTo = availableUpTo;
+          })
+        });
+  }
+
+  void _setAvailableHours(String from, String to) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection(TeachersKeys.collectionName)
+          .doc(user.uid)
+          .update({
+        TeachersKeys.availableFrom: from,
+        TeachersKeys.availableUpTo: to
+      });
+    } on Exception catch (e) {
+      /* print("MALARDOOOO"); */
+      print(e);
+    }
+
+    _getAvailableHours();
+  }
+
+  void _handleChangedAvailableHours() {
+    Navigator.pop(context, true);
+
+    int from = int.parse(dropdownValueFrom.replaceAll(":00", ""));
+    int to = int.parse(dropdownValueUpTo.replaceAll(":00", ""));
+
+    //TODO: Mostrar mensaje de horario invalido
+    if (to < from) return;
+
+    _setAvailableHours(from.toString(), to.toString());
+  }
+
+  void addSubject(BuildContext context) async {
+    showDialog<bool>(context: context, builder: (context) => AddSubject());
+  }
 }
