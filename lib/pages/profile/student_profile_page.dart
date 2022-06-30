@@ -12,6 +12,8 @@ import 'package:teachme_app/pages/settings_page.dart';
 import 'package:teachme_app/widgets/auth/auth_form.dart';
 import 'package:teachme_app/widgets/auth/auth_service.dart';
 import 'package:teachme_app/widgets/auth/profile_service.dart';
+import 'package:teachme_app/pages/notifications_page.dart';
+import 'package:teachme_app/pages/settings_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import '../../widgets/other/tm_navigator.dart';
 
@@ -46,8 +48,9 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: _profileService.getProfile(),
-        builder: (context, AsyncSnapshot<Map<String,dynamic>?> snap) {
-          if(!snap.hasData || snap.connectionState == ConnectionState.waiting){
+        builder: (context, AsyncSnapshot<Map<String, dynamic>?> snap) {
+          if (!snap.hasData ||
+              snap.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
             );
@@ -137,7 +140,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                                           color: MyColors.black,
                                                           fontSize: 28.0,
                                                           fontWeight:
-                                                          FontWeight.bold)),
+                                                              FontWeight.bold)),
                                                 ),
                                                 const SizedBox(height: 10.0),
                                                 const Divider(
@@ -147,37 +150,45 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                                   endIndent: 32.0,
                                                 ),
                                                 Padding(
-                                                  padding: const EdgeInsets.only(
-                                                      left: 32.0, right: 32.0),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 32.0,
+                                                          right: 32.0),
                                                   child: Align(
                                                       child: Center(
-                                                        child: Row(
-                                                            children: [
-                                                              Expanded(
-                                                                  child: !_isEditingText
-                                                                      ? Text(initialText)
-                                                                      : TextFormField(
-                                                                      initialValue: initialText,
-                                                                      textInputAction: TextInputAction.done,
-                                                                      onFieldSubmitted: (value) {
-                                                                        _profileService.updateDescription(value);
-                                                                        setState(() => {
-                                                                          _isEditingText = false, initialText = value
-                                                                        });
-                                                                      }
-                                                                      )
-                                                              ),
-                                                              IconButton(
-                                                                icon: Icon(Icons.edit),
-                                                                onPressed: () {
-                                                                  setState(() => {
-                                                                    _isEditingText = true,
-                                                                  });
-                                                                },
-                                                              )
-                                                        ]),
+                                                    child: Row(children: [
+                                                      Expanded(
+                                                          child: !_isEditingText
+                                                              ? Text(
+                                                                  initialText)
+                                                              : TextFormField(
+                                                                  initialValue:
+                                                                      initialText,
+                                                                  textInputAction:
+                                                                      TextInputAction
+                                                                          .done,
+                                                                  onFieldSubmitted:
+                                                                      (value) {
+                                                                    _profileService
+                                                                        .updateDescription(
+                                                                            value);
+                                                                    setState(
+                                                                        () => {
+                                                                              _isEditingText = false,
+                                                                              initialText = value
+                                                                            });
+                                                                  })),
+                                                      IconButton(
+                                                        icon: Icon(Icons.edit),
+                                                        onPressed: () {
+                                                          setState(() => {
+                                                                _isEditingText =
+                                                                    true,
+                                                              });
+                                                        },
                                                       )
-                                                  ),
+                                                    ]),
+                                                  )),
                                                 ),
                                                 const SizedBox(height: 25.0),
                                                 const Divider(
@@ -187,41 +198,45 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                                   endIndent: 32.0,
                                                 ),
                                                 Padding(
-                                                  padding: const EdgeInsets.only(
-                                                      right: 25.0, left: 25.0),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 25.0,
+                                                          left: 25.0),
                                                   child: Row(
                                                     mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
                                                     children: <Widget>[
                                                       const Text(
                                                         "Calificación",
                                                         style: TextStyle(
                                                             fontWeight:
-                                                            FontWeight.bold,
+                                                                FontWeight.bold,
                                                             fontSize: 20.0,
                                                             color:
-                                                            MyColors.black),
+                                                                MyColors.black),
                                                       ),
                                                       RatingBar.builder(
                                                         initialRating: 3,
                                                         itemSize: 25,
                                                         minRating: 1,
                                                         direction:
-                                                        Axis.horizontal,
+                                                            Axis.horizontal,
                                                         allowHalfRating: true,
                                                         itemCount: 5,
                                                         itemPadding:
-                                                        const EdgeInsets
-                                                            .symmetric(
-                                                            horizontal: 2.0),
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                horizontal:
+                                                                    2.0),
                                                         itemBuilder:
                                                             (context, _) =>
-                                                        const Icon(
+                                                                const Icon(
                                                           Icons.star,
                                                           color: MyColors.white,
                                                         ),
-                                                        onRatingUpdate: (rating) {
+                                                        onRatingUpdate:
+                                                            (rating) {
                                                           print(rating);
                                                         },
                                                       ),
@@ -236,21 +251,23 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                                   endIndent: 32.0,
                                                 ),
                                                 Padding(
-                                                  padding: const EdgeInsets.only(
-                                                      right: 25.0, left: 25.0),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 25.0,
+                                                          left: 25.0),
                                                   child: Row(
                                                     mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
                                                     children: const [
                                                       Text(
                                                         "Comentarios",
                                                         style: TextStyle(
                                                             fontWeight:
-                                                            FontWeight.bold,
+                                                                FontWeight.bold,
                                                             fontSize: 20.0,
                                                             color:
-                                                            MyColors.black),
+                                                                MyColors.black),
                                                       ),
                                                     ],
                                                   ),
@@ -284,7 +301,8 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                     ]),
                   )
                 ]));
-          }});
+          }
+        });
   }
 
   String _getUsername() {
@@ -300,6 +318,4 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
       return const AssetImage("assets/images/hasbulla.png");
     }
   }
-
-
 }
