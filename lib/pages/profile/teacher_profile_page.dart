@@ -264,7 +264,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                       ),
                                                       ElevatedButton(
                                                         onPressed: () =>
-                                                            addSubject(context),
+                                                            addSubject(context, 'Agregar', 'Agregar', 'Cancelar'),
                                                         child: const Text(
                                                             'Agregar'),
                                                         style: ButtonStyle(
@@ -278,6 +278,26 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                                     borderRadius:
                                                                         BorderRadius.circular(
                                                                             18),
+                                                                    side: const BorderSide(
+                                                                        color: Colors
+                                                                            .white)))),
+                                                      ),
+                                                      ElevatedButton(
+                                                        onPressed: () =>
+                                                            addSubject(context, 'Editar', 'Eliminar', 'Guardar'),
+                                                        child: const Text(
+                                                            'Editar'),
+                                                        style: ButtonStyle(
+                                                            backgroundColor:
+                                                            MaterialStateProperty
+                                                                .all(MyColors
+                                                                .buttonCardClass),
+                                                            shape: MaterialStateProperty.all<
+                                                                RoundedRectangleBorder>(
+                                                                RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                    BorderRadius.circular(
+                                                                        18),
                                                                     side: const BorderSide(
                                                                         color: Colors
                                                                             .white)))),
@@ -619,7 +639,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
     _setAvailableHours(from.toString(), to.toString());
   }
 
-  void addSubject(BuildContext context) async {
-    showDialog<bool>(context: context, builder: (context) => AddSubject());
+  void addSubject(BuildContext context, String title, String b1, String b2) async {
+    showDialog<bool>(context: context, builder: (context) => AddSubject(title: title,button1: b1, button2: b2,));
   }
 }
