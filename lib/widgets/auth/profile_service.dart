@@ -71,14 +71,12 @@ class ProfileService {
       var userType = docSnapShot.get(UsersProfileTypeKeys.type);
 
       if (userType == "student") {
-        /*
         await FirebaseFirestore.instance
             .collection(StudentsKeys.collectionName)
             .doc(user?.uid)
             .update({
           StudentsKeys.position: newPosition
         });
-         */
       } else {
         await FirebaseFirestore.instance
             .collection(TeachersKeys.collectionName)

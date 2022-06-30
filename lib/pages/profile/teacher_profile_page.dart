@@ -135,11 +135,14 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                 ),
                                                 ElevatedButton(
                                                     onPressed: () {
-                                                      TMNavigator.navigateToPage(context, CurrentLocationScreen(
-                                                        positionChanged: (position) {
-                                                          _profileService.updatePosition(position);
-                                                        },
-                                                      ));
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(builder: (context) => CurrentLocationScreen(
+                                                          positionChanged: (position) {
+                                                            _profileService.updatePosition(position);
+                                                          },
+                                                        ))
+                                                      );
                                                     },
                                                     child: const Text("Usar ubicación actual")),
                                                 const SizedBox(height: 10.0),

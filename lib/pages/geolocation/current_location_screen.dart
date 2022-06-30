@@ -50,7 +50,7 @@ class _CurrentLocationScreenState extends State<CurrentLocationScreen> {
           markers.add(Marker(markerId: const MarkerId('currentLocation'),position: LatLng(position.latitude, position.longitude)));
 
           widget.positionChanged(position);
-          Navigator.of(context).pop();
+          Navigator.pop(context);
 
           /* setState(() {
 

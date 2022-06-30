@@ -7,6 +7,7 @@ import 'package:teachme_app/helpers/students_keys.dart';
 import 'package:teachme_app/helpers/teachers_keys.dart';
 import 'package:teachme_app/helpers/users_profile_type_keys.dart';
 import 'package:teachme_app/main.dart';
+import 'package:teachme_app/pages/geolocation/current_location_screen.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/pages/settings_page.dart';
 import 'package:teachme_app/widgets/auth/auth_form.dart';
@@ -139,6 +140,18 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                                           fontWeight:
                                                           FontWeight.bold)),
                                                 ),
+                                                ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(builder: (context) => CurrentLocationScreen(
+                                                            positionChanged: (position) {
+                                                              _profileService.updatePosition(position);
+                                                            },
+                                                          ))
+                                                      );
+                                                    },
+                                                    child: const Text("Usar ubicación actual")),
                                                 const SizedBox(height: 10.0),
                                                 const Divider(
                                                   height: 40.0,
