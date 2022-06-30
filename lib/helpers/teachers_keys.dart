@@ -10,6 +10,5 @@ class TeachersKeys {
   static const description = 'description';
   static const positionLatitude = 'positionLatitude';
   static const positionLongitude = 'positionLongitude';
-  static const descritpion = 'descritpion';
   static const collectionName = 'teachers';
 }

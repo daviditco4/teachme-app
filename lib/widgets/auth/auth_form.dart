@@ -233,8 +233,11 @@ void _updateStudentsOrTeachersCollection(String userType) async {
           .set({
         StudentsKeys.name: user.displayName,
         StudentsKeys.photoUrl: user.photoURL,
+        StudentsKeys.description: "",
         StudentsKeys.uid: user.uid,
-        StudentsKeys.address: 'placeholder'
+        StudentsKeys.address: 'placeholder',
+        StudentsKeys.positionLatitude: "",
+        StudentsKeys.positionLongitude: ""
       });
     } else {
       await FirebaseFirestore.instance

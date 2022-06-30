@@ -7,6 +7,7 @@ import 'package:teachme_app/helpers/students_keys.dart';
 import 'package:teachme_app/helpers/teachers_keys.dart';
 import 'package:teachme_app/helpers/users_profile_type_keys.dart';
 import 'package:teachme_app/main.dart';
+import 'package:teachme_app/pages/geolocation/current_location_screen.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/pages/settings_page.dart';
 import 'package:teachme_app/widgets/auth/auth_form.dart';
@@ -30,7 +31,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
 
   bool _isEditingText = false;
   late TextEditingController _editingController;
-  String initialText = "Initial Text";
+  String initialText = "";
 
   @override
   void initState() {
@@ -40,8 +41,8 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
 
   @override
   void dispose() {
-    _editingController.dispose();
     super.dispose();
+    _editingController.dispose();
   }
 
   @override
@@ -142,6 +143,18 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                                           fontWeight:
                                                               FontWeight.bold)),
                                                 ),
+                                                ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(builder: (context) => CurrentLocationScreen(
+                                                            positionChanged: (position) {
+                                                              _profileService.updatePosition(position);
+                                                            },
+                                                          ))
+                                                      );
+                                                    },
+                                                    child: const Text("Usar ubicación actual")),
                                                 const SizedBox(height: 10.0),
                                                 const Divider(
                                                   height: 40.0,
@@ -160,24 +173,24 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                                       Expanded(
                                                           child: !_isEditingText
                                                               ? Text(
-                                                                  initialText)
+                                                              initialText)
                                                               : TextFormField(
-                                                                  initialValue:
-                                                                      initialText,
-                                                                  textInputAction:
-                                                                      TextInputAction
-                                                                          .done,
-                                                                  onFieldSubmitted:
-                                                                      (value) {
-                                                                    _profileService
-                                                                        .updateDescription(
-                                                                            value);
-                                                                    setState(
+                                                              initialValue:
+                                                              initialText,
+                                                              textInputAction:
+                                                              TextInputAction
+                                                                  .done,
+                                                              onFieldSubmitted:
+                                                                  (value) {
+                                                                _profileService
+                                                                    .updateDescription(
+                                                                    value);
+                                                                setState(
                                                                         () => {
-                                                                              _isEditingText = false,
-                                                                              initialText = value
-                                                                            });
-                                                                  })),
+                                                                      _isEditingText = false,
+                                                                      initialText = value
+                                                                    });
+                                                              })),
                                                       IconButton(
                                                         icon: Icon(Icons.edit),
                                                         onPressed: () {

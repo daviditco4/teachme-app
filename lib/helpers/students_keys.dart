@@ -4,5 +4,8 @@ class StudentsKeys {
   static const photoUrl = 'photoUrl';
   static const uid = 'uid';
   static const description = "description";
+  static const position = 'position';
   static const collectionName = 'students';
+  static const positionLatitude = "positionLatitude";
+  static const positionLongitude = "positionLongitude";
 }

@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/helpers/teachers_keys.dart';
+import 'package:teachme_app/pages/geolocation/current_location_screen.dart';
+import 'package:teachme_app/pages/geolocation/search_places_screen.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/pages/settings_page.dart';
 import 'package:teachme_app/widgets/addSubject.dart';
-import 'package:teachme_app/widgets/auth/auth_service.dart';
 import 'package:teachme_app/widgets/auth/profile_service.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import '../../widgets/other/tm_navigator.dart';
@@ -26,7 +27,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
 
   bool _isEditingText = false;
   late TextEditingController _editingController;
-  String initialText = "Initial Text";
+  String initialText = "";
   User user = FirebaseAuth.instance.currentUser!;
   String availableFrom = "...";
   String availableUpTo = "...";
@@ -65,6 +66,12 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
     super.initState();
     _getAvailableHours();
     _editingController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _editingController.dispose();
+    super.dispose();
   }
 
   @override
@@ -165,6 +172,23 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                           fontWeight:
                                                               FontWeight.bold)),
                                                 ),
+                                                ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  CurrentLocationScreen(
+                                                                    positionChanged:
+                                                                        (position) {
+                                                                      _profileService
+                                                                          .updatePosition(
+                                                                              position);
+                                                                    },
+                                                                  )));
+                                                    },
+                                                    child: const Text(
+                                                        "Usar ubicación actual")),
                                                 const SizedBox(height: 10.0),
                                                 const Divider(
                                                   height: 40.0,
@@ -524,6 +548,8 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
           }
         });
   }
+
+  void _updateLocation() {}
 
   String _getUsername() {
     String? username = user.displayName;
