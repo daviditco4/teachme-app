@@ -62,9 +62,9 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
 
   @override
   void initState() {
+    super.initState();
     _getAvailableHours();
     _editingController = TextEditingController();
-    super.initState();
   }
 
   @override

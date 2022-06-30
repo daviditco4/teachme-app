@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:teachme_app/main.dart';
 import 'package:teachme_app/pages/recover_password.dart';
+import 'package:teachme_app/widgets/other/tm_navigator.dart';
 
 import '../../helpers/snack_bars.dart';
 import '../../helpers/students_keys.dart';
@@ -70,10 +71,6 @@ class _AuthFormState extends State<AuthForm> {
         signup: _authMode == AuthMode.signup,
       );
 
-      /* print("DATARDOS DEL USUARIO:");
-      print(FirebaseAuth.instance.currentUser!.displayName);
-      print(FirebaseAuth.instance.currentUser!.uid); */
-
       if (!success) {
         setState(() => _isLoading = false);
       } else {
@@ -87,17 +84,8 @@ class _AuthFormState extends State<AuthForm> {
     }
   }
 
-  /* FIXME: Cambiar esto al nuevo Navigator */
-  PageRouteBuilder _noAnimationRouter(Widget page) {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation1, animation2) => page,
-      transitionDuration: Duration.zero,
-      reverseTransitionDuration: Duration.zero,
-    );
-  }
-
   void _recoverAccount() {
-    Navigator.pushReplacement(context, _noAnimationRouter(RecoverPassword()));
+    TMNavigator.navigateToPage(context, RecoverPassword());
   }
 
   @override
@@ -233,11 +221,8 @@ String _profileTypeToString(ProfileType pt) {
 
 /* Crea una entrada en la tabla de teachers o students, segun corresponda */
 void _updateStudentsOrTeachersCollection(String userType) async {
-  /*TODO: Switch entre alumno y profesor */
   try {
     final user = FirebaseAuth.instance.currentUser!;
-    /* print(" DATOS DEL USUARIO 2");
-    print(user); */
     final String userCategoryPath =
         userType == 'student' ? studentsCollectionPath : teachersCollectionPath;
 
@@ -263,13 +248,12 @@ void _updateStudentsOrTeachersCollection(String userType) async {
         TeachersKeys.address: 'placeholder',
         TeachersKeys.availableFrom: "10",
         TeachersKeys.availableUpTo: "18",
-        TeachersKeys.description: "",
+        TeachersKeys.description: "¡Hola! Soy un profesor en TeachMe",
         TeachersKeys.positionLatitude: "",
         TeachersKeys.positionLongitude: ""
       });
     }
   } on Exception catch (e) {
-    /* print("MALARDOOOO 2"); */
     print(e);
   }
 }
@@ -277,8 +261,6 @@ void _updateStudentsOrTeachersCollection(String userType) async {
 void _updateUsersProfileTypesCollection(String userType) async {
   try {
     final user = FirebaseAuth.instance.currentUser!;
-    /* print(" DATOS DEL USUARIO");
-    print(user); */
     await FirebaseFirestore.instance
         .collection(usersProfileTypeCollectionPath)
         .doc(user.uid)
@@ -287,7 +269,6 @@ void _updateUsersProfileTypesCollection(String userType) async {
       UsersProfileTypeKeys.type: userType
     });
   } on Exception catch (e) {
-    /* print("MALARDOOOO"); */
     print(e);
   }
 }
