@@ -233,7 +233,7 @@ void _updateStudentsOrTeachersCollection(String userType) async {
           .set({
         StudentsKeys.name: user.displayName,
         StudentsKeys.photoUrl: user.photoURL,
-        StudentsKeys.description: "",
+        StudentsKeys.description: "¡Hola! Soy un estudiante en TeachMe",
         StudentsKeys.uid: user.uid,
         StudentsKeys.address: 'placeholder',
         StudentsKeys.positionLatitude: "",
