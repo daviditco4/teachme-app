@@ -10,7 +10,7 @@ import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/pages/settings_page.dart';
 import 'package:teachme_app/widgets/addSubject.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
-import '../widgets/other/tm_navigator.dart';
+import '../../widgets/other/tm_navigator.dart';
 
 class TeacherProfilePage extends StatefulWidget {
   const TeacherProfilePage({Key? key}) : super(key: key);

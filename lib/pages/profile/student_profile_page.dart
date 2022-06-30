@@ -5,7 +5,7 @@ import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/pages/settings_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
-import '../widgets/other/tm_navigator.dart';
+import '../../widgets/other/tm_navigator.dart';
 
 class StudentProfilePage extends StatefulWidget {
   const StudentProfilePage({Key? key}) : super(key: key);
