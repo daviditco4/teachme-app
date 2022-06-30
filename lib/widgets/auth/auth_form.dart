@@ -226,7 +226,7 @@ void _updateStudentsOrTeachersCollection(String userType) async {
     final String userCategoryPath =
         userType == 'student' ? studentsCollectionPath : teachersCollectionPath;
 
-    if (userType == student) {
+    if (userType == 'student') {
       await FirebaseFirestore.instance
           .collection(userCategoryPath)
           .doc(user.uid)
