@@ -75,7 +75,8 @@ class ProfileService {
             .collection(StudentsKeys.collectionName)
             .doc(user?.uid)
             .update({
-          StudentsKeys.position: newPosition
+          StudentsKeys.positionLatitude: newPosition.latitude.toString(),
+          StudentsKeys.positionLongitude: newPosition.longitude.toString()
         });
       } else {
         await FirebaseFirestore.instance
