@@ -31,7 +31,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
 
   bool _isEditingText = false;
   late TextEditingController _editingController;
-  String initialText = "Initial Text";
+  String initialText = "";
 
   @override
   void initState() {
@@ -41,8 +41,8 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
 
   @override
   void dispose() {
-    _editingController.dispose();
     super.dispose();
+    _editingController.dispose();
   }
 
   @override
@@ -173,24 +173,24 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                                       Expanded(
                                                           child: !_isEditingText
                                                               ? Text(
-                                                                  initialText)
+                                                              initialText)
                                                               : TextFormField(
-                                                                  initialValue:
-                                                                      initialText,
-                                                                  textInputAction:
-                                                                      TextInputAction
-                                                                          .done,
-                                                                  onFieldSubmitted:
-                                                                      (value) {
-                                                                    _profileService
-                                                                        .updateDescription(
-                                                                            value);
-                                                                    setState(
+                                                              initialValue:
+                                                              initialText,
+                                                              textInputAction:
+                                                              TextInputAction
+                                                                  .done,
+                                                              onFieldSubmitted:
+                                                                  (value) {
+                                                                _profileService
+                                                                    .updateDescription(
+                                                                    value);
+                                                                setState(
                                                                         () => {
-                                                                              _isEditingText = false,
-                                                                              initialText = value
-                                                                            });
-                                                                  })),
+                                                                      _isEditingText = false,
+                                                                      initialText = value
+                                                                    });
+                                                              })),
                                                       IconButton(
                                                         icon: Icon(Icons.edit),
                                                         onPressed: () {

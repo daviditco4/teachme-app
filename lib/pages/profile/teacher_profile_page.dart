@@ -27,7 +27,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
 
   bool _isEditingText = false;
   late TextEditingController _editingController;
-  String initialText = "Initial Text";
+  String initialText = "";
   User user = FirebaseAuth.instance.currentUser!;
   String availableFrom = "...";
   String availableUpTo = "...";
@@ -63,9 +63,15 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
 
   @override
   void initState() {
+    super.initState();
     _getAvailableHours();
     _editingController = TextEditingController();
-    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _editingController.dispose();
   }
 
   @override

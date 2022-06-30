@@ -6,4 +6,6 @@ class StudentsKeys {
   static const description = "description";
   static const position = 'position';
   static const collectionName = 'students';
+  static const positionLatitude = "positionLatitude";
+  static const positionLongitude = "positionLongitude";
 }
