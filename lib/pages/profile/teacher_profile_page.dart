@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'package:teachme_app/widgets/addSubject.dart';
 import 'package:teachme_app/widgets/auth/profile_service.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import '../../widgets/other/tm_navigator.dart';
+import 'package:weekday_selector/weekday_selector.dart';
 
 class TeacherProfilePage extends StatefulWidget {
   const TeacherProfilePage({Key? key}) : super(key: key);
@@ -33,6 +35,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   String availableUpTo = "...";
   String dropdownValueFrom = "00:00";
   String dropdownValueUpTo = "23:00";
+  List<bool> availableDays = List.filled(7, true);
 
   static final List<String> availableHours = [
     "00:00",
@@ -263,8 +266,10 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                                 MyColors.black),
                                                       ),
                                                       ElevatedButton(
-                                                        onPressed: () =>
-                                                            addSubject(context),
+                                                        onPressed: /* () =>
+                                                            addSubject(context) */
+                                                            () =>
+                                                                _setAvailableWeekdays(),
                                                         child: const Text(
                                                             'Agregar'),
                                                         style: ButtonStyle(
@@ -435,75 +440,96 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                                     side: const BorderSide(
                                                                         color: Colors
                                                                             .white)))),
-                                                        onPressed: () =>
-                                                            showDialog<bool>(
-                                                                context:
-                                                                    context,
-                                                                builder: (_) =>
-                                                                    AlertDialog(
-                                                                      title: const Text(
-                                                                          "Editar Horarios"),
-                                                                      content:
-                                                                          Column(
-                                                                        mainAxisSize:
-                                                                            MainAxisSize.min,
-                                                                        children: <
-                                                                            Widget>[
-                                                                          const Text(
-                                                                              "Seleccione de qué hora a qué hora se encuentra disponible"),
-                                                                          Row(
-                                                                            children: <Widget>[
-                                                                              DropdownButton<String>(
-                                                                                menuMaxHeight: 200.0,
-                                                                                value: dropdownValueFrom,
-                                                                                icon: const Icon(Icons.arrow_drop_down),
-                                                                                onChanged: (String? newValue) {
-                                                                                  setState(() {
-                                                                                    if (newValue != null) {
-                                                                                      dropdownValueFrom = newValue;
-                                                                                    }
-                                                                                  });
-                                                                                },
-                                                                                items: availableHours.map<DropdownMenuItem<String>>((String value) {
-                                                                                  return DropdownMenuItem<String>(
-                                                                                    value: value,
-                                                                                    child: Text(value),
-                                                                                  );
-                                                                                }).toList(),
-                                                                              ),
-                                                                              const Text("  a  "),
-                                                                              DropdownButton<String>(
-                                                                                value: dropdownValueUpTo,
-                                                                                icon: const Icon(Icons.arrow_drop_down),
-                                                                                onChanged: (String? newValue) {
-                                                                                  setState(() {
-                                                                                    if (newValue != null) {
-                                                                                      dropdownValueUpTo = newValue;
-                                                                                    }
-                                                                                  });
-                                                                                },
-                                                                                items: availableHours.map<DropdownMenuItem<String>>((String value) {
-                                                                                  return DropdownMenuItem<String>(
-                                                                                    value: value,
-                                                                                    child: Text(value),
-                                                                                  );
-                                                                                }).toList(),
-                                                                              )
-                                                                            ],
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                      actions: [
-                                                                        ElevatedButton(
-                                                                          onPressed: () =>
-                                                                              _handleChangedAvailableHours(),
-                                                                          child:
-                                                                              const Text('Aceptar'),
-                                                                          style:
-                                                                              ButtonStyle(backgroundColor: MaterialStateProperty.all(MyColors.buttonCardClass)),
+                                                        onPressed: () => showDialog<
+                                                                bool>(
+                                                            context: context,
+                                                            builder: (context) =>
+                                                                StatefulBuilder(
+                                                                  builder: (context,
+                                                                          setState) =>
+                                                                      AlertDialog(
+                                                                    title: const Text(
+                                                                        "Editar Horarios"),
+                                                                    content:
+                                                                        Column(
+                                                                      mainAxisSize:
+                                                                          MainAxisSize
+                                                                              .min,
+                                                                      children: <
+                                                                          Widget>[
+                                                                        const Text(
+                                                                            "Seleccione qué días está disponible"),
+                                                                        WeekdaySelector(
+                                                                            onChanged: (int
+                                                                                day) {
+                                                                              setState(() {
+                                                                                // Los dias estan numerados del 1 al 7
+                                                                                int index = day % 7;
+                                                                                print(index);
+                                                                                availableDays[index] = !availableDays[index];
+                                                                              });
+                                                                            },
+                                                                            values:
+                                                                                availableDays),
+                                                                        const Text(
+                                                                            "Seleccione de qué hora a qué hora se encuentra disponible"),
+                                                                        Row(
+                                                                          children: <
+                                                                              Widget>[
+                                                                            DropdownButton<String>(
+                                                                              menuMaxHeight: 200.0,
+                                                                              value: dropdownValueFrom,
+                                                                              icon: const Icon(Icons.arrow_drop_down),
+                                                                              onChanged: (String? newValue) {
+                                                                                setState(() {
+                                                                                  if (newValue != null) {
+                                                                                    dropdownValueFrom = newValue;
+                                                                                  }
+                                                                                });
+                                                                              },
+                                                                              items: availableHours.map<DropdownMenuItem<String>>((String value) {
+                                                                                return DropdownMenuItem<String>(
+                                                                                  value: value,
+                                                                                  child: Text(value),
+                                                                                );
+                                                                              }).toList(),
+                                                                            ),
+                                                                            const Text("  a  "),
+                                                                            DropdownButton<String>(
+                                                                              value: dropdownValueUpTo,
+                                                                              icon: const Icon(Icons.arrow_drop_down),
+                                                                              onChanged: (String? newValue) {
+                                                                                setState(() {
+                                                                                  if (newValue != null) {
+                                                                                    dropdownValueUpTo = newValue;
+                                                                                  }
+                                                                                });
+                                                                              },
+                                                                              items: availableHours.map<DropdownMenuItem<String>>((String value) {
+                                                                                return DropdownMenuItem<String>(
+                                                                                  value: value,
+                                                                                  child: Text(value),
+                                                                                );
+                                                                              }).toList(),
+                                                                            )
+                                                                          ],
                                                                         ),
                                                                       ],
-                                                                    )),
+                                                                    ),
+                                                                    actions: [
+                                                                      ElevatedButton(
+                                                                        onPressed:
+                                                                            () =>
+                                                                                _handleChangedAvailableHours(),
+                                                                        child: const Text(
+                                                                            'Aceptar'),
+                                                                        style: ButtonStyle(
+                                                                            backgroundColor:
+                                                                                MaterialStateProperty.all(MyColors.buttonCardClass)),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                )),
                                                       )
                                                     ],
                                                   ),
@@ -550,7 +576,6 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   }
 
   void _updateLocation() {}
-
   String _getUsername() {
     String? username = user.displayName;
     return username ?? "ERROR";
@@ -563,6 +588,14 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
     } else {
       return const AssetImage("assets/images/hasbulla.png");
     }
+  }
+
+  void _setAvailableWeekdays() async {
+    await FirebaseFirestore.instance
+        .collection(TeachersKeys.collectionName)
+        .doc(user.uid)
+        .update({TeachersKeys.availableDays: availableDays});
+    //_getAvailableWeekdays
   }
 
   String _roundHourFromString(String s) {
@@ -617,6 +650,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
     if (to < from) return;
 
     _setAvailableHours(from.toString(), to.toString());
+    _setAvailableWeekdays();
   }
 
   void addSubject(BuildContext context) async {
