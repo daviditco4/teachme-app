@@ -264,7 +264,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                       ),
                                                       ElevatedButton(
                                                         onPressed: () =>
-                                                            addSubject(context, 'Agregar', 'Agregar', 'Cancelar'),
+                                                            addSubject(context, 'Agregar Materia', 'Agregar', 'Cancelar'),
                                                         child: const Text(
                                                             'Agregar'),
                                                         style: ButtonStyle(
@@ -284,7 +284,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                       ),
                                                       ElevatedButton(
                                                         onPressed: () =>
-                                                            addSubject(context, 'Editar', 'Eliminar', 'Guardar'),
+                                                            addSubject(context, 'Editar Materia', 'Eliminar', 'Guardar'),
                                                         child: const Text(
                                                             'Editar'),
                                                         style: ButtonStyle(

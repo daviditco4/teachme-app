@@ -32,7 +32,8 @@ class _AddSubject extends State<AddSubject> {
     return Center(
       child: Card(
         shape: RoundedRectangleBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(18.0)),),
+            borderRadius: BorderRadius.circular(18),
+            side: const BorderSide(color: Colors.white)),
         /*child:Container(
           height: 350,
           child: Column(
@@ -219,7 +220,7 @@ class _AddSubject extends State<AddSubject> {
 
         ),*/
         child:Container(
-        height: 250,
+        height: 200,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -228,12 +229,13 @@ class _AddSubject extends State<AddSubject> {
                     color: MyColors.black,
                     fontSize: 25,
                   )),
-
+              const SizedBox(height: 10.0),
               Text('Selecciona alguna de las siguientes materias: ',
                   style: const TextStyle(
                     color: MyColors.black,
                     fontSize: 17,
                   )),
+              const SizedBox(height: 10.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
