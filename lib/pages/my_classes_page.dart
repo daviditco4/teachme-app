@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
-import 'package:teachme_app/widgets/card_class.dart';
+import 'package:teachme_app/widgets/viewClass/card_class.dart';
 import '../widgets/other/tm_navigator.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/pages/settings_page.dart';
@@ -65,10 +65,10 @@ class _MyClass extends State<MyClass> {
                   ),
                   CardClass(
                       title:
-                          'Aún no tienes clases agendadas, busca tu próxima clase.',
-                      textButton: 'Próxima clase',
-                      schedule: '',
-                      direction: ''),
+                          'Matematica Discreta',
+                      textButton: 'Detalles',
+                      schedule: '08:00',
+                      direction: 'Calle falsa 123'),
                 ],
               ),
             ),
