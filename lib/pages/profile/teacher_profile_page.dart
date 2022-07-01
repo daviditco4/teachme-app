@@ -37,6 +37,15 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   String dropdownValueUpTo = "23:00";
   List<bool> availableDays = List.filled(7, true);
 
+  static final Map<int, String> indexToDayMap = {
+    0: "Domingo",
+    1: "Lunes",
+    2: "Martes",
+    3: "Miércoles",
+    4: "Jueves",
+    5: "Viernes",
+    6: "Sábado"
+  };
   static final List<String> availableHours = [
     "00:00",
     "01:00",
@@ -68,9 +77,11 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   void initState() {
     super.initState();
     _getAvailableHours();
+    _getAvailableWeekdays();
     _editingController = TextEditingController();
   }
 
+  @override
   @override
   void dispose() {
     _editingController.dispose();
@@ -228,7 +239,8 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                                             });
                                                                   })),
                                                       IconButton(
-                                                        icon: Icon(Icons.edit),
+                                                        icon: const Icon(
+                                                            Icons.edit),
                                                         onPressed: () {
                                                           setState(() => {
                                                                 _isEditingText =
@@ -465,7 +477,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                                               setState(() {
                                                                                 // Los dias estan numerados del 1 al 7
                                                                                 int index = day % 7;
-                                                                                print(index);
+
                                                                                 availableDays[index] = !availableDays[index];
                                                                               });
                                                                             },
@@ -535,13 +547,29 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                   ),
                                                 ),
                                                 Text(
-                                                    availableFrom +
-                                                        " a " +
-                                                        availableUpTo,
+                                                    "Días: " +
+                                                        _availableWeekdaysToString(
+                                                            availableDays),
                                                     style: const TextStyle(
                                                         fontSize: 18.0,
                                                         color: MyColors.black),
-                                                    textAlign: TextAlign.left),
+                                                    textAlign:
+                                                        TextAlign.center),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      10.0),
+                                                  child: Text(
+                                                      "Horarios: " +
+                                                          availableFrom +
+                                                          " a " +
+                                                          availableUpTo,
+                                                      style: const TextStyle(
+                                                          fontSize: 18.0,
+                                                          color:
+                                                              MyColors.black),
+                                                      textAlign:
+                                                          TextAlign.center),
+                                                ),
                                                 const SizedBox(
                                                   height: 200,
                                                   // child: GridView.count(),
@@ -595,7 +623,51 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
         .collection(TeachersKeys.collectionName)
         .doc(user.uid)
         .update({TeachersKeys.availableDays: availableDays});
-    //_getAvailableWeekdays
+    _getAvailableWeekdays();
+  }
+
+  void _getAvailableWeekdays() async {
+    var document = await FirebaseFirestore.instance
+        .collection(TeachersKeys.collectionName)
+        .doc(user.uid);
+
+    document.get().then((document) => {
+          setState(() {
+            List<dynamic> firebaseAvailableDays =
+                document[TeachersKeys.availableDays];
+
+            availableDays = firebaseAvailableDays.cast<bool>();
+          })
+        });
+  }
+
+  String _availableWeekdaysToString(List<bool> availableWeekdays) {
+    List<String> availableDaysStrings = [];
+    String out = "";
+
+    for (int i = 0; i < availableWeekdays.length; ++i) {
+      if (availableWeekdays[i]) {
+        availableDaysStrings.add(indexToDayMap[i]!);
+      }
+    }
+
+    switch (availableDaysStrings.length) {
+      case 0:
+        out = "El profesor no tiene días disponibles";
+        break;
+      case 1:
+        out = availableDaysStrings[0];
+        break;
+      default:
+        int i;
+        out += availableDaysStrings[0];
+        for (i = 1; i < availableDaysStrings.length - 1; ++i) {
+          out += ", " + availableDaysStrings[i];
+        }
+        out += " y " + availableDaysStrings[i];
+    }
+
+    return out;
   }
 
   String _roundHourFromString(String s) {
@@ -633,7 +705,6 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
         TeachersKeys.availableUpTo: to
       });
     } on Exception catch (e) {
-      /* print("MALARDOOOO"); */
       print(e);
     }
 
@@ -641,16 +712,15 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   }
 
   void _handleChangedAvailableHours() {
-    Navigator.pop(context, true);
-
     int from = int.parse(dropdownValueFrom.replaceAll(":00", ""));
     int to = int.parse(dropdownValueUpTo.replaceAll(":00", ""));
 
     //TODO: Mostrar mensaje de horario invalido
     if (to < from) return;
 
-    _setAvailableHours(from.toString(), to.toString());
     _setAvailableWeekdays();
+    _setAvailableHours(from.toString(), to.toString());
+    Navigator.pop(context, true);
   }
 
   void addSubject(BuildContext context) async {
