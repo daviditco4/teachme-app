@@ -627,11 +627,11 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   }
 
   void _getAvailableWeekdays() async {
-    var document = await FirebaseFirestore.instance
+    var document = FirebaseFirestore.instance
         .collection(TeachersKeys.collectionName)
         .doc(user.uid);
 
-    document.get().then((document) => {
+    await document.get().then((document) => {
           setState(() {
             List<dynamic> firebaseAvailableDays =
                 document[TeachersKeys.availableDays];
