@@ -7,6 +7,7 @@ class TeachersKeys {
   static const subjects = 'subjects';
   static const availableFrom = 'availableFrom';
   static const availableUpTo = 'availableUpTo';
+  static const availableDays = 'availableDays';
   static const description = 'description';
   static const positionLatitude = 'positionLatitude';
   static const positionLongitude = 'positionLongitude';

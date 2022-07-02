@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 import 'package:teachme_app/helpers/teachers_keys.dart';
 
 import '../constants/Theme.dart';
@@ -28,12 +29,17 @@ class AlertClass extends StatefulWidget {
 }
 
 class _AlertClass extends State<AlertClass> {
-  String dropdownValue = 'hh:mm';
+  final user = FirebaseAuth.instance.currentUser!;
+  String selectedHour = 'hh:mm';
   List<String> availableHours = ['hh:mm'];
+  DateTime localDate = DateTime.now();
+  DateTime selectedDate = DateTime.now();
+  List<bool> availableDays = List.filled(7, true);
 
   @override
   void initState() {
     _getTeacherAvailableHours();
+    _getTeacherAvailableWeekdays();
     super.initState();
   }
 
@@ -41,39 +47,58 @@ class _AlertClass extends State<AlertClass> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(widget.title),
-      contentPadding: EdgeInsets.zero,
-      content: Row(
-        children: <Widget>[
-          Text(widget.subTitle),
-          DropdownButton<String>(
-            value: dropdownValue,
-            icon: const Icon(Icons.arrow_drop_down),
-            onChanged: (String? newValue) {
-              setState(() {
-                dropdownValue = newValue!;
-              });
-            },
-            items: availableHours.map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-          ),
-        ],
+      content: StatefulBuilder(
+        builder: (context, setState) => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(widget.subTitle),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const Text("Fecha: "),
+                TextButton(
+                    child: Text(_getDate(selectedDate),
+                        style: const TextStyle(
+                            color: Colors.black, fontSize: 15.0)),
+                    onPressed: () => _selectDate(context)),
+                IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: () => _selectDate(context),
+                    iconSize: 20.0)
+              ],
+            ),
+            DropdownButton<String>(
+              menuMaxHeight: 200.0,
+              value: selectedHour,
+              icon: const Icon(Icons.arrow_drop_down),
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedHour = newValue!;
+                });
+              },
+              items:
+                  availableHours.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+          ],
+        ),
       ),
       actions: [
         ElevatedButton(
           onPressed: () => Navigator.pop(context, false),
-          child: const Text('No'),
+          child: const Text('Cancelar'),
           style: ButtonStyle(
               backgroundColor:
-                  MaterialStateProperty.all(MyColors.buttonCardClass)),
+                  MaterialStateProperty.all(MyColors.defaultColor)),
         ),
         ElevatedButton(
           onPressed: () => _handleBookedClass(
-              context, widget.teacherUid, widget.subjectId, dropdownValue),
-          child: const Text('Si'),
+              context, widget.teacherUid, widget.subjectId, selectedHour),
+          child: const Text('Reservar'),
           style: ButtonStyle(
               backgroundColor:
                   MaterialStateProperty.all(MyColors.buttonCardClass)),
@@ -98,49 +123,119 @@ class _AlertClass extends State<AlertClass> {
             for (int hour = availableFrom; hour <= availableUpTo; ++hour) {
               availableHours.add(hour.toString() + ":00");
             }
-            dropdownValue = availableHours[0];
+            selectedHour = availableHours[0];
           })
         });
   }
-}
 
-void _handleBookedClass(
-    BuildContext context, String teacherUid, String subjectId, String time) {
-  Navigator.pop(context, true);
-  _updateClassesCollection(teacherUid, subjectId, time);
-}
-
-void _updateClassesCollection(
-    String teacherUid, String subjectId, String time) async {
-  try {
-    final user = FirebaseAuth.instance.currentUser!;
-
-    await FirebaseFirestore.instance
-        .collection(StudentsKeys.collectionName)
-        .doc(user.uid)
-        .collection(ClassesKeys.collectionName)
-        .add({
-      //ClassesKeys.studentUid: user.uid,
-      //TODO: Campo Date
-      ClassesKeys.teacherUid: teacherUid,
-      ClassesKeys.time: time,
-      ClassesKeys.subjectId: subjectId,
-      ClassesKeys.cost: 'to be determined'
-    });
-
-    await FirebaseFirestore.instance
+  void _getTeacherAvailableWeekdays() async {
+    var document = await FirebaseFirestore.instance
         .collection(TeachersKeys.collectionName)
-        .doc(teacherUid)
-        .collection(ClassesKeys.collectionName)
-        .add({
-      ClassesKeys.studentUid: user.uid,
-      //ClassesKeys.teacherUid: teacherUid,
-      ClassesKeys.time: time,
-      ClassesKeys.subjectId: subjectId,
-      ClassesKeys.cost: 'to be determined'
-    });
-  } on Exception catch (e) {
-    /* print("MALARDOOOO"); */
-    print(e);
+        .doc(widget.teacherUid);
+
+    document.get().then((document) => {
+          setState(() {
+            List<dynamic> firebaseAvailableDays =
+                document[TeachersKeys.availableDays];
+
+            availableDays = firebaseAvailableDays.cast<bool>();
+
+            //print("AVAILABLE DAYS" + availableDays.toString());
+            _setValidFirstDate();
+          })
+        });
+  }
+
+  void _setValidFirstDate() {
+    if (_selectableDate(selectedDate)) {
+      return;
+    }
+
+    bool foundAvailableDay = false;
+    int i;
+    for (i = 0; i < 7; ++i) {
+      if (availableDays[(selectedDate.weekday + i) % 7]) {
+        foundAvailableDay = true;
+        break;
+      }
+    }
+    //FIXME: Manejar de otra forma el hecho de que un profesor
+    // no tenga fechas disponibles
+    if (!foundAvailableDay) {
+      print("Este profesor no tiene fechas disponibles");
+      return;
+    }
+    selectedDate = selectedDate.add(Duration(days: i));
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: selectedDate,
+        lastDate: DateTime(2101),
+        selectableDayPredicate: _selectableDate);
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
+
+  bool _selectableDate(DateTime dt) {
+    print("SELECTABLE DATE");
+    print(dt);
+    print(selectedDate);
+    return availableDays[dt.weekday % 7];
+  }
+
+  String _getDate(DateTime dateTime) {
+    return dateTime.toLocal().toString().split(' ')[0];
+  }
+
+  String _getTime(String time) {
+    return time.split(':')[0];
+  }
+
+  void _handleBookedClass(
+      BuildContext context, String teacherUid, String subjectId, String time) {
+    Navigator.pop(context, true);
+    _updateClassesCollection(teacherUid, subjectId);
+  }
+
+  void _updateClassesCollection(String teacherUid, String subjectId) async {
+    FirebaseFirestore store = FirebaseFirestore.instance;
+
+    try {
+      await store
+          .collection(StudentsKeys.collectionName)
+          .doc(user.uid)
+          .collection(ClassesKeys.collectionName)
+          .add({
+        //ClassesKeys.studentUid: user.uid,
+        //TODO: Campo Date
+        ClassesKeys.teacherUid: teacherUid,
+        ClassesKeys.date: _getDate(selectedDate),
+        ClassesKeys.time: _getTime(selectedHour),
+        ClassesKeys.subjectId: subjectId,
+        ClassesKeys.cost: 'to be determined'
+      });
+
+      await store
+          .collection(TeachersKeys.collectionName)
+          .doc(teacherUid)
+          .collection(ClassesKeys.collectionName)
+          .add({
+        ClassesKeys.studentUid: user.uid,
+        //ClassesKeys.teacherUid: teacherUid,
+        ClassesKeys.date: _getDate(selectedDate),
+        ClassesKeys.time: _getTime(selectedHour),
+        ClassesKeys.subjectId: subjectId,
+        ClassesKeys.cost: 'to be determined'
+      });
+    } on Exception catch (e) {
+      /* print("MALARDOOOO"); */
+      print(e);
+    }
   }
 }

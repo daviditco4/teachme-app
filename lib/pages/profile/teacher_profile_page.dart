@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'package:teachme_app/widgets/addSubject.dart';
 import 'package:teachme_app/widgets/auth/profile_service.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import '../../widgets/other/tm_navigator.dart';
+import 'package:weekday_selector/weekday_selector.dart';
 
 class TeacherProfilePage extends StatefulWidget {
   const TeacherProfilePage({Key? key}) : super(key: key);
@@ -33,7 +35,17 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   String availableUpTo = "...";
   String dropdownValueFrom = "00:00";
   String dropdownValueUpTo = "23:00";
+  List<bool> availableDays = List.filled(7, true);
 
+  static final Map<int, String> indexToDayMap = {
+    0: "Domingo",
+    1: "Lunes",
+    2: "Martes",
+    3: "Miércoles",
+    4: "Jueves",
+    5: "Viernes",
+    6: "Sábado"
+  };
   static final List<String> availableHours = [
     "00:00",
     "01:00",
@@ -65,9 +77,11 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   void initState() {
     super.initState();
     _getAvailableHours();
+    _getAvailableWeekdays();
     _editingController = TextEditingController();
   }
 
+  @override
   @override
   void dispose() {
     _editingController.dispose();
@@ -225,7 +239,8 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                                             });
                                                                   })),
                                                       IconButton(
-                                                        icon: Icon(Icons.edit),
+                                                        icon: const Icon(
+                                                            Icons.edit),
                                                         onPressed: () {
                                                           setState(() => {
                                                                 _isEditingText =
@@ -264,7 +279,11 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                       ),
                                                       ElevatedButton(
                                                         onPressed: () =>
-                                                            addSubject(context, 'Agregar Materia', 'Agregar', 'Cancelar'),
+                                                            addSubject(
+                                                                context,
+                                                                'Agregar Materia',
+                                                                'Agregar',
+                                                                'Cancelar'),
                                                         child: const Text(
                                                             'Agregar'),
                                                         style: ButtonStyle(
@@ -284,20 +303,24 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                       ),
                                                       ElevatedButton(
                                                         onPressed: () =>
-                                                            addSubject(context, 'Editar Materia', 'Eliminar', 'Guardar'),
+                                                            addSubject(
+                                                                context,
+                                                                'Editar Materia',
+                                                                'Eliminar',
+                                                                'Guardar'),
                                                         child: const Text(
                                                             'Editar'),
                                                         style: ButtonStyle(
                                                             backgroundColor:
-                                                            MaterialStateProperty
-                                                                .all(MyColors
-                                                                .buttonCardClass),
+                                                                MaterialStateProperty
+                                                                    .all(MyColors
+                                                                        .buttonCardClass),
                                                             shape: MaterialStateProperty.all<
-                                                                RoundedRectangleBorder>(
+                                                                    RoundedRectangleBorder>(
                                                                 RoundedRectangleBorder(
                                                                     borderRadius:
-                                                                    BorderRadius.circular(
-                                                                        18),
+                                                                        BorderRadius.circular(
+                                                                            18),
                                                                     side: const BorderSide(
                                                                         color: Colors
                                                                             .white)))),
@@ -455,87 +478,124 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                                     side: const BorderSide(
                                                                         color: Colors
                                                                             .white)))),
-                                                        onPressed: () =>
-                                                            showDialog<bool>(
-                                                                context:
-                                                                    context,
-                                                                builder: (_) =>
-                                                                    AlertDialog(
-                                                                      title: const Text(
-                                                                          "Editar Horarios"),
-                                                                      content:
-                                                                          Column(
-                                                                        mainAxisSize:
-                                                                            MainAxisSize.min,
-                                                                        children: <
-                                                                            Widget>[
-                                                                          const Text(
-                                                                              "Seleccione de qué hora a qué hora se encuentra disponible"),
-                                                                          Row(
-                                                                            children: <Widget>[
-                                                                              DropdownButton<String>(
-                                                                                menuMaxHeight: 200.0,
-                                                                                value: dropdownValueFrom,
-                                                                                icon: const Icon(Icons.arrow_drop_down),
-                                                                                onChanged: (String? newValue) {
-                                                                                  setState(() {
-                                                                                    if (newValue != null) {
-                                                                                      dropdownValueFrom = newValue;
-                                                                                    }
-                                                                                  });
-                                                                                },
-                                                                                items: availableHours.map<DropdownMenuItem<String>>((String value) {
-                                                                                  return DropdownMenuItem<String>(
-                                                                                    value: value,
-                                                                                    child: Text(value),
-                                                                                  );
-                                                                                }).toList(),
-                                                                              ),
-                                                                              const Text("  a  "),
-                                                                              DropdownButton<String>(
-                                                                                value: dropdownValueUpTo,
-                                                                                icon: const Icon(Icons.arrow_drop_down),
-                                                                                onChanged: (String? newValue) {
-                                                                                  setState(() {
-                                                                                    if (newValue != null) {
-                                                                                      dropdownValueUpTo = newValue;
-                                                                                    }
-                                                                                  });
-                                                                                },
-                                                                                items: availableHours.map<DropdownMenuItem<String>>((String value) {
-                                                                                  return DropdownMenuItem<String>(
-                                                                                    value: value,
-                                                                                    child: Text(value),
-                                                                                  );
-                                                                                }).toList(),
-                                                                              )
-                                                                            ],
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                      actions: [
-                                                                        ElevatedButton(
-                                                                          onPressed: () =>
-                                                                              _handleChangedAvailableHours(),
-                                                                          child:
-                                                                              const Text('Aceptar'),
-                                                                          style:
-                                                                              ButtonStyle(backgroundColor: MaterialStateProperty.all(MyColors.buttonCardClass)),
+                                                        onPressed: () => showDialog<
+                                                                bool>(
+                                                            context: context,
+                                                            builder: (context) =>
+                                                                StatefulBuilder(
+                                                                  builder: (context,
+                                                                          setState) =>
+                                                                      AlertDialog(
+                                                                    title: const Text(
+                                                                        "Editar Horarios"),
+                                                                    content:
+                                                                        Column(
+                                                                      mainAxisSize:
+                                                                          MainAxisSize
+                                                                              .min,
+                                                                      children: <
+                                                                          Widget>[
+                                                                        const Text(
+                                                                            "Seleccione qué días está disponible"),
+                                                                        WeekdaySelector(
+                                                                            onChanged: (int
+                                                                                day) {
+                                                                              setState(() {
+                                                                                // Los dias estan numerados del 1 al 7
+                                                                                int index = day % 7;
+
+                                                                                availableDays[index] = !availableDays[index];
+                                                                              });
+                                                                            },
+                                                                            values:
+                                                                                availableDays),
+                                                                        const Text(
+                                                                            "Seleccione de qué hora a qué hora se encuentra disponible"),
+                                                                        Row(
+                                                                          children: <
+                                                                              Widget>[
+                                                                            DropdownButton<String>(
+                                                                              menuMaxHeight: 200.0,
+                                                                              value: dropdownValueFrom,
+                                                                              icon: const Icon(Icons.arrow_drop_down),
+                                                                              onChanged: (String? newValue) {
+                                                                                setState(() {
+                                                                                  if (newValue != null) {
+                                                                                    dropdownValueFrom = newValue;
+                                                                                  }
+                                                                                });
+                                                                              },
+                                                                              items: availableHours.map<DropdownMenuItem<String>>((String value) {
+                                                                                return DropdownMenuItem<String>(
+                                                                                  value: value,
+                                                                                  child: Text(value),
+                                                                                );
+                                                                              }).toList(),
+                                                                            ),
+                                                                            const Text("  a  "),
+                                                                            DropdownButton<String>(
+                                                                              value: dropdownValueUpTo,
+                                                                              icon: const Icon(Icons.arrow_drop_down),
+                                                                              onChanged: (String? newValue) {
+                                                                                setState(() {
+                                                                                  if (newValue != null) {
+                                                                                    dropdownValueUpTo = newValue;
+                                                                                  }
+                                                                                });
+                                                                              },
+                                                                              items: availableHours.map<DropdownMenuItem<String>>((String value) {
+                                                                                return DropdownMenuItem<String>(
+                                                                                  value: value,
+                                                                                  child: Text(value),
+                                                                                );
+                                                                              }).toList(),
+                                                                            )
+                                                                          ],
                                                                         ),
                                                                       ],
-                                                                    )),
+                                                                    ),
+                                                                    actions: [
+                                                                      ElevatedButton(
+                                                                        onPressed:
+                                                                            () =>
+                                                                                _handleChangedAvailableHours(),
+                                                                        child: const Text(
+                                                                            'Aceptar'),
+                                                                        style: ButtonStyle(
+                                                                            backgroundColor:
+                                                                                MaterialStateProperty.all(MyColors.buttonCardClass)),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                )),
                                                       )
                                                     ],
                                                   ),
                                                 ),
                                                 Text(
-                                                    availableFrom +
-                                                        " a " +
-                                                        availableUpTo,
+                                                    "Días: " +
+                                                        _availableWeekdaysToString(
+                                                            availableDays),
                                                     style: const TextStyle(
                                                         fontSize: 18.0,
                                                         color: MyColors.black),
-                                                    textAlign: TextAlign.left),
+                                                    textAlign:
+                                                        TextAlign.center),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      10.0),
+                                                  child: Text(
+                                                      "Horarios: " +
+                                                          availableFrom +
+                                                          " a " +
+                                                          availableUpTo,
+                                                      style: const TextStyle(
+                                                          fontSize: 18.0,
+                                                          color:
+                                                              MyColors.black),
+                                                      textAlign:
+                                                          TextAlign.center),
+                                                ),
                                                 const SizedBox(
                                                   height: 200,
                                                   // child: GridView.count(),
@@ -570,7 +630,6 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   }
 
   void _updateLocation() {}
-
   String _getUsername() {
     String? username = user.displayName;
     return username ?? "ERROR";
@@ -583,6 +642,58 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
     } else {
       return const AssetImage("assets/images/hasbulla.png");
     }
+  }
+
+  void _setAvailableWeekdays() async {
+    await FirebaseFirestore.instance
+        .collection(TeachersKeys.collectionName)
+        .doc(user.uid)
+        .update({TeachersKeys.availableDays: availableDays});
+    _getAvailableWeekdays();
+  }
+
+  void _getAvailableWeekdays() async {
+    var document = FirebaseFirestore.instance
+        .collection(TeachersKeys.collectionName)
+        .doc(user.uid);
+
+    await document.get().then((document) => {
+          setState(() {
+            List<dynamic> firebaseAvailableDays =
+                document[TeachersKeys.availableDays];
+
+            availableDays = firebaseAvailableDays.cast<bool>();
+          })
+        });
+  }
+
+  String _availableWeekdaysToString(List<bool> availableWeekdays) {
+    List<String> availableDaysStrings = [];
+    String out = "";
+
+    for (int i = 0; i < availableWeekdays.length; ++i) {
+      if (availableWeekdays[i]) {
+        availableDaysStrings.add(indexToDayMap[i]!);
+      }
+    }
+
+    switch (availableDaysStrings.length) {
+      case 0:
+        out = "El profesor no tiene días disponibles";
+        break;
+      case 1:
+        out = availableDaysStrings[0];
+        break;
+      default:
+        int i;
+        out += availableDaysStrings[0];
+        for (i = 1; i < availableDaysStrings.length - 1; ++i) {
+          out += ", " + availableDaysStrings[i];
+        }
+        out += " y " + availableDaysStrings[i];
+    }
+
+    return out;
   }
 
   String _roundHourFromString(String s) {
@@ -620,7 +731,6 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
         TeachersKeys.availableUpTo: to
       });
     } on Exception catch (e) {
-      /* print("MALARDOOOO"); */
       print(e);
     }
 
@@ -628,18 +738,25 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   }
 
   void _handleChangedAvailableHours() {
-    Navigator.pop(context, true);
-
     int from = int.parse(dropdownValueFrom.replaceAll(":00", ""));
     int to = int.parse(dropdownValueUpTo.replaceAll(":00", ""));
 
     //TODO: Mostrar mensaje de horario invalido
     if (to < from) return;
 
+    _setAvailableWeekdays();
     _setAvailableHours(from.toString(), to.toString());
+    Navigator.pop(context, true);
   }
 
-  void addSubject(BuildContext context, String title, String b1, String b2) async {
-    showDialog<bool>(context: context, builder: (context) => AddSubject(title: title,button1: b1, button2: b2,));
+  void addSubject(
+      BuildContext context, String title, String b1, String b2) async {
+    showDialog<bool>(
+        context: context,
+        builder: (context) => AddSubject(
+              title: title,
+              button1: b1,
+              button2: b2,
+            ));
   }
 }
