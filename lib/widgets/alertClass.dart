@@ -183,9 +183,6 @@ class _AlertClass extends State<AlertClass> {
   }
 
   bool _selectableDate(DateTime dt) {
-    print("SELECTABLE DATE");
-    print(dt);
-    print(selectedDate);
     return availableDays[dt.weekday % 7];
   }
 
