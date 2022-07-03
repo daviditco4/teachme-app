@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/helpers/teachers_keys.dart';
@@ -28,8 +29,10 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   final ProfileService _profileService = ProfileService();
 
   bool _isEditingText = false;
+  bool _isEditingText2 = false;
   late TextEditingController _editingController;
   String initialText = "";
+  String classPrice = "";
   User user = FirebaseAuth.instance.currentUser!;
   String availableFrom = "...";
   String availableUpTo = "...";
@@ -78,6 +81,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
     super.initState();
     _getAvailableHours();
     _getAvailableWeekdays();
+    _getClassPrice();
     _editingController = TextEditingController();
   }
 
@@ -596,9 +600,93 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                       textAlign:
                                                           TextAlign.center),
                                                 ),
-                                                const SizedBox(
-                                                  height: 200,
-                                                  // child: GridView.count(),
+                                                const SizedBox(height: 25.0),
+                                                const Divider(
+                                                  height: 40.0,
+                                                  thickness: 1.5,
+                                                  indent: 32.0,
+                                                  endIndent: 32.0,
+                                                ),
+                                                Column(
+                                                  children: <Widget>[
+                                                    const Text(
+                                                      "Precio por Clase",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 20.0,
+                                                          color:
+                                                              MyColors.black),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 32.0,
+                                                              right: 32.0),
+                                                      child: Align(
+                                                        child: Row(children: [
+                                                          Expanded(
+                                                              child:
+                                                                  !_isEditingText2
+                                                                      ? Text(
+                                                                          classPrice,
+                                                                          style:
+                                                                              const TextStyle(fontSize: 15),
+                                                                          textAlign:
+                                                                              TextAlign.center,
+                                                                        )
+                                                                      : TextFormField(
+                                                                          validator:
+                                                                              ((value) {
+                                                                            if (value ==
+                                                                                null) {
+                                                                              return "Debe ingresar un valor";
+                                                                            }
+                                                                            int aux =
+                                                                                int.parse(value);
+                                                                            if (aux <=
+                                                                                0) {
+                                                                              return "Precio inválido";
+                                                                            }
+                                                                          }),
+                                                                          decoration: const InputDecoration(
+                                                                              labelStyle: TextStyle(
+                                                                                  color: Colors
+                                                                                      .black),
+                                                                              labelText:
+                                                                                  "Ingresa un nuevo precio"),
+                                                                          keyboardType: TextInputType
+                                                                              .number,
+                                                                          inputFormatters: [
+                                                                            FilteringTextInputFormatter.digitsOnly
+                                                                          ],
+                                                                          initialValue:
+                                                                              classPrice,
+                                                                          textInputAction: TextInputAction
+                                                                              .done,
+                                                                          onFieldSubmitted:
+                                                                              (value) {
+                                                                            setState(() =>
+                                                                                {
+                                                                                  _isEditingText2 = false,
+                                                                                  classPrice = value
+                                                                                });
+                                                                            _handleChangedClassPrice();
+                                                                          })),
+                                                          IconButton(
+                                                            icon: const Icon(
+                                                                Icons.edit),
+                                                            onPressed: () {
+                                                              setState(() => {
+                                                                    _isEditingText2 =
+                                                                        true,
+                                                                  });
+                                                            },
+                                                          )
+                                                        ]),
+                                                      ),
+                                                    )
+                                                  ],
                                                 ),
                                               ],
                                             ),
@@ -747,6 +835,31 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
     _setAvailableWeekdays();
     _setAvailableHours(from.toString(), to.toString());
     Navigator.pop(context, true);
+  }
+
+  void _handleChangedClassPrice() async {
+    try {
+      await FirebaseFirestore.instance
+          .collection(TeachersKeys.collectionName)
+          .doc(user.uid)
+          .update({TeachersKeys.classPrice: double.parse(classPrice)});
+    } on Exception catch (e) {
+      print(e);
+    }
+
+    _getClassPrice();
+  }
+
+  void _getClassPrice() async {
+    var document = FirebaseFirestore.instance
+        .collection(TeachersKeys.collectionName)
+        .doc(user.uid);
+
+    await document.get().then((document) => {
+          setState(() {
+            classPrice = document[TeachersKeys.classPrice].toString();
+          })
+        });
   }
 
   void addSubject(
