@@ -252,8 +252,8 @@ class _SearchPage extends State<SearchPage> {
                                             documentData[TeachersKeys.name]),
                                         subtitle: Text(
                                             'Se encuentra a ${subject["price"]} km'),
-                                        trailing:
-                                            Text('\$ ${subject["price"]}'),
+                                        trailing: Text(
+                                            '\$ ${documentData["classPrice"] ?? 0}'),
                                       ),
                                       Row(
                                         mainAxisAlignment:
