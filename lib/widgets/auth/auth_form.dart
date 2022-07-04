@@ -253,7 +253,8 @@ void _updateStudentsOrTeachersCollection(String userType) async {
         TeachersKeys.availableUpTo: "18",
         TeachersKeys.description: "¡Hola! Soy un profesor en TeachMe",
         TeachersKeys.positionLatitude: "",
-        TeachersKeys.positionLongitude: ""
+        TeachersKeys.positionLongitude: "",
+        TeachersKeys.classPrice: 100
       });
     }
   } on Exception catch (e) {

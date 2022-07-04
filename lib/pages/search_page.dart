@@ -46,15 +46,16 @@ class SearchPage extends StatefulWidget {
 class _SearchPage extends State<SearchPage> {
   //late String selectedValue;
 
-  void showWarning(
-      BuildContext context, String teacherUid, String subjectId) async {
+  void showWarning(BuildContext context, String teacherUid, String subjectId,
+      double classPrice) async {
     showDialog<bool>(
       context: context,
       builder: (context) => AlertClass(
           title: '¿Querés reservar la clase?',
           subTitle: 'Seleccioná una fecha y horario disponibles: ',
           teacherUid: teacherUid,
-          subjectId: subjectId),
+          subjectId: subjectId,
+          classPrice: classPrice),
     );
   }
 
@@ -284,7 +285,10 @@ class _SearchPage extends State<SearchPage> {
                                             onPressed: () => showWarning(
                                                 context,
                                                 documentData[TeachersKeys.uid],
-                                                subject['sid']),
+                                                subject['sid'],
+                                                double.parse(documentData[
+                                                        TeachersKeys.classPrice]
+                                                    .toString())),
                                             child:
                                                 const Text('Reservar clases'),
                                             style: ButtonStyle(

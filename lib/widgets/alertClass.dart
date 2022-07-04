@@ -15,13 +15,15 @@ class AlertClass extends StatefulWidget {
   final String subTitle;
   final String teacherUid;
   final String subjectId;
+  final double classPrice;
 
   const AlertClass(
       {Key? key,
       required this.title,
       required this.subTitle,
       required this.teacherUid,
-      required this.subjectId})
+      required this.subjectId,
+      required this.classPrice})
       : super(key: key);
 
   @override
@@ -97,7 +99,7 @@ class _AlertClass extends State<AlertClass> {
         ),
         ElevatedButton(
           onPressed: () => _handleBookedClass(
-              context, widget.teacherUid, widget.subjectId, selectedHour),
+              context, widget.teacherUid, widget.subjectId, widget.classPrice),
           child: const Text('Reservar'),
           style: ButtonStyle(
               backgroundColor:
@@ -194,13 +196,14 @@ class _AlertClass extends State<AlertClass> {
     return time.split(':')[0];
   }
 
-  void _handleBookedClass(
-      BuildContext context, String teacherUid, String subjectId, String time) {
+  void _handleBookedClass(BuildContext context, String teacherUid,
+      String subjectId, double classPrice) {
     Navigator.pop(context, true);
-    _updateClassesCollection(teacherUid, subjectId);
+    _updateClassesCollection(teacherUid, subjectId, classPrice);
   }
 
-  void _updateClassesCollection(String teacherUid, String subjectId) async {
+  void _updateClassesCollection(
+      String teacherUid, String subjectId, double classPrice) async {
     FirebaseFirestore store = FirebaseFirestore.instance;
 
     try {
@@ -228,7 +231,7 @@ class _AlertClass extends State<AlertClass> {
         ClassesKeys.date: _getDate(selectedDate),
         ClassesKeys.time: _getTime(selectedHour),
         ClassesKeys.subjectId: subjectId,
-        ClassesKeys.cost: 'to be determined'
+        ClassesKeys.cost: classPrice
       });
     } on Exception catch (e) {
       /* print("MALARDOOOO"); */
