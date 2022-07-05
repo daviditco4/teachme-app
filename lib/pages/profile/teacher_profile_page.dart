@@ -365,6 +365,77 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                 const SizedBox(
                                                   height: 200,
                                                   // child: GridView.count(),
+                                                ),
+                                                const Divider(
+                                                  height: 40.0,
+                                                  thickness: 1.5,
+                                                  indent: 32.0,
+                                                  endIndent: 32.0,
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 25.0,
+                                                          left: 25.0),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: <Widget>[
+                                                      const Text(
+                                                        "Deuda", //otro nombre para esto
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 20.0,
+                                                            color:
+                                                                MyColors.black),
+                                                      ),
+                                                      ElevatedButton(
+                                                        // disabled if la deuda es menor que 500
+                                                        onPressed: () =>
+                                                            addSubject(context),
+                                                        child:
+                                                            const Text('Pagar'),
+                                                        style: ButtonStyle(
+                                                            backgroundColor:
+                                                                MaterialStateProperty
+                                                                    .all(MyColors
+                                                                        .buttonCardClass),
+                                                            shape: MaterialStateProperty.all<
+                                                                    RoundedRectangleBorder>(
+                                                                RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            18),
+                                                                    side: const BorderSide(
+                                                                        color: Colors
+                                                                            .white)))),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 25.0,
+                                                          left: 25.0),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: const <Widget>[
+                                                      Text(
+                                                        "\$500", //poner el dato de firebase
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 16.0,
+                                                            color:
+                                                                MyColors.black),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 )
                                               ],
                                             ),
