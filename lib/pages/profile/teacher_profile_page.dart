@@ -401,7 +401,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                             createOrder({
                                                           "price": 500,
                                                           "preference_id":
-                                                              "425735901-7cafcbc4-b7ab-4ea3-bcc5-d40040cfc244",
+                                                              "425735901-92da4190-300c-415f-bc6b-9d2aedb84af6",
                                                           "user": firebaseAuth
                                                               .currentUser!.uid
                                                         }),
@@ -547,7 +547,8 @@ class _OrderScreenState extends State<OrderScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text("Preparando tu pago de: \$ ${widget.orderData['price']}"),
+            if (_loading)
+              Text("Preparando tu pago de: \$ ${widget.orderData['price']}"),
             const SizedBox(
               height: 18,
             ),
@@ -567,7 +568,12 @@ class _OrderScreenState extends State<OrderScreen> {
   }
 
   void onData(DocumentSnapshot<Map<String, dynamic>> event) async {
-    if (event.data()!['status'] == 'payed') {
+    if (event.data()!['result'] == 'done') {
+      setState(() {
+        _loading = false;
+        _message = "Gracias por el pago";
+      });
+    } else if (event.data()!['result'] == 'canceled') {
       setState(() {
         _loading = false;
         _message = "Gracias por el pago";
@@ -578,16 +584,12 @@ class _OrderScreenState extends State<OrderScreen> {
             "TEST-cdaac9ec-521a-443a-a999-3ff5352e4aff",
             event.data()!['preference_id']);
         print(result);
-
-        if (result.status == 'approved') {
-          event.reference.set(
-              {'status': 'payed', 'result': result}, SetOptions(merge: true));
-        } else if (result.result == 'canceled') {
-          setState(() {
-            _loading = false;
-            _message = "Hubo un error con el pago";
-          });
-        }
+        event.reference.set({
+          'result': result.result,
+          'status': result.status,
+          'statusDetails': result.statusDetail,
+          'paymentMethodId': result.paymentMethodId
+        }, SetOptions(merge: true));
       }
     }
   }
