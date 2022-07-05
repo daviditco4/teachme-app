@@ -513,6 +513,7 @@ class OrderScreen extends StatefulWidget {
 class _OrderScreenState extends State<OrderScreen> {
   bool _loading = true;
   bool _paying = false;
+  String _message = "";
 
   late StreamSubscription<DocumentSnapshot> subscription;
 
@@ -557,7 +558,7 @@ class _OrderScreenState extends State<OrderScreen> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text("Gracias por tu pago") // cambiar
+                  child: Text(_message) // cambiar
                   )
           ],
         ),
@@ -569,6 +570,7 @@ class _OrderScreenState extends State<OrderScreen> {
     if (event.data()!['status'] == 'payed') {
       setState(() {
         _loading = false;
+        _message = "Gracias por el pago";
       });
     } else if (_paying == false) {
       if (event.data()!.containsKey('preference_id')) {
@@ -580,6 +582,11 @@ class _OrderScreenState extends State<OrderScreen> {
         if (result.status == 'approved') {
           event.reference.set(
               {'status': 'payed', 'result': result}, SetOptions(merge: true));
+        } else if (result.result == 'canceled') {
+          setState(() {
+            _loading = false;
+            _message = "Hubo un error con el pago";
+          });
         }
       }
     }
