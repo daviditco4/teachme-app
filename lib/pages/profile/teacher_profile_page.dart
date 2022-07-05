@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -10,6 +13,7 @@ import 'package:teachme_app/widgets/auth/auth_service.dart';
 import 'package:teachme_app/widgets/auth/profile_service.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import '../../widgets/other/tm_navigator.dart';
+import 'package:mercado_pago_mobile_checkout/mercado_pago_mobile_checkout.dart';
 
 class TeacherProfilePage extends StatefulWidget {
   const TeacherProfilePage({Key? key}) : super(key: key);
@@ -394,7 +398,13 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                       ElevatedButton(
                                                         // disabled if la deuda es menor que 500
                                                         onPressed: () =>
-                                                            addSubject(context),
+                                                            createOrder({
+                                                          "price": 500,
+                                                          "preference_id":
+                                                              "425735901-7cafcbc4-b7ab-4ea3-bcc5-d40040cfc244",
+                                                          "user": firebaseAuth
+                                                              .currentUser!.uid
+                                                        }),
                                                         child:
                                                             const Text('Pagar'),
                                                         style: ButtonStyle(
@@ -482,5 +492,96 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
 
   void addSubject(BuildContext context) async {
     showDialog<bool>(context: context, builder: (context) => AddSubject());
+  }
+
+  createOrder(Map<String, dynamic> orderData) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return OrderScreen(orderData: orderData);
+    }));
+  }
+}
+
+class OrderScreen extends StatefulWidget {
+  final Map<String, dynamic> orderData;
+
+  const OrderScreen({Key? key, required this.orderData}) : super(key: key);
+
+  @override
+  _OrderScreenState createState() => _OrderScreenState();
+}
+
+class _OrderScreenState extends State<OrderScreen> {
+  bool _loading = true;
+  bool _paying = false;
+
+  late StreamSubscription<DocumentSnapshot> subscription;
+
+  @override
+  void initState() {
+    super.initState();
+
+    createOrder();
+  }
+
+  createOrder() async {
+    var paymentRef = FirebaseFirestore.instance.collection('payments').doc();
+
+    await paymentRef.set(widget.orderData);
+
+    paymentRef.snapshots().listen(onData);
+  }
+
+  @override
+  void dispose() {
+    if (subscription != null) {
+      subscription.cancel();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text("Preparando tu pago de: \$ ${widget.orderData['price']}"),
+            const SizedBox(
+              height: 18,
+            ),
+            if (_loading)
+              const CircularProgressIndicator()
+            else
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Gracias por tu pago") // cambiar
+                  )
+          ],
+        ),
+      ),
+    );
+  }
+
+  void onData(DocumentSnapshot<Map<String, dynamic>> event) async {
+    if (event.data()!['status'] == 'payed') {
+      setState(() {
+        _loading = false;
+      });
+    } else if (_paying == false) {
+      if (event.data()!.containsKey('preference_id')) {
+        var result = await MercadoPagoMobileCheckout.startCheckout(
+            "TEST-cdaac9ec-521a-443a-a999-3ff5352e4aff",
+            event.data()!['preference_id']);
+        print(result);
+
+        if (result.status == 'approved') {
+          event.reference.set(
+              {'status': 'payed', 'result': result}, SetOptions(merge: true));
+        }
+      }
+    }
   }
 }
