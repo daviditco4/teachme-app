@@ -6,7 +6,7 @@ import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:teachme_app/helpers/teachers_keys.dart';
 
-import '../constants/Theme.dart';
+import '../constants/theme.dart';
 import '../helpers/classes_keys.dart';
 import '../helpers/students_keys.dart';
 

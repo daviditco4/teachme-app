@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ import 'package:teachme_app/widgets/auth/profile_service.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import '../../widgets/other/tm_navigator.dart';
 import 'package:weekday_selector/weekday_selector.dart';
+import 'package:mercado_pago_mobile_checkout/mercado_pago_mobile_checkout.dart';
 
 class TeacherProfilePage extends StatefulWidget {
   const TeacherProfilePage({Key? key}) : super(key: key);
@@ -601,6 +603,10 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                           TextAlign.center),
                                                 ),
                                                 const SizedBox(height: 25.0),
+                                                const SizedBox(
+                                                  height: 200,
+                                                  // child: GridView.count(),
+                                                ),
                                                 const Divider(
                                                   height: 40.0,
                                                   thickness: 1.5,
@@ -688,6 +694,77 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                     )
                                                   ],
                                                 ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 25.0,
+                                                          left: 25.0),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: <Widget>[
+                                                      const Text(
+                                                        "Deuda", //otro nombre para esto
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 20.0,
+                                                            color:
+                                                                MyColors.black),
+                                                      ),
+                                                      ElevatedButton(
+                                                        // disabled if la deuda es menor que 500
+                                                        onPressed: () =>
+                                                            createOrder({
+                                                          "price": 500,
+                                                          "preference_id":
+                                                              "425735901-92da4190-300c-415f-bc6b-9d2aedb84af6",
+                                                          "user": firebaseAuth
+                                                              .currentUser!.uid
+                                                        }),
+                                                        child:
+                                                            const Text('Pagar'),
+                                                        style: ButtonStyle(
+                                                            backgroundColor:
+                                                                MaterialStateProperty
+                                                                    .all(MyColors
+                                                                        .buttonCardClass),
+                                                            shape: MaterialStateProperty.all<
+                                                                    RoundedRectangleBorder>(
+                                                                RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            18),
+                                                                    side: const BorderSide(
+                                                                        color: Colors
+                                                                            .white)))),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 25.0,
+                                                          left: 25.0),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: const <Widget>[
+                                                      Text(
+                                                        "\$500", //poner el dato de firebase
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 16.0,
+                                                            color:
+                                                                MyColors.black),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
                                               ],
                                             ),
                                           ),
@@ -871,5 +948,104 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
               button1: b1,
               button2: b2,
             ));
+  }
+
+  createOrder(Map<String, dynamic> orderData) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return OrderScreen(orderData: orderData);
+    }));
+  }
+}
+
+class OrderScreen extends StatefulWidget {
+  final Map<String, dynamic> orderData;
+
+  const OrderScreen({Key? key, required this.orderData}) : super(key: key);
+
+  @override
+  _OrderScreenState createState() => _OrderScreenState();
+}
+
+class _OrderScreenState extends State<OrderScreen> {
+  bool _loading = true;
+  bool _paying = false;
+  String _message = "";
+
+  late StreamSubscription<DocumentSnapshot> subscription;
+
+  @override
+  void initState() {
+    super.initState();
+
+    createOrder();
+  }
+
+  createOrder() async {
+    var paymentRef = FirebaseFirestore.instance.collection('payments').doc();
+
+    await paymentRef.set(widget.orderData);
+
+    paymentRef.snapshots().listen(onData);
+  }
+
+  @override
+  void dispose() {
+    if (subscription != null) {
+      subscription.cancel();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            if (_loading)
+              Text("Preparando tu pago de: \$ ${widget.orderData['price']}"),
+            const SizedBox(
+              height: 18,
+            ),
+            if (_loading)
+              const CircularProgressIndicator()
+            else
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(_message) // cambiar
+                  )
+          ],
+        ),
+      ),
+    );
+  }
+
+  void onData(DocumentSnapshot<Map<String, dynamic>> event) async {
+    if (event.data()!['result'] == 'done') {
+      setState(() {
+        _loading = false;
+        _message = "Gracias por el pago";
+      });
+    } else if (event.data()!['result'] == 'canceled') {
+      setState(() {
+        _loading = false;
+        _message = "Se cancelo el pago";
+      });
+    } else if (_paying == false) {
+      if (event.data()!.containsKey('preference_id')) {
+        var result = await MercadoPagoMobileCheckout.startCheckout(
+            "TEST-cdaac9ec-521a-443a-a999-3ff5352e4aff",
+            event.data()!['preference_id']);
+        event.reference.set({
+          'result': result.result,
+          'status': result.status,
+          'statusDetails': result.statusDetail,
+          'paymentMethodId': result.paymentMethodId
+        }, SetOptions(merge: true));
+      }
+    }
   }
 }
