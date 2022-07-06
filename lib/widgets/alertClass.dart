@@ -55,7 +55,7 @@ class _AlertClass extends State<AlertClass> {
           children: <Widget>[
             Text(widget.subTitle),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 const Text("Fecha: "),
                 TextButton(
@@ -69,22 +69,45 @@ class _AlertClass extends State<AlertClass> {
                     iconSize: 20.0)
               ],
             ),
-            DropdownButton<String>(
-              menuMaxHeight: 200.0,
-              value: selectedHour,
-              icon: const Icon(Icons.arrow_drop_down),
-              onChanged: (String? newValue) {
-                setState(() {
-                  selectedHour = newValue!;
-                });
-              },
-              items:
-                  availableHours.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  const Text("Horario: "),
+                  DropdownButton<String>(
+                    menuMaxHeight: 200.0,
+                    value: selectedHour,
+                    icon: const Icon(Icons.arrow_drop_down),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedHour = newValue!;
+                      });
+                    },
+                    items:
+                    availableHours.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ]
+            ),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: const <Widget>[
+                Text("Temario: "),
+                  SizedBox(
+                    height: 50,
+                    width: 100,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: UnderlineInputBorder(),
+                        hintText: 'Temas a ver    ',
+                      ),
+                    ),
+                  )
+
+                ],
             ),
           ],
         ),
