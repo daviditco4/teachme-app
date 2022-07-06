@@ -576,14 +576,13 @@ class _OrderScreenState extends State<OrderScreen> {
     } else if (event.data()!['result'] == 'canceled') {
       setState(() {
         _loading = false;
-        _message = "Gracias por el pago";
+        _message = "Se cancelo el pago";
       });
     } else if (_paying == false) {
       if (event.data()!.containsKey('preference_id')) {
         var result = await MercadoPagoMobileCheckout.startCheckout(
             "TEST-cdaac9ec-521a-443a-a999-3ff5352e4aff",
             event.data()!['preference_id']);
-        print(result);
         event.reference.set({
           'result': result.result,
           'status': result.status,
