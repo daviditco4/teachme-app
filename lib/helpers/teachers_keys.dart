@@ -5,6 +5,8 @@ class TeachersKeys {
   static const uid = 'uid';
   static const rating = 'rating';
   static const subjects = 'subjects';
+  static const subjects_price = 'price';
+  static const subjects_sid = 'sid';
   static const availableFrom = 'availableFrom';
   static const availableUpTo = 'availableUpTo';
   static const availableDays = 'availableDays';

@@ -8,6 +8,7 @@ import 'package:path/path.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/helpers/SubjectsKeys.dart';
 import 'package:teachme_app/helpers/classes_keys.dart';
+import 'package:teachme_app/helpers/search_teacher_system.dart';
 import 'package:teachme_app/helpers/teachers_keys.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/widgets/auth/auth_form.dart';
@@ -208,8 +209,8 @@ class _SearchPage extends State<SearchPage> {
                 ],
               ),
               Expanded(
-                  child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                stream: teachersCollec.snapshots(),
+                  child: FutureBuilder<List<Map<String, dynamic>>>(
+                future: SearchTeacherSystem().getTeachersBySubject("0Anho3xMItg7QeXG8vhs"),
                 builder: (_, snapshot) {
                   final isWaiting =
                       snapshot.connectionState == ConnectionState.waiting;
@@ -217,24 +218,15 @@ class _SearchPage extends State<SearchPage> {
                     return const Center(child: CircularProgressIndicator());
 
                   if (snapshot.hasData) {
-                    final docs = snapshot.data!.docs;
+                    final docs = snapshot.data!;
                     final n = docs.length;
 
                     return ListView.builder(
                         itemCount: n,
                         itemBuilder: (context, index) {
                           // Documento que tiene las propiedades  de Teacher
-                          final document = docs[index];
-                          final documentData = document.data();
-                          final subjectsData =
-                              documentData[TeachersKeys.subjects]
-                                  as List<dynamic>;
+                          final documentData = docs[index];
 
-                          /*
-                          FIXME: Tomar el nombre/sid de la materia desde el custom
-                           */
-                          for (var subject in subjectsData) {
-                            if (subject["sid"] == "LTtGqXljp13JMSk1jDA1") {
                               return Card(
                                 key: ValueKey(documentData[TeachersKeys.uid]),
                                 color: MyColors.cardClass,
@@ -252,7 +244,7 @@ class _SearchPage extends State<SearchPage> {
                                         title: Text(
                                             documentData[TeachersKeys.name]),
                                         subtitle: Text(
-                                            'Se encuentra a ${subject["price"]} km'),
+                                            'Se encuentra a '),
                                         trailing: Text(
                                             '\$ ${documentData["classPrice"] ?? 0}'),
                                       ),
@@ -285,7 +277,7 @@ class _SearchPage extends State<SearchPage> {
                                             onPressed: () => showWarning(
                                                 context,
                                                 documentData[TeachersKeys.uid],
-                                                subject['sid'],
+                                                "",
                                                 double.parse(documentData[
                                                         TeachersKeys.classPrice]
                                                     .toString())),
@@ -312,8 +304,8 @@ class _SearchPage extends State<SearchPage> {
                                   ),
                                 ),
                               );
-                            }
-                          }
+
+
                           return const SizedBox(width: 0, height: 0);
                         });
                   } else {
