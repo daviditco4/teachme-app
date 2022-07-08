@@ -284,37 +284,13 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                       ),
                                                       ElevatedButton(
                                                         onPressed: () =>
-                                                            addSubject(
+                                                            _addSubjectPopup(
                                                                 context,
                                                                 'Agregar Materia',
-                                                                'Agregar',
-                                                                'Cancelar'),
+                                                                'Cancelar',
+                                                                'Agregar'),
                                                         child: const Text(
-                                                            'Agregar'),
-                                                        style: ButtonStyle(
-                                                            backgroundColor:
-                                                                MaterialStateProperty
-                                                                    .all(MyColors
-                                                                        .buttonCardClass),
-                                                            shape: MaterialStateProperty.all<
-                                                                    RoundedRectangleBorder>(
-                                                                RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            18),
-                                                                    side: const BorderSide(
-                                                                        color: Colors
-                                                                            .white)))),
-                                                      ),
-                                                      ElevatedButton(
-                                                        onPressed: () =>
-                                                            addSubject(
-                                                                context,
-                                                                'Editar Materia',
-                                                                'Eliminar',
-                                                                'Guardar'),
-                                                        child: const Text(
-                                                            'Editar'),
+                                                            'Agregar Materias'),
                                                         style: ButtonStyle(
                                                             backgroundColor:
                                                                 MaterialStateProperty
@@ -938,7 +914,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
         });
   }
 
-  void addSubject(
+  void _addSubjectPopup(
       BuildContext context, String title, String b1, String b2) async {
     showDialog<bool>(
         context: context,
