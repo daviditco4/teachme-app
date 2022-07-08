@@ -10,7 +10,6 @@ import 'package:teachme_app/pages/profile/student_profile_page.dart';
 import 'package:teachme_app/pages/splash_page.dart';
 import 'package:provider/provider.dart';
 import 'package:teachme_app/pages/profile/teacher_profile_page.dart';
-
 import 'pages/loading_page.dart';
 import 'pages/notifications_page.dart';
 import 'pages/settings_page.dart';
