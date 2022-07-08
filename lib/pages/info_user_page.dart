@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/pages/settings_page.dart';
@@ -13,6 +14,8 @@ class InfoUser extends StatefulWidget {
 }
 
 class _InfoUser extends State<InfoUser> {
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
   Future<bool?> showWarning(BuildContext context) async => showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
@@ -65,7 +68,7 @@ class _InfoUser extends State<InfoUser> {
                     decoration: InputDecoration(
                       border: UnderlineInputBorder(),
                       labelText: "Email",
-                      hintText: 'Dejar mail existente',
+                      hintText: 'Escribir el nuevo email',
                     ),
                   ),
                 ),
@@ -75,22 +78,12 @@ class _InfoUser extends State<InfoUser> {
                     decoration: InputDecoration(
                       border: UnderlineInputBorder(),
                       labelText: "Usuario",
-                      hintText: 'Dejar el user existente',
-                    ),
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(25, 10, 40, 20),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: UnderlineInputBorder(),
-                      labelText: "Contraseña",
-                      hintText: '********',
+                      hintText: 'Escribir el nuevo usuario',
                     ),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 130.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 100.0),
                   child: ElevatedButton(
                     onPressed: () => showWarning(context),
                     child: const Text('Cambiar los datos'),
@@ -109,5 +102,15 @@ class _InfoUser extends State<InfoUser> {
         ),
       ),
     );
+  }
+
+  String _getUserEmail() {
+    String? userEmail = firebaseAuth.currentUser!.email;
+    return userEmail ?? "";
+  }
+
+  String _getUsername() {
+    String? username = firebaseAuth.currentUser!.displayName;
+    return username ?? "";
   }
 }

@@ -50,6 +50,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   TMNotification(
                       professorName: "Jorge Suspenso",
                       professorImage: AssetImage("assets/images/test2.jpeg"),
+                      timeAgo: "7 días"),
+                  TMNotification(
+                      professorName: "Profesor Jirafales",
+                      professorImage: AssetImage("assets/images/test2.jpeg"),
                       timeAgo: "10 días")
                 ],
               ),
