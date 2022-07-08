@@ -316,56 +316,14 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                 Padding(
                                                   padding:
                                                       const EdgeInsets.only(
-                                                          right: 25.0,
-                                                          left: 25.0,
                                                           top: 15.0),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: const <Widget>[
-                                                      Chip(
-                                                        padding:
-                                                            EdgeInsets.all(8),
-                                                        backgroundColor:
-                                                            MyColors.background,
-                                                        shadowColor:
-                                                            Colors.black,
-                                                        label: Text(
-                                                          'Álgebra',
-                                                          style: TextStyle(
-                                                              fontSize: 16),
-                                                        ), //Text
-                                                      ),
-                                                      Chip(
-                                                        padding:
-                                                            EdgeInsets.all(8),
-                                                        backgroundColor:
-                                                            MyColors.background,
-                                                        shadowColor:
-                                                            Colors.black,
-                                                        label: Text(
-                                                          'Física',
-                                                          style: TextStyle(
-                                                              fontSize: 16),
-                                                        ), //Text
-                                                      ), //C
-                                                      Chip(
-                                                        padding:
-                                                            EdgeInsets.all(8),
-                                                        backgroundColor:
-                                                            MyColors.background,
-                                                        shadowColor:
-                                                            Colors.black,
-                                                        label: Text(
-                                                          'Lógica',
-                                                          style: TextStyle(
-                                                              fontSize: 16),
-                                                        ), //Text
-                                                      ),
-                                                      //C //Chip
-                                                    ],
-                                                  ),
+                                                  child: Wrap(
+                                                      alignment:
+                                                          WrapAlignment.start,
+                                                      spacing: 5.0,
+                                                      children:
+                                                          _generateSubjectChips(
+                                                              subjects)),
                                                 ),
                                                 const SizedBox(height: 25.0),
                                                 const Divider(
@@ -920,13 +878,15 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
 
   void _addSubjectPopup(
       BuildContext context, String title, String b1, String b2) async {
-    showDialog<bool>(
+    await showDialog<bool>(
         context: context,
         builder: (context) => AddSubject(
               title: title,
               button1: b1,
               button2: b2,
             ));
+
+    _getSubjects();
   }
 
   void _getSubjects() async {
@@ -953,10 +913,35 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
           .then((document) => {subjectNames.add(document[SubjectsKeys.name])});
     }
 
+    //FIXME: Orden alfabetico. Puede ser ineficiente
+    subjectNames.sort((a, b) {
+      return a.toLowerCase().compareTo(b.toLowerCase());
+    });
+
     setState(() {
       subjects = subjectNames;
     });
     print(subjects);
+  }
+
+  List<Widget> _generateSubjectChips(List<String> subjectNames) {
+    List<Chip> chipList = [];
+
+    for (String subjectName in subjectNames) {
+      Chip newChip = Chip(
+        padding: const EdgeInsets.all(8),
+        backgroundColor: MyColors.background,
+        shadowColor: Colors.black,
+        label: Text(
+          subjectName,
+          style: const TextStyle(fontSize: 16),
+        ), //Text
+      );
+
+      chipList.add(newChip);
+    }
+
+    return chipList;
   }
 
   createOrder(Map<String, dynamic> orderData) {
