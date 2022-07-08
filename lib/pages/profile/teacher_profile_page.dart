@@ -6,12 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:teachme_app/constants/theme.dart';
+import 'package:teachme_app/helpers/SubjectsKeys.dart';
 import 'package:teachme_app/helpers/teachers_keys.dart';
 import 'package:teachme_app/pages/geolocation/current_location_screen.dart';
 import 'package:teachme_app/pages/geolocation/search_places_screen.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/pages/settings_page.dart';
 import 'package:teachme_app/widgets/addSubject.dart';
+import 'package:teachme_app/widgets/auth/auth_form.dart';
 import 'package:teachme_app/widgets/auth/profile_service.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import '../../widgets/other/tm_navigator.dart';
@@ -40,6 +42,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   String dropdownValueFrom = "00:00";
   String dropdownValueUpTo = "23:00";
   List<bool> availableDays = List.filled(7, true);
+  List<String> subjects = [];
 
   static final Map<int, String> indexToDayMap = {
     0: "Domingo",
@@ -80,6 +83,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   @override
   void initState() {
     super.initState();
+    _getSubjects();
     _getAvailableHours();
     _getAvailableWeekdays();
     _getClassPrice();
@@ -923,6 +927,36 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
               button1: b1,
               button2: b2,
             ));
+  }
+
+  void _getSubjects() async {
+    List<String> subjectIDs = [];
+    var firestore = FirebaseFirestore.instance;
+
+    List<dynamic> aux = [];
+    await firestore
+        .collection(TeachersKeys.collectionName)
+        .doc(user.uid)
+        .get()
+        .then((document) => {
+              aux = document[TeachersKeys.subjects],
+              subjectIDs = aux.cast<String>()
+            });
+
+    List<String> subjectNames = [];
+    var subjectCollection = firestore.collection(SubjectsKeys.collectionName);
+
+    for (String subjectID in subjectIDs) {
+      await subjectCollection
+          .doc(subjectID)
+          .get()
+          .then((document) => {subjectNames.add(document[SubjectsKeys.name])});
+    }
+
+    setState(() {
+      subjects = subjectNames;
+    });
+    print(subjects);
   }
 
   createOrder(Map<String, dynamic> orderData) {
