@@ -1,5 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
+import 'package:teachme_app/helpers/SubjectsKeys.dart';
+import 'package:teachme_app/helpers/classes_keys.dart';
+import 'package:teachme_app/helpers/teachers_keys.dart';
+import 'package:teachme_app/widgets/auth/auth_form.dart';
 
 class AddSubject extends StatefulWidget {
   final String title;
@@ -8,9 +14,9 @@ class AddSubject extends StatefulWidget {
 
   const AddSubject(
       {Key? key,
-        required this.title,
-        required this.button1,
-        required this.button2})
+      required this.title,
+      required this.button1,
+      required this.button2})
       : super(key: key);
 
   @override
@@ -18,14 +24,19 @@ class AddSubject extends StatefulWidget {
 }
 
 class _AddSubject extends State<AddSubject> {
-
-  String dropdownValue = 'Programación';
+  String dropdownValue = 'Cargando...';
   int dropdownPrice = 950;
+  List<String> subjectList = ['Cargando...'];
+  Map<String, String> subjectNameToID = {};
 
   bool _expanded1 = false;
   bool _expanded2 = false;
 
-
+  @override
+  void initState() {
+    super.initState();
+    _getFirebaseSubjectsList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -219,8 +230,8 @@ class _AddSubject extends State<AddSubject> {
           ),
 
         ),*/
-        child:Container(
-        height: 200,
+        child: Container(
+          height: 200,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -230,75 +241,111 @@ class _AddSubject extends State<AddSubject> {
                     fontSize: 25,
                   )),
               const SizedBox(height: 10.0),
-              Text('Selecciona alguna de las siguientes materias: ',
-                  style: const TextStyle(
+              const Text('Selecciona alguna de las siguientes materias: ',
+                  style: TextStyle(
                     color: MyColors.black,
                     fontSize: 17,
                   )),
               const SizedBox(height: 10.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    DropdownButton<String>(
-                      value: dropdownValue,
-                      icon: const Icon(Icons.arrow_drop_down),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownValue = newValue!;
-                        });
-                      },
-                      items: <String>['Matematica Discreta', 'Analisis Matematico', 'Programación', 'Biologia']
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                    ),
-                    DropdownButton<int>(
-                      value: dropdownPrice,
-                      icon: const Icon(Icons.arrow_drop_down),
-                      onChanged: (int? newValue) {
-                        setState(() {
-                          dropdownPrice = newValue!;
-                        });
-                      },
-                      items: <int>[950, 1000, 1200]
-                          .map<DropdownMenuItem<int>>((int value) {
-                        return DropdownMenuItem<int>(
-                          value: value,
-                          child: Text(value.toString()),
-                        );
-                      }).toList(),
-                    ),
-                  ],
-                ),
+                children: <Widget>[
+                  DropdownButton<String>(
+                    value: dropdownValue,
+                    icon: const Icon(Icons.arrow_drop_down),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownValue = newValue!;
+                      });
+                    },
+                    items: subjectList
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
               Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    ElevatedButton(
-                      onPressed: () => Navigator.pop(context, true),
-                      child: Text(widget.button1),
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(MyColors.buttonCardClass)),
-                    ),
-                    ElevatedButton(
-                      onPressed: () => Navigator.pop(context, false),
-                      child: Text(widget.button2),
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(MyColors.buttonCardClass)),
-                    ),
-                  ],
-                ),
-
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  ElevatedButton(
+                    onPressed: () => Navigator.pop(context, true),
+                    child: Text(widget.button1),
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(MyColors.defaultColor)),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => _handleAddNewSubject(dropdownValue),
+                    child: Text(widget.button2),
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            MyColors.buttonCardClass)),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
       ),
     );
   }
-}
 
-void onPressed(String text) {
-  print('Se presiono "$text"');
+  void _getFirebaseSubjectsList() async {
+    var fbSubjects =
+        FirebaseFirestore.instance.collection(SubjectsKeys.collectionName);
+
+    QuerySnapshot querySnapshot = await fbSubjects.get();
+
+    var docIterator = querySnapshot.docs.iterator;
+    String? subjectName;
+    String subjectID;
+    while (docIterator.moveNext()) {
+      var current = docIterator.current;
+      subjectName = current[SubjectsKeys.name];
+      subjectID = current.id;
+
+      if (subjectName != null) {
+        subjectNameToID[subjectName] = subjectID;
+      }
+    }
+
+    setState(() {
+      subjectList = subjectNameToID.keys.toList();
+
+      //FIXME: El orden alfabetico puede ser muy ineficiente. Eliminar estas
+      // lineas si es necesario
+      subjectList.sort((a, b) {
+        return a.toLowerCase().compareTo(b.toLowerCase());
+      });
+
+      dropdownValue = subjectList[0];
+    });
+  }
+
+  void _handleAddNewSubject(String subjectName) async {
+    Navigator.pop(context, false);
+
+    String? subjectID = subjectNameToID[subjectName];
+    if (subjectID == null) return;
+
+    String teacherUID = FirebaseAuth.instance.currentUser!.uid;
+    List<String> auxSubjectList = [subjectID];
+    List<String> auxTeacherList = [teacherUID];
+
+    var firestore = FirebaseFirestore.instance;
+
+    await firestore
+        .collection(TeachersKeys.collectionName)
+        .doc(teacherUID)
+        .update({TeachersKeys.subjects: FieldValue.arrayUnion(auxSubjectList)});
+
+    await firestore
+        .collection(SubjectsKeys.collectionName)
+        .doc(subjectID)
+        .update({SubjectsKeys.teachers: FieldValue.arrayUnion(auxTeacherList)});
+  }
 }

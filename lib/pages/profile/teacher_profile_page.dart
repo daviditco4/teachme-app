@@ -6,12 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:teachme_app/constants/theme.dart';
+import 'package:teachme_app/helpers/SubjectsKeys.dart';
 import 'package:teachme_app/helpers/teachers_keys.dart';
 import 'package:teachme_app/pages/geolocation/current_location_screen.dart';
 import 'package:teachme_app/pages/geolocation/search_places_screen.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/pages/settings_page.dart';
 import 'package:teachme_app/widgets/addSubject.dart';
+import 'package:teachme_app/widgets/auth/auth_form.dart';
 import 'package:teachme_app/widgets/auth/profile_service.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import '../../widgets/other/tm_navigator.dart';
@@ -40,6 +42,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   String dropdownValueFrom = "00:00";
   String dropdownValueUpTo = "23:00";
   List<bool> availableDays = List.filled(7, true);
+  List<String> subjects = [];
 
   static final Map<int, String> indexToDayMap = {
     0: "Domingo",
@@ -80,6 +83,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   @override
   void initState() {
     super.initState();
+    _getSubjects();
     _getAvailableHours();
     _getAvailableWeekdays();
     _getClassPrice();
@@ -284,37 +288,13 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                       ),
                                                       ElevatedButton(
                                                         onPressed: () =>
-                                                            addSubject(
+                                                            _addSubjectPopup(
                                                                 context,
                                                                 'Agregar Materia',
-                                                                'Agregar',
-                                                                'Cancelar'),
+                                                                'Cancelar',
+                                                                'Agregar'),
                                                         child: const Text(
-                                                            'Agregar'),
-                                                        style: ButtonStyle(
-                                                            backgroundColor:
-                                                                MaterialStateProperty
-                                                                    .all(MyColors
-                                                                        .buttonCardClass),
-                                                            shape: MaterialStateProperty.all<
-                                                                    RoundedRectangleBorder>(
-                                                                RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            18),
-                                                                    side: const BorderSide(
-                                                                        color: Colors
-                                                                            .white)))),
-                                                      ),
-                                                      ElevatedButton(
-                                                        onPressed: () =>
-                                                            addSubject(
-                                                                context,
-                                                                'Editar Materia',
-                                                                'Eliminar',
-                                                                'Guardar'),
-                                                        child: const Text(
-                                                            'Editar'),
+                                                            'Agregar Materias'),
                                                         style: ButtonStyle(
                                                             backgroundColor:
                                                                 MaterialStateProperty
@@ -336,56 +316,14 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                 Padding(
                                                   padding:
                                                       const EdgeInsets.only(
-                                                          right: 25.0,
-                                                          left: 25.0,
                                                           top: 15.0),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: const <Widget>[
-                                                      Chip(
-                                                        padding:
-                                                            EdgeInsets.all(8),
-                                                        backgroundColor:
-                                                            MyColors.background,
-                                                        shadowColor:
-                                                            Colors.black,
-                                                        label: Text(
-                                                          'Álgebra',
-                                                          style: TextStyle(
-                                                              fontSize: 16),
-                                                        ), //Text
-                                                      ),
-                                                      Chip(
-                                                        padding:
-                                                            EdgeInsets.all(8),
-                                                        backgroundColor:
-                                                            MyColors.background,
-                                                        shadowColor:
-                                                            Colors.black,
-                                                        label: Text(
-                                                          'Física',
-                                                          style: TextStyle(
-                                                              fontSize: 16),
-                                                        ), //Text
-                                                      ), //C
-                                                      Chip(
-                                                        padding:
-                                                            EdgeInsets.all(8),
-                                                        backgroundColor:
-                                                            MyColors.background,
-                                                        shadowColor:
-                                                            Colors.black,
-                                                        label: Text(
-                                                          'Lógica',
-                                                          style: TextStyle(
-                                                              fontSize: 16),
-                                                        ), //Text
-                                                      ),
-                                                      //C //Chip
-                                                    ],
-                                                  ),
+                                                  child: Wrap(
+                                                      alignment:
+                                                          WrapAlignment.start,
+                                                      spacing: 5.0,
+                                                      children:
+                                                          _generateSubjectChips(
+                                                              subjects)),
                                                 ),
                                                 const SizedBox(height: 25.0),
                                                 const Divider(
@@ -938,15 +876,72 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
         });
   }
 
-  void addSubject(
+  void _addSubjectPopup(
       BuildContext context, String title, String b1, String b2) async {
-    showDialog<bool>(
+    await showDialog<bool>(
         context: context,
         builder: (context) => AddSubject(
               title: title,
               button1: b1,
               button2: b2,
             ));
+
+    _getSubjects();
+  }
+
+  void _getSubjects() async {
+    List<String> subjectIDs = [];
+    var firestore = FirebaseFirestore.instance;
+
+    List<dynamic> aux = [];
+    await firestore
+        .collection(TeachersKeys.collectionName)
+        .doc(user.uid)
+        .get()
+        .then((document) => {
+              aux = document[TeachersKeys.subjects],
+              subjectIDs = aux.cast<String>()
+            });
+
+    List<String> subjectNames = [];
+    var subjectCollection = firestore.collection(SubjectsKeys.collectionName);
+
+    for (String subjectID in subjectIDs) {
+      await subjectCollection
+          .doc(subjectID)
+          .get()
+          .then((document) => {subjectNames.add(document[SubjectsKeys.name])});
+    }
+
+    //FIXME: Orden alfabetico. Puede ser ineficiente
+    subjectNames.sort((a, b) {
+      return a.toLowerCase().compareTo(b.toLowerCase());
+    });
+
+    setState(() {
+      subjects = subjectNames;
+    });
+    print(subjects);
+  }
+
+  List<Widget> _generateSubjectChips(List<String> subjectNames) {
+    List<Chip> chipList = [];
+
+    for (String subjectName in subjectNames) {
+      Chip newChip = Chip(
+        padding: const EdgeInsets.all(8),
+        backgroundColor: MyColors.background,
+        shadowColor: Colors.black,
+        label: Text(
+          subjectName,
+          style: const TextStyle(fontSize: 16),
+        ), //Text
+      );
+
+      chipList.add(newChip);
+    }
+
+    return chipList;
   }
 
   createOrder(Map<String, dynamic> orderData) {
