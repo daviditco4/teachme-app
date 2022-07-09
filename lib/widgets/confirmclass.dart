@@ -4,7 +4,7 @@ import 'package:teachme_app/constants/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:teachme_app/widgets/viewClass/details_class.dart';
 
-void main() {
+/*void main() {
   runApp(const MyApp());
 }
 
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
+*/
 class ConfirmClass extends StatefulWidget {
 
   const ConfirmClass(
