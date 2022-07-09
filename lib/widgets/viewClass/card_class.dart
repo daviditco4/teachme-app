@@ -62,51 +62,8 @@ class _CardClass extends State<CardClass> {
               //onPressed: () => onPressed(widget.textButton),
               child: Text(widget.textButton,
                   style: const TextStyle(color: MyColors.white, fontSize: 15)),
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(MyColors.buttonCardClass),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18),
-                  side: const BorderSide(color: Colors.white)))),
+              style: MyColors.buttonStyleDefault,
             ),
-        /*TextButton(
-          onPressed: () => onPressed(widget.title),
-          child: Text(widget.title,
-          style: const TextStyle(
-          color: MyColors.white,
-          fontSize: 15,
-          )),
-          style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(MyColors.cardClass),
-          alignment: AlignmentDirectional.centerStart,
-          padding: MaterialStateProperty.all(
-          const EdgeInsets.symmetric(horizontal: 20)),
-          fixedSize:
-          MaterialStateProperty.all(const Size.fromHeight(75))
-          ),
-        ),
-
-            Text(widget.schedule,
-                style: const TextStyle(
-                  color: MyColors.white,
-                  fontSize: 15,
-                )),
-          Text(widget.direction,
-              style: const TextStyle(
-                color: MyColors.white,
-                fontSize: 15,
-              )),
-          Padding(
-             padding: const EdgeInsets.only(left: 20.0, bottom: 10.0),
-             child: Row(
-                    children: <Widget>[
-                    TextButton(onPressed: () => onPressed(widget.textButton),
-                    child: Text(widget.textButton,
-                    style: const TextStyle(color: MyColors.white, fontSize: 12)),
-                    style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(MyColors.buttonCardClass),
-                            ),
-                    ),
-                  ],*/
           ],
         ),
       ],

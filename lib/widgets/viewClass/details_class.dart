@@ -82,22 +82,12 @@ class _DetailsClass extends State<DetailsClass> {
                 ElevatedButton(
                   onPressed: () => Navigator.pop(context, false),
                   child: Text('Cancelar Clase'),
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(MyColors.buttonCardClass),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18),
-                              side: const BorderSide(color: Colors.white)))),
+                  style: MyColors.buttonStyleDefault,
                 ),
                 ElevatedButton(
                   onPressed: () => Navigator.pop(context, false),
                   child: Text('Cerrar'),
-                  style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(MyColors.buttonCardClass),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18),
-                                side: const BorderSide(color: Colors.white)))),
+                  style: MyColors.buttonStyleDefault,
                 ),
               ],
             ),
