@@ -1,5 +1,7 @@
 import 'dart:ui' show Color;
 
+import 'package:flutter/material.dart';
+
 class MyColors {
   static const Color black = Color(0xFF000000);
 
@@ -78,4 +80,19 @@ class MyColors {
   static const Color socialTwitter = Color.fromRGBO(91, 192, 222, 1.0);
 
   static const Color socialDribbble = Color.fromRGBO(234, 76, 137, 1.0);
+
+  static ButtonStyle buttonStyleDefault = ElevatedButton.styleFrom(
+    onPrimary: MyColors.white,
+    primary: MyColors.buttonCardClass,
+    minimumSize: Size(88, 36),
+    padding: EdgeInsets.symmetric(horizontal: 16),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+    side: const BorderSide(color: Colors.white),
+  );
+
+  static TextStyle textBoldDefault = TextStyle(
+      fontSize: 20.0,
+      color: MyColors.black,
+      fontWeight: FontWeight.bold,
+  );
 }

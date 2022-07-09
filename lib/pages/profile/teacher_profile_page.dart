@@ -210,6 +210,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                                     },
                                                                   )));
                                                     },
+                                                    style: MyColors.buttonStyleDefault,
                                                     child: const Text(
                                                         "Usar ubicación actual")),
                                                 const SizedBox(height: 10.0),
@@ -295,20 +296,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                                 'Aceptar'),
                                                         child: const Text(
                                                             'Editar'),
-                                                        style: ButtonStyle(
-                                                            backgroundColor:
-                                                                MaterialStateProperty
-                                                                    .all(MyColors
-                                                                        .buttonCardClass),
-                                                            shape: MaterialStateProperty.all<
-                                                                    RoundedRectangleBorder>(
-                                                                RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            18),
-                                                                    side: const BorderSide(
-                                                                        color: Colors
-                                                                            .white)))),
+                                                        style: MyColors.buttonStyleDefault,
                                                       ),
                                                     ],
                                                   ),
@@ -407,20 +395,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                       ElevatedButton(
                                                         child: const Text(
                                                             'Editar'),
-                                                        style: ButtonStyle(
-                                                            backgroundColor:
-                                                                MaterialStateProperty
-                                                                    .all(MyColors
-                                                                        .buttonCardClass),
-                                                            shape: MaterialStateProperty.all<
-                                                                    RoundedRectangleBorder>(
-                                                                RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            18),
-                                                                    side: const BorderSide(
-                                                                        color: Colors
-                                                                            .white)))),
+                                                        style: MyColors.buttonStyleDefault,
                                                         onPressed: () => showDialog<
                                                                 bool>(
                                                             context: context,
@@ -662,20 +637,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                         }),
                                                         child:
                                                             const Text('Pagar'),
-                                                        style: ButtonStyle(
-                                                            backgroundColor:
-                                                                MaterialStateProperty
-                                                                    .all(MyColors
-                                                                        .buttonCardClass),
-                                                            shape: MaterialStateProperty.all<
-                                                                    RoundedRectangleBorder>(
-                                                                RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            18),
-                                                                    side: const BorderSide(
-                                                                        color: Colors
-                                                                            .white)))),
+                                                        style: MyColors.buttonStyleDefault,
                                                       ),
                                                     ],
                                                   ),

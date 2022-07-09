@@ -87,13 +87,7 @@ class _InfoUser extends State<InfoUser> {
                   child: ElevatedButton(
                     onPressed: () => showWarning(context),
                     child: const Text('Cambiar los datos'),
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(MyColors.buttonCardClass),
-                        shape: MaterialStateProperty
-                            .all<RoundedRectangleBorder>(RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18),
-                                side: const BorderSide(color: Colors.white)))),
+                    style: MyColors.buttonStyleDefault,
                   ),
                 ),
               ],

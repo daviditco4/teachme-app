@@ -143,18 +143,15 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                                           fontWeight:
                                                               FontWeight.bold)),
                                                 ),
+
                                                 ElevatedButton(
-                                                    onPressed: () {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(builder: (context) => CurrentLocationScreen(
-                                                            positionChanged: (position) {
-                                                              _profileService.updatePosition(position);
-                                                            },
-                                                          ))
-                                                      );
-                                                    },
-                                                    child: const Text("Usar ubicación actual")),
+                                                  onPressed: () => {
+                                                  Navigator.push(context, MaterialPageRoute(builder: (context) => CurrentLocationScreen(
+                                                  positionChanged: (position) {_profileService.updatePosition(position);}, ))),
+                                                  },
+                                                  child: const Text("Usar ubicación actual"),
+                                                  style: MyColors.buttonStyleDefault,
+                                                ),
                                                 const SizedBox(height: 10.0),
                                                 const Divider(
                                                   height: 40.0,
