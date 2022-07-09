@@ -1,17 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:path/path.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/helpers/SubjectsKeys.dart';
-import 'package:teachme_app/helpers/classes_keys.dart';
 import 'package:teachme_app/helpers/search_teacher_system.dart';
 import 'package:teachme_app/helpers/teachers_keys.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
-import 'package:teachme_app/widgets/auth/auth_form.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import 'package:teachme_app/widgets/custom_autocomplete.dart';
 import 'package:teachme_app/widgets/other/tm_navigator.dart';
@@ -46,6 +40,10 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPage extends State<SearchPage> {
   //late String selectedValue;
+  final Map<String, String> _subjectNameToID = {};
+  List<String> _allSubjectsList = [];
+  String subjectSelected = "";
+  final _searchSystem = SearchTeacherSystem();
 
   void showWarning(BuildContext context, String teacherUid, String subjectId,
       double classPrice) async {
@@ -60,58 +58,46 @@ class _SearchPage extends State<SearchPage> {
     );
   }
 
-  // This holds a list of fiction users
-  // You can use data fetched from a database or a server as well
-  final List<Map<String, dynamic>> _allUsers = [
-    {"id": 1, "name": "Martin Perez", "km": 1.3, "price": 1300},
-    {"id": 2, "name": "Lucia Gomez", "km": 2.7, "price": 1800},
-    {"id": 3, "name": "Juan Gutierrez", "km": 3, "price": 900},
-    {"id": 4, "name": "Martina Ramirez", "km": 5.3, "price": 1000},
-    {"id": 5, "name": "Federico Botti", "km": 1.1, "price": 1500},
-  ];
+  void _getFirebaseSubjectsList() async {
+    var fbSubjects =
+        FirebaseFirestore.instance.collection(SubjectsKeys.collectionName);
 
-  final List<String> subjects = [
-    "Analisis matematico 1",
-    "Biologia eucariota",
-    "Catequesis",
-    "otras mas"
-  ];
+    QuerySnapshot querySnapshot = await fbSubjects.get();
 
-  // This list holds the data for the list view
-  List<Map<String, dynamic>> _foundUsers = [];
-  @override
-  initState() {
-    // at the beginning, all users are shown
-    _foundUsers = _allUsers;
-    super.initState();
-  }
+    var docIterator = querySnapshot.docs.iterator;
+    String? subjectName;
+    String subjectID;
+    while (docIterator.moveNext()) {
+      var current = docIterator.current;
+      subjectName = current[SubjectsKeys.name];
+      subjectID = current.id;
 
-  // This function is called whenever the text field changes
-  void _runFilter(String enteredKeyword) {
-    List<Map<String, dynamic>> results = [];
-    if (enteredKeyword.isEmpty) {
-      // if the search field is empty or only contains white-space, we'll display all users
-      results = _allUsers;
-    } else {
-      results = _allUsers
-          .where((user) =>
-              user["name"].toLowerCase().contains(enteredKeyword.toLowerCase()))
-          .toList();
-      // we use the toLowerCase() method to make it case-insensitive
+      if (subjectName != null) {
+        _subjectNameToID[subjectName] = subjectID;
+      }
     }
 
-    // Refresh the UI
     setState(() {
-      _foundUsers = results;
+      _allSubjectsList = _subjectNameToID.keys.toList();
+
+      //FIXME: El orden alfabetico puede ser muy ineficiente. Eliminar estas
+      // lineas si es necesario
+      _allSubjectsList.sort((a, b) {
+        return a.toLowerCase().compareTo(b.toLowerCase());
+      });
     });
+  }
+
+  @override
+  initState() {
+    _getFirebaseSubjectsList();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final firestore = FirebaseFirestore.instance;
-
     final subjectsCollec = firestore.collection("subjects");
-    final teachersCollec = firestore.collection("teachers");
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -170,7 +156,16 @@ class _SearchPage extends State<SearchPage> {
                         final data = document.data();
                         subjects.add(data[SubjectsKeys.name]);
                       }
-                      return CustomAutocomplete(kOptions: subjects);
+                      return CustomAutocomplete(
+                        kOptions: _allSubjectsList,
+                        onSaved: (String? newValue) {
+                          if (newValue != null) {
+                            setState(() {
+                              subjectSelected = newValue;
+                            });
+                          }
+                        },
+                      );
                     } else {
                       return const SizedBox(
                         width: 200,
@@ -210,7 +205,8 @@ class _SearchPage extends State<SearchPage> {
               ),
               Expanded(
                   child: FutureBuilder<List<Map<String, dynamic>>>(
-                future: SearchTeacherSystem().getTeachersBySubject("0Anho3xMItg7QeXG8vhs"),
+                future: _searchSystem
+                    .getTeachersBySubject(_subjectNameToID[subjectSelected]),
                 builder: (_, snapshot) {
                   final isWaiting =
                       snapshot.connectionState == ConnectionState.waiting;
@@ -227,85 +223,76 @@ class _SearchPage extends State<SearchPage> {
                           // Documento que tiene las propiedades  de Teacher
                           final documentData = docs[index];
 
-                              return Card(
-                                key: ValueKey(documentData[TeachersKeys.uid]),
-                                color: MyColors.cardClass,
-                                elevation: 4,
-                                margin:
-                                    const EdgeInsets.symmetric(vertical: 10),
-                                child: Container(
-                                  child: Column(
+                          return Card(
+                            key: ValueKey(documentData[TeachersKeys.uid]),
+                            color: MyColors.cardClass,
+                            elevation: 4,
+                            margin: const EdgeInsets.symmetric(vertical: 10),
+                            child: Container(
+                              child: Column(
+                                children: <Widget>[
+                                  ListTile(
+                                    leading: Text(
+                                      documentData[TeachersKeys.name],
+                                      style: const TextStyle(fontSize: 24),
+                                    ),
+                                    title:
+                                        Text(documentData[TeachersKeys.name]),
+                                    subtitle: Text('Se encuentra a '),
+                                    trailing: Text(
+                                        '\$ ${documentData["classPrice"] ?? 0}'),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
                                     children: <Widget>[
-                                      ListTile(
-                                        leading: Text(
-                                          documentData[TeachersKeys.name],
-                                          style: const TextStyle(fontSize: 24),
-                                        ),
-                                        title: Text(
-                                            documentData[TeachersKeys.name]),
-                                        subtitle: Text(
-                                            'Se encuentra a '),
-                                        trailing: Text(
-                                            '\$ ${documentData["classPrice"] ?? 0}'),
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: <Widget>[
-                                          RatingBar.builder(
-                                            initialRating: 1,
-                                            itemSize: 25,
-                                            minRating: 1,
-                                            direction: Axis.horizontal,
-                                            allowHalfRating: true,
-                                            itemCount: documentData[
-                                                    TeachersKeys.rating]
+                                      RatingBar.builder(
+                                        initialRating: 1,
+                                        itemSize: 25,
+                                        minRating: 1,
+                                        direction: Axis.horizontal,
+                                        allowHalfRating: true,
+                                        itemCount:
+                                            documentData[TeachersKeys.rating]
                                                 .round(),
-                                            itemPadding:
-                                                const EdgeInsets.symmetric(
-                                                    horizontal: 2.0),
-                                            itemBuilder: (context, _) =>
-                                                const Icon(
-                                              Icons.star,
-                                              color: MyColors.white,
-                                            ),
-                                            onRatingUpdate: (rating) {
-                                              print(rating);
-                                            },
-                                          ),
-                                          ElevatedButton(
-                                            onPressed: () => showWarning(
-                                                context,
-                                                documentData[TeachersKeys.uid],
-                                                "",
-                                                double.parse(documentData[
-                                                        TeachersKeys.classPrice]
-                                                    .toString())),
-                                            child:
-                                                const Text('Reservar clases'),
-                                            style: ButtonStyle(
-                                                backgroundColor:
-                                                    MaterialStateProperty.all(
-                                                        MyColors
-                                                            .buttonCardClass),
-                                                shape: MaterialStateProperty.all<
-                                                        RoundedRectangleBorder>(
-                                                    RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(18),
-                                                        side: const BorderSide(
-                                                            color: Colors
-                                                                .white)))),
-                                          ),
-                                        ],
+                                        itemPadding: const EdgeInsets.symmetric(
+                                            horizontal: 2.0),
+                                        itemBuilder: (context, _) => const Icon(
+                                          Icons.star,
+                                          color: MyColors.white,
+                                        ),
+                                        onRatingUpdate: (rating) {
+                                          print(rating);
+                                        },
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () => showWarning(
+                                            context,
+                                            documentData[TeachersKeys.uid],
+                                            "",
+                                            double.parse(documentData[
+                                                    TeachersKeys.classPrice]
+                                                .toString())),
+                                        child: const Text('Reservar clases'),
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    MyColors.buttonCardClass),
+                                            shape: MaterialStateProperty.all<
+                                                    RoundedRectangleBorder>(
+                                                RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            18),
+                                                    side: const BorderSide(
+                                                        color: Colors.white)))),
                                       ),
                                     ],
                                   ),
-                                ),
-                              );
-
-
+                                ],
+                              ),
+                            ),
+                          );
                           return const SizedBox(width: 0, height: 0);
                         });
                   } else {

@@ -5,9 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path show extension;
-import 'package:teachme_app/helpers/students_keys.dart';
-import 'package:teachme_app/helpers/users_profile_type_keys.dart';
-
 import '../helpers/snack_bars.dart';
 import '../helpers/teachers_keys.dart';
 import '../widgets/auth/auth_form.dart' show AuthForm;
