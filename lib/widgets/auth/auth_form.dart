@@ -254,7 +254,10 @@ void _updateStudentsOrTeachersCollection(String userType) async {
         TeachersKeys.description: "¡Hola! Soy un profesor en TeachMe",
         TeachersKeys.positionLatitude: "",
         TeachersKeys.positionLongitude: "",
-        TeachersKeys.classPrice: 100
+        TeachersKeys.classPrice: 100,
+        TeachersKeys.rating: 0.0,
+        TeachersKeys.accumRatig: 0.0,
+        TeachersKeys.reviewCount: 0
       });
     }
   } on Exception catch (e) {
