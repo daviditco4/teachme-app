@@ -41,7 +41,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPage extends State<SearchPage> {
   //late String selectedValue;
   final Map<String, String> _subjectNameToID = {};
-  List<String> _allSubjectsList = [];
+  List<String> _allSubjectsList = [""];
   String subjectSelected = "";
   final _searchSystem = SearchTeacherSystem();
 
@@ -85,6 +85,8 @@ class _SearchPage extends State<SearchPage> {
       _allSubjectsList.sort((a, b) {
         return a.toLowerCase().compareTo(b.toLowerCase());
       });
+
+      subjectSelected = _allSubjectsList[0];
     });
   }
 
@@ -141,38 +143,7 @@ class _SearchPage extends State<SearchPage> {
                 decoration: const InputDecoration(
                     labelText: 'Buscar', suffixIcon: Icon(Icons.search)),
               ), */
-              StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                  stream: subjectsCollec.snapshots(),
-                  builder: (_, snap) {
-                    final isWaiting =
-                        snap.connectionState == ConnectionState.waiting;
-                    if (isWaiting)
-                      return const Center(child: CircularProgressIndicator());
-                    if (snap.hasData) {
-                      final docs = snap.data!.docs;
-
-                      List<String> subjects = [];
-                      for (var document in docs) {
-                        final data = document.data();
-                        subjects.add(data[SubjectsKeys.name]);
-                      }
-                      return CustomAutocomplete(
-                        kOptions: _allSubjectsList,
-                        onSaved: (String? newValue) {
-                          if (newValue != null) {
-                            setState(() {
-                              subjectSelected = newValue;
-                            });
-                          }
-                        },
-                      );
-                    } else {
-                      return const SizedBox(
-                        width: 200,
-                        height: 200,
-                      );
-                    }
-                  }),
+              _subjectSelector(),
               const SizedBox(
                 height: 20,
               ),
@@ -304,6 +275,41 @@ class _SearchPage extends State<SearchPage> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _subjectSelector() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        DropdownButton<String>(
+          value: subjectSelected,
+          icon: const Icon(Icons.arrow_drop_down),
+          onChanged: (String? newValue) {
+            setState(() {
+              if (newValue != null) {
+                subjectSelected = newValue;
+              }
+            });
+          },
+          items: _allSubjectsList.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+        ),
+        IconButton(
+            onPressed: () {
+              setState(() {
+                // changedSubject = true;
+              });
+            },
+            icon: const Icon(
+              Icons.check_circle,
+              color: MyColors.buttonCardClass,
+            ))
+      ],
     );
   }
 }
