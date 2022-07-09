@@ -12,7 +12,7 @@ import 'package:teachme_app/pages/geolocation/current_location_screen.dart';
 import 'package:teachme_app/pages/geolocation/search_places_screen.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/pages/settings_page.dart';
-import 'package:teachme_app/widgets/addSubject.dart';
+import 'package:teachme_app/widgets/edit_subjects_popup.dart';
 import 'package:teachme_app/widgets/auth/auth_form.dart';
 import 'package:teachme_app/widgets/auth/profile_service.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
@@ -288,13 +288,13 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                       ),
                                                       ElevatedButton(
                                                         onPressed: () =>
-                                                            _addSubjectPopup(
+                                                            _editSubjectPopup(
                                                                 context,
-                                                                'Agregar Materia',
+                                                                'Editar Materias',
                                                                 'Cancelar',
-                                                                'Agregar'),
+                                                                'Aceptar'),
                                                         child: const Text(
-                                                            'Agregar Materias'),
+                                                            'Editar'),
                                                         style: ButtonStyle(
                                                             backgroundColor:
                                                                 MaterialStateProperty
@@ -876,14 +876,15 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
         });
   }
 
-  void _addSubjectPopup(
+  void _editSubjectPopup(
       BuildContext context, String title, String b1, String b2) async {
     await showDialog<bool>(
         context: context,
-        builder: (context) => AddSubject(
+        builder: (context) => EditSubjectPopup(
               title: title,
               button1: b1,
               button2: b2,
+              teacherSubjectsList: subjects,
             ));
 
     _getSubjects();
