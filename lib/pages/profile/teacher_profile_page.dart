@@ -29,7 +29,6 @@ class TeacherProfilePage extends StatefulWidget {
 class _TeacherProfilePage extends State<TeacherProfilePage> {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final ProfileService _profileService = ProfileService();
-
   bool _isEditingText = false;
   bool _isEditingText2 = false;
   late TextEditingController _editingController;
@@ -42,6 +41,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   String dropdownValueUpTo = "23:00";
   List<bool> availableDays = List.filled(7, true);
   List<String> subjects = [];
+  bool isLoading = true;
 
   static final Map<int, String> indexToDayMap = {
     0: "Domingo",
@@ -90,7 +90,6 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   }
 
   @override
-  @override
   void dispose() {
     _editingController.dispose();
     super.dispose();
@@ -101,52 +100,53 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
     return FutureBuilder(
         future: _profileService.getProfile(),
         builder: (context, AsyncSnapshot<Map<String, dynamic>?> snap) {
-          if (!snap.hasData ||
-              snap.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+          if (snap.connectionState == ConnectionState.waiting ||
+              !snap.hasData) {
+            isLoading = true;
           } else {
             initialText = snap.data![TeachersKeys.description];
             _editingController.text = snap.data![TeachersKeys.description];
+            isLoading = false;
+          }
 
-            return Scaffold(
-                extendBodyBehindAppBar: true,
-                backgroundColor: MyColors.background,
-                bottomNavigationBar: const TMBottomNavigationBar(),
-                appBar: AppBar(
-                  leading: const ImageIcon(
-                    AssetImage("assets/images/teach_me_logo.png"),
-                    color: MyColors.black,
-                  ),
-                  centerTitle: true,
-                  title: const Text('Mi Perfil',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.w900,
-                      )),
-                  actions: [
-                    IconButton(
-                        icon: const Icon(Icons.settings, color: Colors.black),
-                        onPressed: () => TMNavigator.navigateToPage(
-                            context, const SettingsPage())),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: IconButton(
-                        icon: const Icon(Icons.notifications_none,
-                            color: Colors.black),
-                        onPressed: () => TMNavigator.navigateToPage(
-                            context, const NotificationsPage()),
-                      ),
-                    ),
-                  ],
-                  backgroundColor: MyColors.background,
-                  elevation: 0,
+          return Scaffold(
+              extendBodyBehindAppBar: true,
+              backgroundColor: MyColors.background,
+              bottomNavigationBar: const TMBottomNavigationBar(),
+              appBar: AppBar(
+                leading: const ImageIcon(
+                  AssetImage("assets/images/teach_me_logo.png"),
+                  color: MyColors.black,
                 ),
-                body: Stack(children: <Widget>[
-                  SafeArea(
-                    child: ListView(children: [
+                centerTitle: true,
+                title: const Text('Mi Perfil',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 25,
+                      fontWeight: FontWeight.w900,
+                    )),
+                actions: [
+                  IconButton(
+                      icon: const Icon(Icons.settings, color: Colors.black),
+                      onPressed: () => TMNavigator.navigateToPage(
+                          context, const SettingsPage())),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: IconButton(
+                      icon: const Icon(Icons.notifications_none,
+                          color: Colors.black),
+                      onPressed: () => TMNavigator.navigateToPage(
+                          context, const NotificationsPage()),
+                    ),
+                  ),
+                ],
+                backgroundColor: MyColors.background,
+                elevation: 0,
+              ),
+              body: Stack(children: <Widget>[
+                SafeArea(
+                  child: Stack(children: [
+                    ListView(children: [
                       Padding(
                         padding: const EdgeInsets.only(
                             left: 16.0, right: 16.0, top: 74.0),
@@ -686,9 +686,17 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                         ),
                       ),
                     ]),
-                  )
-                ]));
-          }
+                    Visibility(
+                      visible: isLoading,
+                      maintainInteractivity: false,
+                      child: const Center(
+                        child: CircularProgressIndicator(
+                            color: MyColors.buttonCardClass),
+                      ),
+                    ),
+                  ]),
+                )
+              ]));
         });
   }
 
