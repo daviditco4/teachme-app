@@ -13,4 +13,6 @@ class TeachersKeys {
   static const positionLongitude = 'positionLongitude';
   static const classPrice = 'classPrice';
   static const collectionName = 'teachers';
+  static const accumRatig = 'accumRating';
+  static const reviewCount = 'ratingCount';
 }
