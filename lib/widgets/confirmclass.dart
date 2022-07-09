@@ -70,7 +70,6 @@ class _ConfirmClass extends State<ConfirmClass> {
                 children: <Widget>[
                 Text('Califica la clase: '),
                 RatingBar.builder(
-                  initialRating: 3,
                   itemSize: 25,
                   minRating: 1,
                   direction:
