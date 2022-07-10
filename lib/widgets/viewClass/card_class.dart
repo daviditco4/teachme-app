@@ -50,7 +50,10 @@ class _CardClass extends State<CardClass> {
                 contentPadding: const EdgeInsets.fromLTRB(15, 10, 25, 0),
                 title: Text(
                   widget.title,
-                  style: const TextStyle(color: MyColors.black, fontSize: 17),
+                  style: const TextStyle(
+                      color: MyColors.black,
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold),
                 ),
                 subtitle: Text(widget.schedule,
                     style: const TextStyle(
