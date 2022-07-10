@@ -76,11 +76,16 @@ class SearchTeacherSystem {
         print("Exception in [SEARCH_TEACHER_SYSTEM] " + e.toString());
       }
     }
-    return _orderByDistance(toReturn);
+    toReturn = await _setDistance(toReturn);
+
+    toReturn.sort((a, b) =>
+        (a["distance"] as double).compareTo((b["distance"] as double)));
+
+    return toReturn;
   }
 
   /* Debe ser necesariamente un estudiante quien llame a este método */
-  Future<List<Map<String, dynamic>>> _orderByDistance(
+  Future<List<Map<String, dynamic>>> _setDistance(
       List<Map<String, dynamic>> inList) async {
     var userProfile = await ProfileService().getProfile();
     if (userProfile != null) {
