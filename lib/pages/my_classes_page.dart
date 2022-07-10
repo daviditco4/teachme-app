@@ -91,6 +91,7 @@ class _MyClass extends State<MyClass> {
                       clipBehavior: Clip.antiAlias,
                       margin: const EdgeInsets.all(8.0),
                       child: TableCalendar(
+                        locale: 'es_US',
                         calendarController: _calendarController,
                         headerStyle: HeaderStyle(
                           decoration: const BoxDecoration(
