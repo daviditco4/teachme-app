@@ -78,8 +78,8 @@ class SearchTeacherSystem {
     }
     toReturn = await _setDistance(toReturn);
 
-    toReturn.sort((a, b) =>
-        (a["distance"] as double).compareTo((b["distance"] as double)));
+    toReturn.sort(
+        (a, b) => (a["distance"] as int).compareTo((b["distance"] as int)));
 
     return toReturn;
   }
@@ -96,15 +96,15 @@ class SearchTeacherSystem {
         if (currentTeacher[TeachersKeys.positionLatitude].isEmpty ||
             currentTeacher[TeachersKeys.positionLongitude].isEmpty) {
           currentTeacher["distance"] = -1;
+        } else {
+          currentTeacher["distance"] = GeolocationHelper()
+              .calculateDistance(
+                  userLat,
+                  userLon,
+                  double.parse(currentTeacher[TeachersKeys.positionLatitude]),
+                  double.parse(currentTeacher[TeachersKeys.positionLongitude]))
+              .ceil();
         }
-
-        currentTeacher["distance"] = GeolocationHelper()
-            .calculateDistance(
-                userLat,
-                userLon,
-                double.parse(currentTeacher[StudentsKeys.positionLatitude]),
-                double.parse(currentTeacher[StudentsKeys.positionLongitude]))
-            .ceil();
       }
     }
     return inList;
