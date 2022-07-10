@@ -6,4 +6,5 @@ class ClassesKeys {
   static const time = 'time';
   static const date = 'date';
   static const cost = 'cost';
+  static const topics = 'topics';
 }
