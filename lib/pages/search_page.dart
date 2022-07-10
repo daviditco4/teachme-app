@@ -103,7 +103,7 @@ class _SearchPage extends State<SearchPage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: MyColors.background,
-      bottomNavigationBar: const TMBottomNavigationBar(),
+      bottomNavigationBar: TMBottomNavigationBar(),
       appBar: AppBar(
         leading: const ImageIcon(
           AssetImage("assets/images/teach_me_logo.png"),
@@ -199,65 +199,70 @@ class _SearchPage extends State<SearchPage> {
                             color: MyColors.cardClass,
                             elevation: 4,
                             margin: const EdgeInsets.symmetric(vertical: 10),
-                            child: Column(
-                              children: <Widget>[
-                                ListTile(
-                                  leading: Text(
-                                    documentData[TeachersKeys.name],
-                                    style: const TextStyle(fontSize: 24),
+                            child: Container(
+                              child: Column(
+                                children: <Widget>[
+                                  ListTile(
+                                    leading: Text(
+                                      documentData[TeachersKeys.name],
+                                      style: const TextStyle(fontSize: 24),
+                                    ),
+                                    title:
+                                        Text(documentData[TeachersKeys.name]),
+                                    subtitle: Text(
+                                        'Se encuentra a ${documentData["distance"] == -1 ? 0 : documentData["distance"]} km'),
+                                    trailing: Text(
+                                        '\$ ${documentData["classPrice"] ?? 0}'),
                                   ),
-                                  title: Text(documentData[TeachersKeys.name]),
-                                  subtitle: const Text('Se encuentra a '),
-                                  trailing: Text(
-                                      '\$ ${documentData["classPrice"] ?? 0}'),
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: <Widget>[
-                                    RatingBar.builder(
-                                      initialRating: 1,
-                                      itemSize: 25,
-                                      minRating: 1,
-                                      direction: Axis.horizontal,
-                                      allowHalfRating: true,
-                                      itemCount:
-                                          documentData[TeachersKeys.rating]
-                                              .round(),
-                                      itemPadding: const EdgeInsets.symmetric(
-                                          horizontal: 2.0),
-                                      itemBuilder: (context, _) => const Icon(
-                                        Icons.star,
-                                        color: MyColors.white,
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: <Widget>[
+                                      RatingBar.builder(
+                                        initialRating: 1,
+                                        itemSize: 25,
+                                        minRating: 1,
+                                        direction: Axis.horizontal,
+                                        allowHalfRating: true,
+                                        itemCount:
+                                            documentData[TeachersKeys.rating]
+                                                .round(),
+                                        itemPadding: const EdgeInsets.symmetric(
+                                            horizontal: 2.0),
+                                        itemBuilder: (context, _) => const Icon(
+                                          Icons.star,
+                                          color: MyColors.white,
+                                        ),
+                                        onRatingUpdate: (rating) {
+                                          print(rating);
+                                        },
                                       ),
-                                      onRatingUpdate: (rating) {
-                                        print(rating);
-                                      },
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () => showWarning(
-                                          context,
-                                          documentData[TeachersKeys.uid],
-                                          "",
-                                          double.parse(documentData[
-                                                  TeachersKeys.classPrice]
-                                              .toString())),
-                                      child: const Text('Reservar clases'),
-                                      style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                                  MyColors.buttonCardClass),
-                                          shape: MaterialStateProperty.all<
-                                                  RoundedRectangleBorder>(
-                                              RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(18),
-                                                  side: const BorderSide(
-                                                      color: Colors.white)))),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                      ElevatedButton(
+                                        onPressed: () => showWarning(
+                                            context,
+                                            documentData[TeachersKeys.uid],
+                                            "",
+                                            double.parse(documentData[
+                                                    TeachersKeys.classPrice]
+                                                .toString())),
+                                        child: const Text('Reservar clases'),
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    MyColors.buttonCardClass),
+                                            shape: MaterialStateProperty.all<
+                                                    RoundedRectangleBorder>(
+                                                RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            18),
+                                                    side: const BorderSide(
+                                                        color: Colors.white)))),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           );
                         });
