@@ -8,7 +8,6 @@ import 'package:teachme_app/pages/auth_page.dart';
 import 'package:teachme_app/pages/messages/chat_page.dart';
 import 'package:teachme_app/pages/profile/student_profile_page.dart';
 import 'package:teachme_app/pages/splash_page.dart';
-import 'package:provider/provider.dart';
 import 'package:teachme_app/pages/profile/teacher_profile_page.dart';
 import 'pages/loading_page.dart';
 import 'pages/notifications_page.dart';
@@ -63,12 +62,12 @@ class MyApp extends StatelessWidget {
               if (!focusScope.hasPrimaryFocus) focusScope.unfocus();
             },
             child: MaterialApp(
-              title: 'TeachMe-app',
+              title: 'TeachMe_app',
               theme: ThemeData(
-                primaryColor: Color.fromARGB(255, 0, 42, 127),
-                primaryColorDark: Color.fromARGB(255, 95, 125, 226),
-                accentColor: Color(0xff00adb5),
-                backgroundColor: Color(0xffeeeeee),
+                primaryColor: const Color.fromARGB(255, 0, 42, 127),
+                primaryColorDark: const Color.fromARGB(255, 95, 125, 226),
+                accentColor: const Color(0xff00adb5),
+                backgroundColor: const Color(0xffeeeeee),
               ),
               routes: {
                 '/loading_page': (context) => const LoadingPage(),
@@ -96,7 +95,7 @@ class MyApp extends StatelessWidget {
                           return const MyClass();
                         } else {
                           userProfileType.value = ProfileType.missing;
-                          return AuthPage();
+                          return const AuthPage();
                         }
                       },
                     ),

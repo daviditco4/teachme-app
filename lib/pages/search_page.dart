@@ -2,13 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:teachme_app/constants/theme.dart';
-import 'package:teachme_app/helpers/SubjectsKeys.dart';
+import 'package:teachme_app/helpers/subject_keys.dart';
 import 'package:teachme_app/helpers/search_teacher_system.dart';
 import 'package:teachme_app/helpers/teachers_keys.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import 'package:teachme_app/widgets/other/tm_navigator.dart';
-import 'package:teachme_app/widgets/alertClass.dart';
+import 'package:teachme_app/widgets/alert_class.dart';
 
 /*void main() {
   runApp(const MyApp());
@@ -180,8 +180,9 @@ class _SearchPage extends State<SearchPage> {
                 builder: (_, snapshot) {
                   final isWaiting =
                       snapshot.connectionState == ConnectionState.waiting;
-                  if (isWaiting)
+                  if (isWaiting) {
                     return const Center(child: CircularProgressIndicator());
+                  }
 
                   if (snapshot.hasData) {
                     final docs = snapshot.data!;
@@ -264,7 +265,6 @@ class _SearchPage extends State<SearchPage> {
                               ),
                             ),
                           );
-                          return const SizedBox(width: 0, height: 0);
                         });
                   } else {
                     return const SizedBox(width: 200, height: 200);

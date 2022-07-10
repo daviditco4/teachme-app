@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/pages/settings_page.dart';
-import 'package:flutter/material.dart';
-import '../widgets/bottom_nav_bar.dart';
 import '../widgets/other/tm_navigator.dart';
 
 class PaymentMethod extends StatefulWidget {

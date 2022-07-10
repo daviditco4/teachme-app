@@ -1,18 +1,16 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:teachme_app/constants/theme.dart';
-import 'package:teachme_app/helpers/SubjectsKeys.dart';
+import 'package:teachme_app/helpers/subject_keys.dart';
 import 'package:teachme_app/helpers/teachers_keys.dart';
 import 'package:teachme_app/pages/geolocation/current_location_screen.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/pages/settings_page.dart';
 import 'package:teachme_app/widgets/edit_subjects_popup.dart';
-import 'package:teachme_app/widgets/auth/auth_form.dart';
 import 'package:teachme_app/widgets/auth/profile_service.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import '../../widgets/other/tm_navigator.dart';
@@ -209,7 +207,8 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                                     },
                                                                   )));
                                                     },
-                                                    style: MyColors.buttonStyleDefault,
+                                                    style: MyColors
+                                                        .buttonStyleDefault,
                                                     child: const Text(
                                                         "Usar ubicación actual")),
                                                 const SizedBox(height: 10.0),
@@ -295,7 +294,8 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                                 'Aceptar'),
                                                         child: const Text(
                                                             'Editar'),
-                                                        style: MyColors.buttonStyleDefault,
+                                                        style: MyColors
+                                                            .buttonStyleDefault,
                                                       ),
                                                     ],
                                                   ),
@@ -394,7 +394,8 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                       ElevatedButton(
                                                         child: const Text(
                                                             'Editar'),
-                                                        style: MyColors.buttonStyleDefault,
+                                                        style: MyColors
+                                                            .buttonStyleDefault,
                                                         onPressed: () => showDialog<
                                                                 bool>(
                                                             context: context,
@@ -565,6 +566,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                                                 0) {
                                                                               return "Precio inválido";
                                                                             }
+                                                                            return null;
                                                                           }),
                                                                           decoration: const InputDecoration(
                                                                               labelStyle: TextStyle(
@@ -636,7 +638,8 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                         }),
                                                         child:
                                                             const Text('Pagar'),
-                                                        style: MyColors.buttonStyleDefault,
+                                                        style: MyColors
+                                                            .buttonStyleDefault,
                                                       ),
                                                     ],
                                                   ),
@@ -700,7 +703,9 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
         });
   }
 
+  //TODO: Implementar
   void _updateLocation() {}
+
   String _getUsername() {
     String? username = user.displayName;
     return username ?? "ERROR";
@@ -776,11 +781,11 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   }
 
   void _getAvailableHours() async {
-    var document = await FirebaseFirestore.instance
+    var document = FirebaseFirestore.instance
         .collection(TeachersKeys.collectionName)
         .doc(user.uid);
 
-    document.get().then((document) => {
+    await document.get().then((document) => {
           setState(() {
             availableFrom =
                 _roundHourFromString(document[TeachersKeys.availableFrom]);

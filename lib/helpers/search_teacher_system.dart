@@ -1,12 +1,8 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:teachme_app/helpers/SubjectsKeys.dart';
+import 'package:teachme_app/helpers/subject_keys.dart';
 import 'package:teachme_app/helpers/geolocation_helper.dart';
 import 'package:teachme_app/helpers/students_keys.dart';
 import 'package:teachme_app/helpers/teachers_keys.dart';
-import 'package:teachme_app/main.dart';
 import 'package:teachme_app/widgets/auth/profile_service.dart';
 
 class SearchTeacherSystem {

@@ -6,6 +6,8 @@ import 'package:teachme_app/pages/messages/chat_page.dart';
 import '../../helpers/message_keys.dart';
 
 class SendMessageField extends StatefulWidget {
+  const SendMessageField({Key? key}) : super(key: key);
+
   @override
   _SendMessageFieldState createState() => _SendMessageFieldState();
 }

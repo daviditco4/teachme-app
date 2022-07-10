@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:teachme_app/widgets/other/tm_navigator.dart';
 
 class CurrentLocationScreen extends StatefulWidget {
-  const CurrentLocationScreen({
-    required this.positionChanged
-  });
+  const CurrentLocationScreen({Key? key, required this.positionChanged})
+      : super(key: key);
 
   final void Function(Position) positionChanged;
 
@@ -17,7 +15,8 @@ class CurrentLocationScreen extends StatefulWidget {
 class _CurrentLocationScreenState extends State<CurrentLocationScreen> {
   late GoogleMapController googleMapController;
 
-  static const CameraPosition initialCameraPosition = CameraPosition(target: LatLng(37.42796133580664, -122.085749655962), zoom: 14);
+  static const CameraPosition initialCameraPosition = CameraPosition(
+      target: LatLng(37.42796133580664, -122.085749655962), zoom: 14);
 
   Set<Marker> markers = {};
 
@@ -41,13 +40,16 @@ class _CurrentLocationScreenState extends State<CurrentLocationScreen> {
         onPressed: () async {
           Position position = await _determinePosition();
 
-          googleMapController
-              .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(position.latitude, position.longitude), zoom: 14)));
-
+          googleMapController.animateCamera(CameraUpdate.newCameraPosition(
+              CameraPosition(
+                  target: LatLng(position.latitude, position.longitude),
+                  zoom: 14)));
 
           markers.clear();
 
-          markers.add(Marker(markerId: const MarkerId('currentLocation'),position: LatLng(position.latitude, position.longitude)));
+          markers.add(Marker(
+              markerId: const MarkerId('currentLocation'),
+              position: LatLng(position.latitude, position.longitude)));
 
           widget.positionChanged(position);
           Navigator.pop(context);

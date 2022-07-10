@@ -4,13 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:teachme_app/widgets/viewClass/details_class.dart';
 
 class CardClass extends StatefulWidget {
-
   const CardClass(
       {Key? key,
-        required this.title,
-        required this.textButton,
-        required this.schedule,
-        required this.direction})
+      required this.title,
+      required this.textButton,
+      required this.schedule,
+      required this.direction})
       : super(key: key);
   final String title;
   final String textButton;
@@ -25,51 +24,51 @@ class _CardClass extends State<CardClass> {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   @override
-  Widget build(BuildContext context) {return Center(
-    child: Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: const BorderRadius.all(Radius.circular(18.0)),),
-      child:Container(
-        color: MyColors.cardClass,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          ListTile(
-            contentPadding: EdgeInsets.fromLTRB(15, 10, 25, 0),
-            title: Text(widget.title,
-              style: const TextStyle(
-                color: MyColors.black,
-                fontSize: 17),
-            ),
-            subtitle: Text(
-                widget.schedule,
-                style: const TextStyle(
-                  color: MyColors.black,
-                  fontSize: 17,
-                )),
-            trailing:  CircleAvatar(
-                    backgroundColor: MyColors.white,
-                    backgroundImage: _getUserImage(),
-                    radius: 65.0,
-                    // maxRadius: 200.0,
-                  ),
-          ),
-
-        Row(
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: () => viewDetails(context),
-              //onPressed: () => onPressed(widget.textButton),
-              child: Text(widget.textButton,
-                  style: const TextStyle(color: MyColors.white, fontSize: 15)),
-              style: MyColors.buttonStyleDefault,
-            ),
-          ],
+  Widget build(BuildContext context) {
+    return Center(
+      child: Card(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(18.0)),
         ),
-      ],
+        child: Container(
+          color: MyColors.cardClass,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                contentPadding: const EdgeInsets.fromLTRB(15, 10, 25, 0),
+                title: Text(
+                  widget.title,
+                  style: const TextStyle(color: MyColors.black, fontSize: 17),
+                ),
+                subtitle: Text(widget.schedule,
+                    style: const TextStyle(
+                      color: MyColors.black,
+                      fontSize: 17,
+                    )),
+                trailing: CircleAvatar(
+                  backgroundColor: MyColors.white,
+                  backgroundImage: _getUserImage(),
+                  radius: 65.0,
+                  // maxRadius: 200.0,
+                ),
+              ),
+              Row(
+                children: <Widget>[
+                  ElevatedButton(
+                    onPressed: () => viewDetails(context),
+                    //onPressed: () => onPressed(widget.textButton),
+                    child: Text(widget.textButton,
+                        style: const TextStyle(
+                            color: MyColors.white, fontSize: 15)),
+                    style: MyColors.buttonStyleDefault,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
-    ),
-    ),
     );
   }
 
@@ -88,6 +87,6 @@ void onPressed(String text) {
 }
 
 void viewDetails(BuildContext context) async {
-  showDialog<bool>(context: context, builder: (context) => DetailsClass());
+  showDialog<bool>(
+      context: context, builder: (context) => const DetailsClass());
 }
-

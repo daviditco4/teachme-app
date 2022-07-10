@@ -1,11 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomAutocomplete extends StatelessWidget {
   final List<String> kOptions;
   final void Function(String? newValue) onSaved;
 
-  CustomAutocomplete({Key? key, required this.kOptions, required this.onSaved})
+  const CustomAutocomplete(
+      {Key? key, required this.kOptions, required this.onSaved})
       : super(key: key);
 
   @override

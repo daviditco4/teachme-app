@@ -1,20 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/helpers/students_keys.dart';
-import 'package:teachme_app/helpers/teachers_keys.dart';
-import 'package:teachme_app/helpers/users_profile_type_keys.dart';
-import 'package:teachme_app/main.dart';
 import 'package:teachme_app/pages/geolocation/current_location_screen.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/pages/settings_page.dart';
-import 'package:teachme_app/widgets/auth/auth_form.dart';
-import 'package:teachme_app/widgets/auth/auth_service.dart';
 import 'package:teachme_app/widgets/auth/profile_service.dart';
-import 'package:teachme_app/pages/notifications_page.dart';
-import 'package:teachme_app/pages/settings_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import '../../widgets/other/tm_navigator.dart';
 
@@ -143,14 +135,25 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                                           fontWeight:
                                                               FontWeight.bold)),
                                                 ),
-
                                                 ElevatedButton(
                                                   onPressed: () => {
-                                                  Navigator.push(context, MaterialPageRoute(builder: (context) => CurrentLocationScreen(
-                                                  positionChanged: (position) {_profileService.updatePosition(position);}, ))),
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                CurrentLocationScreen(
+                                                                  positionChanged:
+                                                                      (position) {
+                                                                    _profileService
+                                                                        .updatePosition(
+                                                                            position);
+                                                                  },
+                                                                ))),
                                                   },
-                                                  child: const Text("Usar ubicación actual"),
-                                                  style: MyColors.buttonStyleDefault,
+                                                  child: const Text(
+                                                      "Usar ubicación actual"),
+                                                  style: MyColors
+                                                      .buttonStyleDefault,
                                                 ),
                                                 const SizedBox(height: 10.0),
                                                 const Divider(
@@ -170,26 +173,27 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                                       Expanded(
                                                           child: !_isEditingText
                                                               ? Text(
-                                                              initialText)
+                                                                  initialText)
                                                               : TextFormField(
-                                                              initialValue:
-                                                              initialText,
-                                                              textInputAction:
-                                                              TextInputAction
-                                                                  .done,
-                                                              onFieldSubmitted:
-                                                                  (value) {
-                                                                _profileService
-                                                                    .updateDescription(
-                                                                    value);
-                                                                setState(
+                                                                  initialValue:
+                                                                      initialText,
+                                                                  textInputAction:
+                                                                      TextInputAction
+                                                                          .done,
+                                                                  onFieldSubmitted:
+                                                                      (value) {
+                                                                    _profileService
+                                                                        .updateDescription(
+                                                                            value);
+                                                                    setState(
                                                                         () => {
-                                                                      _isEditingText = false,
-                                                                      initialText = value
-                                                                    });
-                                                              })),
+                                                                              _isEditingText = false,
+                                                                              initialText = value
+                                                                            });
+                                                                  })),
                                                       IconButton(
-                                                        icon: Icon(Icons.edit),
+                                                        icon: const Icon(
+                                                            Icons.edit),
                                                         onPressed: () {
                                                           setState(() => {
                                                                 _isEditingText =

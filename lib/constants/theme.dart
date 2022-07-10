@@ -1,5 +1,3 @@
-import 'dart:ui' show Color;
-
 import 'package:flutter/material.dart';
 
 class MyColors {
@@ -84,15 +82,15 @@ class MyColors {
   static ButtonStyle buttonStyleDefault = ElevatedButton.styleFrom(
     onPrimary: MyColors.white,
     primary: MyColors.buttonCardClass,
-    minimumSize: Size(88, 36),
-    padding: EdgeInsets.symmetric(horizontal: 16),
+    minimumSize: const Size(88, 36),
+    padding: const EdgeInsets.symmetric(horizontal: 16),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
     side: const BorderSide(color: Colors.white),
   );
 
-  static TextStyle textBoldDefault = TextStyle(
-      fontSize: 20.0,
-      color: MyColors.black,
-      fontWeight: FontWeight.bold,
+  static TextStyle textBoldDefault = const TextStyle(
+    fontSize: 20.0,
+    color: MyColors.black,
+    fontWeight: FontWeight.bold,
   );
 }

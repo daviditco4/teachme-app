@@ -2,12 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/main.dart';
-import 'package:teachme_app/pages/auth_page.dart';
 import 'package:teachme_app/pages/help.dart';
 import 'package:teachme_app/pages/payment_methods_page.dart';
-import 'package:teachme_app/pages/profile/student_profile_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
-import 'package:teachme_app/widgets/other/tm_navigator.dart';
 import 'package:teachme_app/widgets/setting_button.dart';
 import 'package:teachme_app/pages/info_user_page.dart';
 import 'package:teachme_app/pages/notifications_config_page.dart';
@@ -27,7 +24,7 @@ class _SettingsPageState extends State<SettingsPage> {
     await FirebaseAuth.instance.signOut().catchError((error) {
       print(error.toString());
     }).then((value) => Navigator.push(
-        context, MaterialPageRoute(builder: (context) => MyApp())));
+        context, MaterialPageRoute(builder: (context) => const MyApp())));
   }
 
   @override

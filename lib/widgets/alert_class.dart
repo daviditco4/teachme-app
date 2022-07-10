@@ -1,11 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
-import 'package:provider/provider.dart';
 import 'package:teachme_app/helpers/teachers_keys.dart';
-
 import '../constants/theme.dart';
 import '../helpers/classes_keys.dart';
 import '../helpers/students_keys.dart';
@@ -82,32 +78,30 @@ class _AlertClass extends State<AlertClass> {
                         selectedHour = newValue!;
                       });
                     },
-                    items:
-                    availableHours.map<DropdownMenuItem<String>>((String value) {
+                    items: availableHours
+                        .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
                       );
                     }).toList(),
                   ),
-                ]
-            ),
+                ]),
             Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: const <Widget>[
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: const <Widget>[
                 Text("Temario: "),
-                  SizedBox(
-                    height: 50,
-                    width: 100,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: UnderlineInputBorder(),
-                        hintText: 'Temas a ver    ',
-                      ),
+                SizedBox(
+                  height: 50,
+                  width: 100,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(),
+                      hintText: 'Temas a ver    ',
                     ),
-                  )
-
-                ],
+                  ),
+                )
+              ],
             ),
           ],
         ),
@@ -154,11 +148,11 @@ class _AlertClass extends State<AlertClass> {
   }
 
   void _getTeacherAvailableWeekdays() async {
-    var document = await FirebaseFirestore.instance
+    var document = FirebaseFirestore.instance
         .collection(TeachersKeys.collectionName)
         .doc(widget.teacherUid);
 
-    document.get().then((document) => {
+    await document.get().then((document) => {
           setState(() {
             List<dynamic> firebaseAvailableDays =
                 document[TeachersKeys.availableDays];
@@ -235,8 +229,6 @@ class _AlertClass extends State<AlertClass> {
           .doc(user.uid)
           .collection(ClassesKeys.collectionName)
           .add({
-        //ClassesKeys.studentUid: user.uid,
-        //TODO: Campo Date
         ClassesKeys.teacherUid: teacherUid,
         ClassesKeys.date: _getDate(selectedDate),
         ClassesKeys.time: _getTime(selectedHour),
@@ -250,7 +242,6 @@ class _AlertClass extends State<AlertClass> {
           .collection(ClassesKeys.collectionName)
           .add({
         ClassesKeys.studentUid: user.uid,
-        //ClassesKeys.teacherUid: teacherUid,
         ClassesKeys.date: _getDate(selectedDate),
         ClassesKeys.time: _getTime(selectedHour),
         ClassesKeys.subjectId: subjectId,

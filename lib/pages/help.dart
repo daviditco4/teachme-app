@@ -42,128 +42,119 @@ class _Help extends State<Help> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Container(
-                child: ExpansionPanelList(
-                  animationDuration: Duration(milliseconds: 500),
-                  children: [
-                    ExpansionPanel(
-                      headerBuilder: (context, isExpanded) {
-                        return ListTile(
-                          title: Text(
-                            'Reportar un problema',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        );
-                      },
-                      body: SafeArea(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    25, 10, 40, 20),
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                    border: UnderlineInputBorder(),
-                                    hintText: 'Dejar un comentario del reporte',
-                                  ),
+              ExpansionPanelList(
+                animationDuration: const Duration(milliseconds: 500),
+                children: [
+                  ExpansionPanel(
+                    headerBuilder: (context, isExpanded) {
+                      return const ListTile(
+                        title: Text(
+                          'Reportar un problema',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      );
+                    },
+                    body: SafeArea(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: <Widget>[
+                            const Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  25, 10, 40, 20),
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  border: UnderlineInputBorder(),
+                                  hintText: 'Dejar un comentario del reporte',
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 130.0),
-                                child: ElevatedButton(
-                                  onPressed: () => showPopup(),
-                                  child: const Text('Enviar'),
-                                  style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              MyColors.buttonCardClass),
-                                      shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(18),
-                                              side: const BorderSide(
-                                                  color: Colors.white)))),
-                                ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 130.0),
+                              child: ElevatedButton(
+                                onPressed: () => showPopup(),
+                                child: const Text('Enviar'),
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        MyColors.buttonCardClass),
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(18),
+                                            side: const BorderSide(
+                                                color: Colors.white)))),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
-                      isExpanded: _expanded1,
-                      backgroundColor: MyColors.background,
-                      canTapOnHeader: true,
                     ),
-                  ],
-                  dividerColor: MyColors.bottomNavBarBackground,
-                  expansionCallback: (panelIndex, isExpanded) {
-                    _expanded1 = !_expanded1;
-                    setState(() {});
-                  },
-                ),
+                    isExpanded: _expanded1,
+                    backgroundColor: MyColors.background,
+                    canTapOnHeader: true,
+                  ),
+                ],
+                dividerColor: MyColors.bottomNavBarBackground,
+                expansionCallback: (panelIndex, isExpanded) {
+                  _expanded1 = !_expanded1;
+                  setState(() {});
+                },
               ),
-              Container(
-                child: ExpansionPanelList(
-                  animationDuration: Duration(milliseconds: 500),
-                  children: [
-                    ExpansionPanel(
-                      headerBuilder: (context, isExpanded) {
-                        return ListTile(
-                          title: Text(
-                            'Solicitudes de ayuda',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        );
-                      },
-                      body: ListTile(
-                        title: Text('Aun no se han realizado reportes',
-                            style:
-                                TextStyle(color: Colors.black, fontSize: 15)),
-                      ),
-                      isExpanded: _expanded2,
-                      backgroundColor: MyColors.background,
-                      canTapOnHeader: true,
-                    ),
-                  ],
-                  dividerColor: MyColors.bottomNavBarBackground,
-                  expansionCallback: (panelIndex, isExpanded) {
-                    _expanded2 = !_expanded2;
-                    setState(() {});
-                  },
-                ),
-              ),
-              Container(
-                child: ExpansionPanelList(
-                  animationDuration: Duration(milliseconds: 500),
-                  children: [
-                    ExpansionPanel(
-                      headerBuilder: (context, isExpanded) {
-                        return ListTile(
-                          title: Text(
-                            'Help sobre privacidad y seguridad',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        );
-                      },
-                      body: ListTile(
+              ExpansionPanelList(
+                animationDuration: const Duration(milliseconds: 500),
+                children: [
+                  ExpansionPanel(
+                    headerBuilder: (context, isExpanded) {
+                      return const ListTile(
                         title: Text(
-                            'Recorda que reporte es anonimo. \n ¿Como reportar a un usuario? ',
-                            style:
-                                TextStyle(color: Colors.black, fontSize: 15)),
-                      ),
-                      isExpanded: _expanded3,
-                      backgroundColor: MyColors.background,
-                      canTapOnHeader: true,
+                          'Solicitudes de ayuda',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      );
+                    },
+                    body: const ListTile(
+                      title: Text('Aun no se han realizado reportes',
+                          style: TextStyle(color: Colors.black, fontSize: 15)),
                     ),
-                  ],
-                  dividerColor: MyColors.bottomNavBarBackground,
-                  expansionCallback: (panelIndex, isExpanded) {
-                    _expanded3 = !_expanded3;
-                    setState(() {});
-                  },
-                ),
+                    isExpanded: _expanded2,
+                    backgroundColor: MyColors.background,
+                    canTapOnHeader: true,
+                  ),
+                ],
+                dividerColor: MyColors.bottomNavBarBackground,
+                expansionCallback: (panelIndex, isExpanded) {
+                  _expanded2 = !_expanded2;
+                  setState(() {});
+                },
+              ),
+              ExpansionPanelList(
+                animationDuration: const Duration(milliseconds: 500),
+                children: [
+                  ExpansionPanel(
+                    headerBuilder: (context, isExpanded) {
+                      return const ListTile(
+                        title: Text(
+                          'Help sobre privacidad y seguridad',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      );
+                    },
+                    body: const ListTile(
+                      title: Text(
+                          'Recorda que reporte es anonimo. \n ¿Como reportar a un usuario? ',
+                          style: TextStyle(color: Colors.black, fontSize: 15)),
+                    ),
+                    isExpanded: _expanded3,
+                    backgroundColor: MyColors.background,
+                    canTapOnHeader: true,
+                  ),
+                ],
+                dividerColor: MyColors.bottomNavBarBackground,
+                expansionCallback: (panelIndex, isExpanded) {
+                  _expanded3 = !_expanded3;
+                  setState(() {});
+                },
               ),
             ],
           ),
@@ -178,7 +169,7 @@ class _Help extends State<Help> {
         builder: (BuildContext builder) {
           return CupertinoPopupSurface(
             child: Container(
-                padding: EdgeInsetsDirectional.all(20),
+                padding: const EdgeInsetsDirectional.all(20),
                 color: CupertinoColors.white,
                 alignment: Alignment.center,
                 width: MediaQuery.of(context).size.width,
@@ -186,7 +177,7 @@ class _Help extends State<Help> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Material(
+                    const Material(
                         child: Text(
                       "Estas seguro que deseas iniciar el reporte?",
                       style: TextStyle(
@@ -217,7 +208,7 @@ class _Help extends State<Help> {
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: Text("Si"),
+                            child: const Text("Si"),
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
                                   MyColors.buttonCardClass),
