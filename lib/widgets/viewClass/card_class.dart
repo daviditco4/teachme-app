@@ -68,6 +68,7 @@ class _CardClass extends State<CardClass> {
                 ),
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   ElevatedButton(
                     onPressed: () => viewDetails(context),

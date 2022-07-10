@@ -36,10 +36,13 @@ class _DetailsClass extends State<DetailsClass> {
           borderRadius: BorderRadius.circular(20.0),
         ),
         child: Container(
+          padding: const EdgeInsets.all(10),
           height: 400,
-          width: 300,
+          width: 320,
           color: MyColors.cardClass,
-          child: Column(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
             children: [
               const SizedBox(height: 20.0),
               CircleAvatar(
@@ -106,8 +109,8 @@ class _DetailsClass extends State<DetailsClass> {
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              Wrap(
+                // mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(widget.topics, style: const TextStyle(fontSize: 17)),
                 ],
@@ -131,6 +134,7 @@ class _DetailsClass extends State<DetailsClass> {
             ],
           ),
         ),
+      ),
       ),
     );
   }
