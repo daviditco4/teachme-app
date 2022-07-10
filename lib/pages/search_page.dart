@@ -241,7 +241,7 @@ class _SearchPage extends State<SearchPage> {
                                         onPressed: () => showWarning(
                                             context,
                                             documentData[TeachersKeys.uid],
-                                            "",
+                                            subjectSelected,
                                             double.parse(documentData[
                                                     TeachersKeys.classPrice]
                                                 .toString())),

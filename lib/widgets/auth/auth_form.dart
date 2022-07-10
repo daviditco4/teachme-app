@@ -105,7 +105,7 @@ class _AuthFormState extends State<AuthForm> {
                 condition: isSigninMode,
                 child: _buildAnimatedChildVisibleOnCondition(
                     condition:
-                        WidgetsBinding.instance.window.viewInsets.bottom == 0,
+                        WidgetsBinding.instance?.window.viewInsets.bottom == 0,
                     onInvisibleWidget: const SizedBox(height: 6.0),
                     verticalSpaceLocation: VerticalDirection.down,
                     child: Column(
@@ -236,8 +236,8 @@ void _updateStudentsOrTeachersCollection(String userType) async {
         StudentsKeys.description: "¡Hola! Soy un estudiante en TeachMe",
         StudentsKeys.uid: user.uid,
         StudentsKeys.address: 'placeholder',
-        StudentsKeys.positionLatitude: "",
-        StudentsKeys.positionLongitude: ""
+        StudentsKeys.positionLatitude: 0,
+        StudentsKeys.positionLongitude: 0
       });
     } else {
       await FirebaseFirestore.instance
@@ -252,8 +252,8 @@ void _updateStudentsOrTeachersCollection(String userType) async {
         TeachersKeys.availableFrom: "10",
         TeachersKeys.availableUpTo: "18",
         TeachersKeys.description: "¡Hola! Soy un profesor en TeachMe",
-        TeachersKeys.positionLatitude: "",
-        TeachersKeys.positionLongitude: "",
+        TeachersKeys.positionLatitude: 0,
+        TeachersKeys.positionLongitude: 0,
         TeachersKeys.classPrice: 100,
         TeachersKeys.rating: 0.0,
         TeachersKeys.accumRatig: 0.0,

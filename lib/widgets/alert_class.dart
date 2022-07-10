@@ -214,7 +214,29 @@ class _AlertClass extends State<AlertClass> {
   }
 
   void _handleBookedClass(BuildContext context, String teacherUid,
-      String subjectId, double classPrice) {
+      String subjectId, double classPrice) async {
+    bool classExists = false;
+    String classDate = _getDate(selectedDate);
+    String classTime = _getTime(selectedHour);
+    String classDateTimeFormat = classDate + "_" + classTime;
+
+    FirebaseFirestore store = FirebaseFirestore.instance;
+    await store
+        .collection(TeachersKeys.collectionName)
+        .doc(teacherUid)
+        .collection(ClassesKeys.collectionName)
+        .doc(classDateTimeFormat)
+        .get()
+        .then((doc) {
+      classExists = doc.exists;
+    });
+
+    if (classExists) {
+      _showToast(context,
+          "Este profesor ya tiene una clase ene este horario. Por favor, selecciona otro");
+      return;
+    }
+
     Navigator.pop(context, true);
     _updateClassesCollection(teacherUid, subjectId, classPrice);
   }
@@ -222,28 +244,34 @@ class _AlertClass extends State<AlertClass> {
   void _updateClassesCollection(
       String teacherUid, String subjectId, double classPrice) async {
     FirebaseFirestore store = FirebaseFirestore.instance;
+    String classDate = _getDate(selectedDate);
+    String classTime = _getTime(selectedHour);
+
+    String classDateTimeFormat = classDate + "_" + classTime;
 
     try {
       await store
           .collection(StudentsKeys.collectionName)
           .doc(user.uid)
           .collection(ClassesKeys.collectionName)
-          .add({
+          .doc(classDateTimeFormat)
+          .set({
         ClassesKeys.teacherUid: teacherUid,
-        ClassesKeys.date: _getDate(selectedDate),
-        ClassesKeys.time: _getTime(selectedHour),
+        ClassesKeys.date: classDate,
+        ClassesKeys.time: classTime,
         ClassesKeys.subjectId: subjectId,
-        ClassesKeys.cost: 'to be determined'
+        ClassesKeys.cost: classPrice
       });
 
       await store
           .collection(TeachersKeys.collectionName)
           .doc(teacherUid)
           .collection(ClassesKeys.collectionName)
-          .add({
+          .doc(classDateTimeFormat)
+          .set({
         ClassesKeys.studentUid: user.uid,
-        ClassesKeys.date: _getDate(selectedDate),
-        ClassesKeys.time: _getTime(selectedHour),
+        ClassesKeys.date: classDate,
+        ClassesKeys.time: classTime,
         ClassesKeys.subjectId: subjectId,
         ClassesKeys.cost: classPrice
       });
@@ -251,5 +279,14 @@ class _AlertClass extends State<AlertClass> {
       /* print("MALARDOOOO"); */
       print(e);
     }
+  }
+
+  void _showToast(BuildContext context, String text) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        content: Text(text),
+      ),
+    );
   }
 }
