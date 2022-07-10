@@ -48,6 +48,7 @@ dependencies:
   flutter_google_places: ^0.3.0
   mercado_pago_mobile_checkout: ^0.1.1
   table_calendar: ^2.3.1
+  intl: ^0.17.0
 
 
 dev_dependencies:

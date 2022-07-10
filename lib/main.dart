@@ -12,6 +12,7 @@ import 'package:teachme_app/pages/profile/teacher_profile_page.dart';
 import 'pages/loading_page.dart';
 import 'pages/notifications_page.dart';
 import 'pages/settings_page.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 const chatTopic = 'public';
 
@@ -26,7 +27,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  initializeDateFormatting().then((_) => runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
