@@ -1,6 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:teachme_app/constants/theme.dart';
+import 'package:teachme_app/helpers/classes_keys.dart';
+import 'package:teachme_app/helpers/students_keys.dart';
+import 'package:teachme_app/helpers/teachers_keys.dart';
+import 'package:teachme_app/helpers/users_profile_type_keys.dart';
+import 'package:teachme_app/main.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import 'package:teachme_app/widgets/viewClass/card_class.dart';
@@ -16,6 +23,14 @@ class MyClass extends StatefulWidget {
 
 class _MyClass extends State<MyClass> {
   final CalendarController _calendarController = CalendarController();
+  List<Widget> incomingClasses = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getIncomingClasses();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,13 +87,7 @@ class _MyClass extends State<MyClass> {
                         horizontal: 15.0, vertical: 10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: const <Widget>[
-                        CardClass(
-                            title: 'Matematica Discreta',
-                            textButton: 'Detalles',
-                            schedule: '08:00',
-                            direction: 'Calle falsa 123'),
-                      ],
+                      children: incomingClasses,
                     ),
                   ),
                 ),
@@ -124,5 +133,53 @@ class _MyClass extends State<MyClass> {
                 ),
               ),
             ])));
+  }
+
+  void _getIncomingClasses() async {
+    List<Widget> incomingClassesResult = [];
+    FirebaseFirestore store = FirebaseFirestore.instance;
+    User user = FirebaseAuth.instance.currentUser!;
+    String profileType = userProfileType.value == ProfileType.student
+        ? StudentsKeys.collectionName
+        : TeachersKeys.collectionName;
+
+    var classesCol = await store
+        .collection(profileType)
+        .doc(user.uid)
+        .collection(ClassesKeys.collectionName)
+        .get();
+
+    var docIterator = classesCol.docs.iterator;
+
+    while (docIterator.moveNext()) {
+      var current = docIterator.current;
+      String date = current[ClassesKeys.date];
+      String time = current[ClassesKeys.time];
+      String formattedDateTime = _formatDateTime(date, time);
+
+      DateTime localDateTime = DateTime.now();
+      DateTime classTime = DateTime.parse(formattedDateTime);
+
+      if (classTime.isAfter(localDateTime)) {
+        incomingClassesResult.add(CardClass(
+            title: current[ClassesKeys.subjectId],
+            textButton: "Detalles",
+            schedule: "$date a las $time:00",
+            cost: current[ClassesKeys.cost],
+            otherUserName: user.displayName!,
+            subject: current[ClassesKeys.subjectId],
+            time: current[ClassesKeys.time] + ":00",
+            topics: current[ClassesKeys.topics],
+            address: "to be determined"));
+      }
+    }
+
+    setState(() {
+      incomingClasses = incomingClassesResult;
+    });
+  }
+
+  String _formatDateTime(String date, String time) {
+    return "$date $time:00:00.000";
   }
 }

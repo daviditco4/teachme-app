@@ -33,6 +33,7 @@ class _AlertClass extends State<AlertClass> {
   DateTime localDate = DateTime.now();
   DateTime selectedDate = DateTime.now();
   List<bool> availableDays = List.filled(7, true);
+  String topics = "No se han especificado temas a ver";
 
   @override
   void initState() {
@@ -89,13 +90,16 @@ class _AlertClass extends State<AlertClass> {
                 ]),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: const <Widget>[
-                Text("Temario: "),
+              children: <Widget>[
+                const Text("topics: "),
                 SizedBox(
                   height: 50,
                   width: 100,
                   child: TextField(
-                    decoration: InputDecoration(
+                    onChanged: (value) {
+                      topics = value;
+                    },
+                    decoration: const InputDecoration(
                       border: UnderlineInputBorder(),
                       hintText: 'Temas a ver    ',
                     ),
@@ -260,7 +264,8 @@ class _AlertClass extends State<AlertClass> {
         ClassesKeys.date: classDate,
         ClassesKeys.time: classTime,
         ClassesKeys.subjectId: subjectId,
-        ClassesKeys.cost: classPrice
+        ClassesKeys.cost: classPrice,
+        ClassesKeys.topics: topics
       });
 
       await store
@@ -273,7 +278,8 @@ class _AlertClass extends State<AlertClass> {
         ClassesKeys.date: classDate,
         ClassesKeys.time: classTime,
         ClassesKeys.subjectId: subjectId,
-        ClassesKeys.cost: classPrice
+        ClassesKeys.cost: classPrice,
+        ClassesKeys.topics: topics
       });
     } on Exception catch (e) {
       /* print("MALARDOOOO"); */

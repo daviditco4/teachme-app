@@ -4,17 +4,28 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:teachme_app/widgets/viewClass/details_class.dart';
 
 class CardClass extends StatefulWidget {
+  final String title;
+  final String textButton;
+  final String schedule;
+  final String address;
+  final double cost;
+  final String time;
+  final String topics;
+  final String otherUserName;
+  final String subject;
+
   const CardClass(
       {Key? key,
       required this.title,
       required this.textButton,
       required this.schedule,
-      required this.direction})
+      required this.address,
+      required this.cost,
+      required this.time,
+      required this.topics,
+      required this.otherUserName,
+      required this.subject})
       : super(key: key);
-  final String title;
-  final String textButton;
-  final String schedule;
-  final String direction;
 
   @override
   State<CardClass> createState() => _CardClass();
@@ -80,13 +91,21 @@ class _CardClass extends State<CardClass> {
       return const AssetImage("assets/images/hasbulla.png");
     }
   }
-}
 
-void onPressed(String text) {
-  print('Se presiono "$text"');
-}
+  void onPressed(String text) {
+    print('Se presiono "$text"');
+  }
 
-void viewDetails(BuildContext context) async {
-  showDialog<bool>(
-      context: context, builder: (context) => const DetailsClass());
+  void viewDetails(BuildContext context) async {
+    showDialog<bool>(
+        context: context,
+        builder: (context) => DetailsClass(
+              address: widget.address,
+              cost: widget.cost,
+              otherUserName: widget.otherUserName,
+              subject: widget.subject,
+              time: widget.time,
+              topics: widget.topics,
+            ));
+  }
 }
