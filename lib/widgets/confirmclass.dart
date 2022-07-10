@@ -104,6 +104,6 @@ class _ConfirmClass extends State<ConfirmClass> {
 }
 
 void viewDetails(BuildContext context) async {
-  showDialog<bool>(
-      context: context, builder: (context) => const DetailsClass());
+  /* showDialog<bool>(
+      context: context, builder: (context) => DetailsClass()); */
 }
