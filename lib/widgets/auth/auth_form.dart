@@ -105,7 +105,7 @@ class _AuthFormState extends State<AuthForm> {
                 condition: isSigninMode,
                 child: _buildAnimatedChildVisibleOnCondition(
                     condition:
-                        WidgetsBinding.instance?.window.viewInsets.bottom == 0,
+                        WidgetsBinding.instance.window.viewInsets.bottom == 0,
                     onInvisibleWidget: const SizedBox(height: 6.0),
                     verticalSpaceLocation: VerticalDirection.down,
                     child: Column(

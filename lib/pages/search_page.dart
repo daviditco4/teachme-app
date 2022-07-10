@@ -7,7 +7,6 @@ import 'package:teachme_app/helpers/search_teacher_system.dart';
 import 'package:teachme_app/helpers/teachers_keys.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
-import 'package:teachme_app/widgets/custom_autocomplete.dart';
 import 'package:teachme_app/widgets/other/tm_navigator.dart';
 import 'package:teachme_app/widgets/alertClass.dart';
 
@@ -209,7 +208,8 @@ class _SearchPage extends State<SearchPage> {
                                     ),
                                     title:
                                         Text(documentData[TeachersKeys.name]),
-                                    subtitle: Text('Se encuentra a '),
+                                    subtitle: Text(
+                                        'Se encuentra a ${documentData["distance"] == -1 ? 0 : documentData["distance"]} km'),
                                     trailing: Text(
                                         '\$ ${documentData["classPrice"] ?? 0}'),
                                   ),
