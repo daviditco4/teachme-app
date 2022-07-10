@@ -8,8 +8,8 @@ class LogInPage extends StatefulWidget {
 }
 
 class _LogInPage extends State<LogInPage> {
-  TextEditingController _userController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _userController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   //String _passwordError;
 
   @override

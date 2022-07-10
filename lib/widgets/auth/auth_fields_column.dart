@@ -10,6 +10,7 @@ import 'user_image_picker.dart';
 
 class AuthFieldsColumn extends StatefulWidget {
   const AuthFieldsColumn({
+    Key? key,
     required this.authMode,
     required this.onUserImageSaved,
     required this.onEmailSaved,
@@ -19,7 +20,7 @@ class AuthFieldsColumn extends StatefulWidget {
     this.currentUserImage,
     this.enabled,
     this.onSubmitted,
-  });
+  }) : super(key: key);
 
   final AuthMode authMode;
   final void Function(File newValue) onUserImageSaved;
@@ -36,7 +37,7 @@ class AuthFieldsColumn extends StatefulWidget {
 }
 
 class _AuthFieldsColumnState extends State<AuthFieldsColumn> {
-  ProfileType _internal_profileType = ProfileType.student;
+  ProfileType _internalProfileType = ProfileType.student;
 
   static final _emailRegExp = RegExp(
     r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$",
@@ -163,10 +164,10 @@ class _AuthFieldsColumnState extends State<AuthFieldsColumn> {
                       title: const Text('Estudiante'),
                       leading: Radio<ProfileType>(
                           value: ProfileType.student,
-                          groupValue: _internal_profileType,
+                          groupValue: _internalProfileType,
                           onChanged: (ProfileType? value) {
                             setState(() {
-                              _internal_profileType = value!;
+                              _internalProfileType = value!;
                               widget.onUserProfileTypeSaved(value);
                             });
                           })),
@@ -174,10 +175,10 @@ class _AuthFieldsColumnState extends State<AuthFieldsColumn> {
                       title: const Text('Maestro'),
                       leading: Radio<ProfileType>(
                           value: ProfileType.teacher,
-                          groupValue: _internal_profileType,
+                          groupValue: _internalProfileType,
                           onChanged: (ProfileType? value) {
                             setState(() {
-                              _internal_profileType = value!;
+                              _internalProfileType = value!;
                               widget.onUserProfileTypeSaved(value);
                             });
                           })),
@@ -193,5 +194,4 @@ class _AuthFieldsColumnState extends State<AuthFieldsColumn> {
     _passwordController.dispose();
     super.dispose();
   }
-
 }

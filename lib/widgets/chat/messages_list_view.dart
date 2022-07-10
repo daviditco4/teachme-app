@@ -7,6 +7,8 @@ import '../../pages/messages/chat_page.dart' show messagesCollectionPath;
 import 'message_bubble.dart';
 
 class MessagesListView extends StatelessWidget {
+  const MessagesListView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final firestore = FirebaseFirestore.instance;

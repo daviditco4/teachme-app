@@ -7,10 +7,11 @@ import '../../helpers/snack_bars.dart';
 
 class UserImagePicker extends StatefulWidget {
   const UserImagePicker({
+    Key? key,
     required this.pickImageCallback,
     this.enabled = true,
     this.initialImage,
-  });
+  }) : super(key: key);
 
   final void Function(File pickedImage) pickImageCallback;
   final bool enabled;
@@ -60,26 +61,31 @@ class _UserImagePickerState extends State<UserImagePicker> {
 
     return Row(
       children: [
-        Expanded(child: CircleAvatar(
-          radius: imgR,
-          backgroundColor: sch.primary,
-          foregroundImage: _pickedImg == null ? null : FileImage(_pickedImg!),
-          child: Icon(Icons.person_rounded, size: imgR * 2, color: sch.surface),
-        ),),
-        Expanded(child: TextButton.icon(
+        Expanded(
+          child: CircleAvatar(
+            radius: imgR,
+            backgroundColor: sch.primary,
+            foregroundImage: _pickedImg == null ? null : FileImage(_pickedImg!),
+            child:
+                Icon(Icons.person_rounded, size: imgR * 2, color: sch.surface),
+          ),
+        ),
+        Expanded(
+            child: TextButton.icon(
           icon: const Icon(Icons.camera),
           label: const Text('Take Picture'),
           onPressed: widget.enabled
               ? () => _pickImage(source: p.ImageSource.camera)
               : null,
         )),
-        Expanded(child: TextButton.icon(
+        Expanded(
+            child: TextButton.icon(
           icon: const Icon(Icons.photo_library),
           label: const Text('Choose From Gallery'),
           onPressed: widget.enabled
               ? () => _pickImage(source: p.ImageSource.gallery)
               : null,
-          ))
+        ))
       ],
     );
   }

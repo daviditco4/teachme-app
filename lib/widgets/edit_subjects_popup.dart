@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
-import 'package:teachme_app/helpers/SubjectsKeys.dart';
+import 'package:teachme_app/helpers/subject_keys.dart';
 import 'package:teachme_app/helpers/teachers_keys.dart';
 
 class EditSubjectPopup extends StatefulWidget {
@@ -259,7 +259,7 @@ class _EditSubjectPopup extends State<EditSubjectPopup> {
               isAddingSubject = true;
             });
           },
-          icon: Icon(Icons.add))
+          icon: const Icon(Icons.add))
     ]);
   }
 }

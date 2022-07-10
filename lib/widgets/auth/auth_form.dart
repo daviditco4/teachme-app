@@ -22,7 +22,7 @@ const student = 0;
 const teacher = 1;
 
 class AuthForm extends StatefulWidget {
-  const AuthForm(this.onFormSubmitted);
+  const AuthForm(this.onFormSubmitted, {Key? key}) : super(key: key);
 
   final Future<bool> Function({
     required BuildContext context,
@@ -85,7 +85,7 @@ class _AuthFormState extends State<AuthForm> {
   }
 
   void _recoverAccount() {
-    TMNavigator.navigateToPage(context, RecoverPassword());
+    TMNavigator.navigateToPage(context, const RecoverPassword());
   }
 
   @override
@@ -100,7 +100,7 @@ class _AuthFormState extends State<AuthForm> {
           children: [
             _buildAnimatedChildVisibleOnCondition(
                 onInvisibleWidget: const SizedBox(height: 4.0),
-                verticalSpace: SizedBox(height: 12.0),
+                verticalSpace: const SizedBox(height: 12.0),
                 verticalSpaceLocation: VerticalDirection.down,
                 condition: isSigninMode,
                 child: _buildAnimatedChildVisibleOnCondition(

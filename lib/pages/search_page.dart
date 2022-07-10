@@ -2,14 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:teachme_app/constants/theme.dart';
-import 'package:teachme_app/helpers/SubjectsKeys.dart';
+import 'package:teachme_app/helpers/subject_keys.dart';
 import 'package:teachme_app/helpers/search_teacher_system.dart';
 import 'package:teachme_app/helpers/teachers_keys.dart';
 import 'package:teachme_app/pages/notifications_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
-import 'package:teachme_app/widgets/custom_autocomplete.dart';
 import 'package:teachme_app/widgets/other/tm_navigator.dart';
-import 'package:teachme_app/widgets/alertClass.dart';
+import 'package:teachme_app/widgets/alert_class.dart';
 
 /*void main() {
   runApp(const MyApp());
@@ -104,7 +103,7 @@ class _SearchPage extends State<SearchPage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: MyColors.background,
-      bottomNavigationBar: TMBottomNavigationBar(),
+      bottomNavigationBar: const TMBottomNavigationBar(),
       appBar: AppBar(
         leading: const ImageIcon(
           AssetImage("assets/images/teach_me_logo.png"),
@@ -181,8 +180,9 @@ class _SearchPage extends State<SearchPage> {
                 builder: (_, snapshot) {
                   final isWaiting =
                       snapshot.connectionState == ConnectionState.waiting;
-                  if (isWaiting)
+                  if (isWaiting) {
                     return const Center(child: CircularProgressIndicator());
+                  }
 
                   if (snapshot.hasData) {
                     final docs = snapshot.data!;
@@ -199,72 +199,67 @@ class _SearchPage extends State<SearchPage> {
                             color: MyColors.cardClass,
                             elevation: 4,
                             margin: const EdgeInsets.symmetric(vertical: 10),
-                            child: Container(
-                              child: Column(
-                                children: <Widget>[
-                                  ListTile(
-                                    leading: Text(
-                                      documentData[TeachersKeys.name],
-                                      style: const TextStyle(fontSize: 24),
+                            child: Column(
+                              children: <Widget>[
+                                ListTile(
+                                  leading: Text(
+                                    documentData[TeachersKeys.name],
+                                    style: const TextStyle(fontSize: 24),
+                                  ),
+                                  title: Text(documentData[TeachersKeys.name]),
+                                  subtitle: const Text('Se encuentra a '),
+                                  trailing: Text(
+                                      '\$ ${documentData["classPrice"] ?? 0}'),
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: <Widget>[
+                                    RatingBar.builder(
+                                      initialRating: 1,
+                                      itemSize: 25,
+                                      minRating: 1,
+                                      direction: Axis.horizontal,
+                                      allowHalfRating: true,
+                                      itemCount:
+                                          documentData[TeachersKeys.rating]
+                                              .round(),
+                                      itemPadding: const EdgeInsets.symmetric(
+                                          horizontal: 2.0),
+                                      itemBuilder: (context, _) => const Icon(
+                                        Icons.star,
+                                        color: MyColors.white,
+                                      ),
+                                      onRatingUpdate: (rating) {
+                                        print(rating);
+                                      },
                                     ),
-                                    title:
-                                        Text(documentData[TeachersKeys.name]),
-                                    subtitle: Text('Se encuentra a '),
-                                    trailing: Text(
-                                        '\$ ${documentData["classPrice"] ?? 0}'),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: <Widget>[
-                                      RatingBar.builder(
-                                        initialRating: 1,
-                                        itemSize: 25,
-                                        minRating: 1,
-                                        direction: Axis.horizontal,
-                                        allowHalfRating: true,
-                                        itemCount:
-                                            documentData[TeachersKeys.rating]
-                                                .round(),
-                                        itemPadding: const EdgeInsets.symmetric(
-                                            horizontal: 2.0),
-                                        itemBuilder: (context, _) => const Icon(
-                                          Icons.star,
-                                          color: MyColors.white,
-                                        ),
-                                        onRatingUpdate: (rating) {
-                                          print(rating);
-                                        },
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () => showWarning(
-                                            context,
-                                            documentData[TeachersKeys.uid],
-                                            "",
-                                            double.parse(documentData[
-                                                    TeachersKeys.classPrice]
-                                                .toString())),
-                                        child: const Text('Reservar clases'),
-                                        style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    MyColors.buttonCardClass),
-                                            shape: MaterialStateProperty.all<
-                                                    RoundedRectangleBorder>(
-                                                RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            18),
-                                                    side: const BorderSide(
-                                                        color: Colors.white)))),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                    ElevatedButton(
+                                      onPressed: () => showWarning(
+                                          context,
+                                          documentData[TeachersKeys.uid],
+                                          "",
+                                          double.parse(documentData[
+                                                  TeachersKeys.classPrice]
+                                              .toString())),
+                                      child: const Text('Reservar clases'),
+                                      style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  MyColors.buttonCardClass),
+                                          shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(18),
+                                                  side: const BorderSide(
+                                                      color: Colors.white)))),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           );
-                          return const SizedBox(width: 0, height: 0);
                         });
                   } else {
                     return const SizedBox(width: 200, height: 200);

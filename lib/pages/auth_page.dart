@@ -1,15 +1,14 @@
 import 'dart:io' show File;
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path show extension;
 import '../helpers/snack_bars.dart';
-import '../helpers/teachers_keys.dart';
 import '../widgets/auth/auth_form.dart' show AuthForm;
 
 class AuthPage extends StatelessWidget {
+  const AuthPage({Key? key}) : super(key: key);
+
   Future<bool> _authenticate({
     required BuildContext context,
     File? userImage,
@@ -53,7 +52,6 @@ class AuthPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("[AUTH_PAGE 54]: Current user ${FirebaseAuth.instance.currentUser}");
-    const verticalSpace = SizedBox(height: 18.0);
 
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.primary,

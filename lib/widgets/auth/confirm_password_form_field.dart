@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 
 class ConfirmPasswordFormField extends StatefulWidget {
   const ConfirmPasswordFormField({
+    Key? key,
     required this.validator,
     required this.onSaved,
     this.enabled,
     this.focusNode,
     this.onFieldSubmitted,
-  });
+  }) : super(key: key);
 
   final String? Function(String? value) validator;
   final void Function(String? newValue) onSaved;

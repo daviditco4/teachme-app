@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:teachme_app/helpers/SubjectsKeys.dart';
+import 'package:teachme_app/helpers/subject_keys.dart';
 import 'package:teachme_app/helpers/teachers_keys.dart';
 
 class SearchTeacherSystem {
