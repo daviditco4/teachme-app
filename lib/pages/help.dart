@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/pages/settings_page.dart';
 import 'package:flutter/cupertino.dart';
-
 import '../widgets/other/tm_navigator.dart';
 
 class Help extends StatefulWidget {

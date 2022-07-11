@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/main.dart';
 import 'package:teachme_app/pages/help.dart';
+import 'package:teachme_app/pages/my_classes_page.dart';
 import 'package:teachme_app/pages/payment_methods_page.dart';
 import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import 'package:teachme_app/widgets/setting_button.dart';
 import 'package:teachme_app/pages/info_user_page.dart';
 import 'package:teachme_app/pages/notifications_config_page.dart';
+
+import '../widgets/other/tm_navigator.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -37,7 +40,8 @@ class _SettingsPageState extends State<SettingsPage> {
           automaticallyImplyLeading: true,
           leading: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.black),
-              onPressed: () {}),
+              onPressed: () => TMNavigator.navigateToPage(
+                  context, const MyClass())),
           title: const Text('Configuración',
               style: TextStyle(
                 color: Colors.black,
