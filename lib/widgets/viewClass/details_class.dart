@@ -1,10 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:teachme_app/constants/theme.dart';
+import 'package:teachme_app/main.dart';
 import '../../constants/theme.dart';
 
 class DetailsClass extends StatefulWidget {
-  const DetailsClass({Key? key}) : super(key: key);
+  final String subject;
+  final double cost;
+  final String time;
+  final String address;
+  final String topics;
+  final String otherUserName;
+
+  const DetailsClass(
+      {Key? key,
+      required this.subject,
+      required this.cost,
+      required this.time,
+      required this.address,
+      required this.topics,
+      required this.otherUserName})
+      : super(key: key);
   @override
   _DetailsClass createState() => _DetailsClass();
 }
@@ -20,10 +36,13 @@ class _DetailsClass extends State<DetailsClass> {
           borderRadius: BorderRadius.circular(20.0),
         ),
         child: Container(
+          padding: const EdgeInsets.all(10),
           height: 400,
-          width: 300,
+          width: 320,
           color: MyColors.cardClass,
-          child: Column(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
             children: [
               const SizedBox(height: 20.0),
               CircleAvatar(
@@ -31,9 +50,9 @@ class _DetailsClass extends State<DetailsClass> {
                 backgroundImage: _getUserImage(),
                 radius: 45.0,
               ),
-              const Align(
-                child: Text('Materia',
-                    style: TextStyle(
+              Align(
+                child: Text(widget.subject,
+                    style: const TextStyle(
                         color: MyColors.black,
                         fontSize: 28.0,
                         fontWeight: FontWeight.bold)),
@@ -41,41 +60,44 @@ class _DetailsClass extends State<DetailsClass> {
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const <Widget>[
-                  Text('Profesor',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  Text('Nombre', style: TextStyle(fontSize: 18))
+                children: <Widget>[
+                  Text(
+                      userProfileType.value == ProfileType.student
+                          ? 'Profesor'
+                          : 'Alumno',
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text(widget.otherUserName, style: TextStyle(fontSize: 18))
                 ],
               ),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const <Widget>[
-                  Text('Precio',
+                children: <Widget>[
+                  const Text('Precio',
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  Text('950', style: TextStyle(fontSize: 18))
+                  Text("\$${widget.cost}", style: const TextStyle(fontSize: 18))
                 ],
               ),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const <Widget>[
-                  Text('Horario',
+                children: <Widget>[
+                  const Text('Horario',
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  Text('08:00', style: TextStyle(fontSize: 18))
+                  Text(widget.time, style: const TextStyle(fontSize: 18))
                 ],
               ),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const <Widget>[
-                  Text('Direccion',
+                children: <Widget>[
+                  const Text('Direccion',
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  Text('Calle falsa 123', style: TextStyle(fontSize: 18))
+                  Text(widget.address, style: const TextStyle(fontSize: 18))
                 ],
               ),
               const SizedBox(height: 10),
@@ -87,11 +109,10 @@ class _DetailsClass extends State<DetailsClass> {
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const <Widget>[
-                  Text('Temas a ver en la clase',
-                      style: TextStyle(fontSize: 17)),
+              Wrap(
+                // mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(widget.topics, style: const TextStyle(fontSize: 17)),
                 ],
               ),
               const SizedBox(height: 20),
@@ -113,6 +134,7 @@ class _DetailsClass extends State<DetailsClass> {
             ],
           ),
         ),
+      ),
       ),
     );
   }
