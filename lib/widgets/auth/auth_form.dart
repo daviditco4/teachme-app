@@ -161,8 +161,8 @@ class _AuthFormState extends State<AuthForm> {
                       const Spacer(),
                       TextButton(
                         child:
-                            /* TODO: Traducir esta linea */
-                            Text('Sign ${isSigninMode ? 'Up' : 'In'} Instead'),
+                            // Text('Sign ${isSigninMode ? 'Up' : 'In'} Instead'),
+                              Text(isSigninMode ? 'Regístrate ahora' : 'Inicia sesión'),
                         onPressed: _switchAuthMode,
                       ),
                     ],

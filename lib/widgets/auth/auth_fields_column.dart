@@ -108,7 +108,7 @@ class _AuthFieldsColumnState extends State<AuthFieldsColumn> {
             textInputAction: TextInputAction.next,
             validator: (value) {
               if (value != null && _emailRegExp.hasMatch(value)) return null;
-              return 'Enter a valid email address.';
+              return 'Ingrese una dirección de email válida.';
             },
             onSaved: widget.onEmailSaved,
             decoration: const InputDecoration(
@@ -124,18 +124,16 @@ class _AuthFieldsColumnState extends State<AuthFieldsColumn> {
               textInputAction: TextInputAction.next,
               validator: (value) {
                 if (value == null || value.length < 8 || value.length > 20) {
-                  return 'The username must have between 8 and 20 characters '
-                      'in total.';
+                  return 'El nombre de usuario debe contener entre 8 y 20 caracteres';
                 } else if (!_usernameRegExp.hasMatch(value)) {
-                  return 'The username must only contain letters, numbers '
-                      'or single dots/underscores in between.';
+                  return 'El nombre de usuario solo debe contener letras y/o números';
                 }
                 return null;
               },
               onSaved: widget.onUsernameSaved,
               decoration: const InputDecoration(
                 icon: Icon(Icons.person),
-                labelText: 'Username',
+                labelText: 'Nombre de usuario',
               ),
             ),
           ),
@@ -154,7 +152,7 @@ class _AuthFieldsColumnState extends State<AuthFieldsColumn> {
                   ConfirmPasswordFormField(
                     validator: (value) {
                       if (value == _passwordController.text) return null;
-                      return 'Passwords do not match.';
+                      return 'Las contraseñas son diferentes.';
                     },
                     enabled: widget.enabled,
                     onFieldSubmitted: widget.onSubmitted,

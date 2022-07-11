@@ -73,7 +73,7 @@ class _UserImagePickerState extends State<UserImagePicker> {
         Expanded(
             child: TextButton.icon(
           icon: const Icon(Icons.camera),
-          label: const Text('Take Picture'),
+          label: const Text('Toma una foto'),
           onPressed: widget.enabled
               ? () => _pickImage(source: p.ImageSource.camera)
               : null,
@@ -81,7 +81,7 @@ class _UserImagePickerState extends State<UserImagePicker> {
         Expanded(
             child: TextButton.icon(
           icon: const Icon(Icons.photo_library),
-          label: const Text('Choose From Gallery'),
+          label: const Text('Elige de la galería'),
           onPressed: widget.enabled
               ? () => _pickImage(source: p.ImageSource.gallery)
               : null,
@@ -90,34 +90,3 @@ class _UserImagePickerState extends State<UserImagePicker> {
     );
   }
 }
-
-/*
-
-Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        CircleAvatar(
-          radius: imgR,
-          backgroundColor: sch.primary,
-          foregroundImage: _pickedImg == null ? null : FileImage(_pickedImg!),
-          child: Icon(Icons.person_rounded, size: imgR * 2, color: sch.surface),
-        ),
-        const SizedBox(height: 6.0),
-        TextButton.icon(
-          icon: const Icon(Icons.camera),
-          label: const Text('Take Picture'),
-          onPressed: widget.enabled
-              ? () => _pickImage(source: p.ImageSource.camera)
-              : null,
-        ),
-        TextButton.icon(
-          icon: const Icon(Icons.photo_library),
-          label: const Text('Choose From Gallery'),
-          onPressed: widget.enabled
-              ? () => _pickImage(source: p.ImageSource.gallery)
-              : null,
-        ),
-      ],
-    );
-
- */

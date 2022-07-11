@@ -37,19 +37,18 @@ class _PasswordFormFieldState extends State<PasswordFormField> {
       onFieldSubmitted: signinMode ? widget.onSubmitted : null,
       validator: (val) {
         if (val == null || val.length < 6 || val.length > 20) {
-          return 'The password must have between 6 and 20 characters in total.';
+          return 'La contraseña debe tener entre 6 y 20 caracteres.';
         } else if (!val.contains(_digitRegExp) || !val.contains(_alphaRegExp)) {
-          return 'The password must contain at least one letter and one digit.';
+          return 'La contraseña debe tener al menos una letra y al menos un número.';
         } else if (!_passwordRegExp.hasMatch(val)) {
-          return 'The password must only contain letters, numbers '
-              r'or any of the following characters: ! @ # $ % & *';
+          return 'La contraseña solo debe contener letras y/o números.';
         }
         return null;
       },
       onSaved: widget.onSaved,
       decoration: InputDecoration(
         //icon: const Icon(Icons.password),
-        labelText: 'Password',
+        labelText: 'Contraseña',
         suffixIcon: InkWell(
           canRequestFocus: false,
           onTap: () => setState(() => _obscureText = !_obscureText),
