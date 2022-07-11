@@ -166,12 +166,33 @@ class _MyClass extends State<MyClass> {
       addClassToCalendar(classTime, current[ClassesKeys.subjectId]);
 
       if (classTime.isAfter(localDateTime)) {
+        String otherUsername = "Usuario";
+
+        print("OTHER USERNAME");
+        if (userProfileType.value == ProfileType.student) {
+          await store
+              .collection(TeachersKeys.collectionName)
+              .doc(current[ClassesKeys.teacherUid])
+              .get()
+              .then((doc) {
+            otherUsername = doc[TeachersKeys.name];
+          });
+        } else {
+          await store
+              .collection(StudentsKeys.collectionName)
+              .doc(current[ClassesKeys.studentUid])
+              .get()
+              .then((doc) {
+            otherUsername = doc[StudentsKeys.name];
+          });
+        }
+
         incomingClassesResult.add(CardClass(
             title: current[ClassesKeys.subjectId],
             textButton: "Detalles",
             schedule: "$date a las $time:00",
             cost: current[ClassesKeys.cost],
-            otherUserName: user.displayName!,
+            otherUserName: otherUsername,
             subject: current[ClassesKeys.subjectId],
             time: current[ClassesKeys.time] + ":00",
             topics: current[ClassesKeys.topics],
