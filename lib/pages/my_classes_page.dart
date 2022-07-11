@@ -81,61 +81,60 @@ class _MyClass extends State<MyClass> {
               elevation: 0,
             ),
             bottomNavigationBar: const TMBottomNavigationBar(),
-            body: TabBarView(
-                children: [
-                  SafeArea(
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15.0, vertical: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: incomingClasses,
+            body: TabBarView(children: [
+              SafeArea(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15.0, vertical: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: incomingClasses,
+                    ),
+                  ),
+                ),
+              ),
+              SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Card(
+                      clipBehavior: Clip.antiAlias,
+                      margin: const EdgeInsets.all(8.0),
+                      child: TableCalendar(
+                        locale: 'es_US',
+                        events: _events,
+                        calendarController: _calendarController,
+                        headerStyle: HeaderStyle(
+                          decoration: const BoxDecoration(
+                            color: MyColors.bottomNavBarBackground,
+                          ),
+                          headerMargin: const EdgeInsets.only(bottom: 8),
+                          titleTextStyle: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18.0,
+                          ),
+                          formatButtonTextStyle: const TextStyle(
+                            color: Colors.white,
+                          ),
+                          formatButtonDecoration: BoxDecoration(
+                            border: Border.all(color: Colors.white),
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          leftChevronIcon: const Icon(
+                            Icons.chevron_left,
+                            color: Colors.white,
+                          ),
+                          rightChevronIcon: const Icon(
+                            Icons.chevron_right,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Card(
-                          clipBehavior: Clip.antiAlias,
-                          margin: const EdgeInsets.all(8.0),
-                          child: TableCalendar(
-                            locale: 'es_US',
-                            events: _events,
-                            calendarController: _calendarController,
-                            headerStyle: HeaderStyle(
-                              decoration: const BoxDecoration(
-                                color: MyColors.bottomNavBarBackground,
-                              ),
-                              headerMargin: const EdgeInsets.only(bottom: 8),
-                              titleTextStyle: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 18.0,
-                              ),
-                              formatButtonTextStyle: const TextStyle(
-                                color: Colors.white,
-                              ),
-                              formatButtonDecoration: BoxDecoration(
-                                border: Border.all(color: Colors.white),
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                              leftChevronIcon: const Icon(
-                                Icons.chevron_left,
-                                color: Colors.white,
-                              ),
-                              rightChevronIcon: const Icon(
-                                Icons.chevron_right,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  ],
+                ),
+              ),
             ])));
   }
 
@@ -176,7 +175,7 @@ class _MyClass extends State<MyClass> {
             subject: current[ClassesKeys.subjectId],
             time: current[ClassesKeys.time] + ":00",
             topics: current[ClassesKeys.topics],
-            address: "to be determined"));
+            address: "A determinar"));
       }
     }
 
@@ -185,11 +184,11 @@ class _MyClass extends State<MyClass> {
     });
   }
 
-  void addClassToCalendar(DateTime datetime, var subject){
-        if(_events[datetime] == null) {
-          _events[datetime] = [];
-        }
-        _events[datetime]?.add(subject);
+  void addClassToCalendar(DateTime datetime, var subject) {
+    if (_events[datetime] == null) {
+      _events[datetime] = [];
+    }
+    _events[datetime]?.add(subject);
   }
 
   String _formatDateTime(String date, String time) {

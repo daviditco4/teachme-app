@@ -47,7 +47,8 @@ android {
     defaultConfig {
         applicationId "com.daviditcovici.teachme_app"
         minSdkVersion 20
-        targetSdkVersion flutter.targetSdkVersion
+        targetSdkVersion 28
+        //targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
