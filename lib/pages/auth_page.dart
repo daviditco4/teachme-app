@@ -52,8 +52,8 @@ class AuthPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("[AUTH_PAGE 54]: Current user ${FirebaseAuth.instance.currentUser}");
-
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Theme.of(context).colorScheme.primary,
         body: Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 20),
@@ -67,7 +67,9 @@ class AuthPage extends StatelessWidget {
                   child: Scaffold(
                     backgroundColor: const Color(0xFFE6FFFF),
                     body: Form(
-                      child: Column(
+                      child: SingleChildScrollView(
+                      child:
+                      Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Center(
@@ -86,6 +88,7 @@ class AuthPage extends StatelessWidget {
                       ),
                     ),
                   ),
+                ),
                 ),
               ],
             ),

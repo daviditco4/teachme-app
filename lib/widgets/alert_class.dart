@@ -47,7 +47,10 @@ class _AlertClass extends State<AlertClass> {
     return AlertDialog(
       title: Text(widget.title),
       content: StatefulBuilder(
-        builder: (context, setState) => Column(
+        builder: (context, setState) => SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child:
+            Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(widget.subTitle),
@@ -91,7 +94,7 @@ class _AlertClass extends State<AlertClass> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                const Text("topics: "),
+                const Text("Temas: "),
                 SizedBox(
                   height: 50,
                   width: 100,
@@ -108,6 +111,7 @@ class _AlertClass extends State<AlertClass> {
               ],
             ),
           ],
+        ),
         ),
       ),
       actions: [

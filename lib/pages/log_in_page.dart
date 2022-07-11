@@ -14,9 +14,12 @@ class _LogInPage extends State<LogInPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 20),
-      child: Container(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 20),
+    child:
+    Container(
         color: const Color(0xFFE6FFFF),
         child: Column(
           mainAxisSize: MainAxisSize.max,
@@ -173,6 +176,7 @@ class _LogInPage extends State<LogInPage> {
             ),
           ],
         ),
+    ),
       ),
     );
   }
