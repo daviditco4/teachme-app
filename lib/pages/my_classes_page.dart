@@ -23,12 +23,14 @@ class MyClass extends StatefulWidget {
 
 class _MyClass extends State<MyClass> {
   final CalendarController _calendarController = CalendarController();
+  Map<DateTime, List<dynamic>> _events = {};
   List<Widget> incomingClasses = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _events = {};
     _getIncomingClasses();
   }
 
@@ -79,59 +81,61 @@ class _MyClass extends State<MyClass> {
               elevation: 0,
             ),
             bottomNavigationBar: const TMBottomNavigationBar(),
-            body: TabBarView(children: [
-              SafeArea(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15.0, vertical: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: incomingClasses,
-                    ),
-                  ),
-                ),
-              ),
-              SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Card(
-                      clipBehavior: Clip.antiAlias,
-                      margin: const EdgeInsets.all(8.0),
-                      child: TableCalendar(
-                        locale: 'es_US',
-                        calendarController: _calendarController,
-                        headerStyle: HeaderStyle(
-                          decoration: const BoxDecoration(
-                            color: MyColors.bottomNavBarBackground,
-                          ),
-                          headerMargin: const EdgeInsets.only(bottom: 8),
-                          titleTextStyle: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18.0,
-                          ),
-                          formatButtonTextStyle: const TextStyle(
-                            color: Colors.white,
-                          ),
-                          formatButtonDecoration: BoxDecoration(
-                            border: Border.all(color: Colors.white),
-                            borderRadius: BorderRadius.circular(12.0),
-                          ),
-                          leftChevronIcon: const Icon(
-                            Icons.chevron_left,
-                            color: Colors.white,
-                          ),
-                          rightChevronIcon: const Icon(
-                            Icons.chevron_right,
-                            color: Colors.white,
-                          ),
+            body: TabBarView(
+                children: [
+                  SafeArea(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15.0, vertical: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: incomingClasses,
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                  SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Card(
+                          clipBehavior: Clip.antiAlias,
+                          margin: const EdgeInsets.all(8.0),
+                          child: TableCalendar(
+                            locale: 'es_US',
+                            events: _events,
+                            calendarController: _calendarController,
+                            headerStyle: HeaderStyle(
+                              decoration: const BoxDecoration(
+                                color: MyColors.bottomNavBarBackground,
+                              ),
+                              headerMargin: const EdgeInsets.only(bottom: 8),
+                              titleTextStyle: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18.0,
+                              ),
+                              formatButtonTextStyle: const TextStyle(
+                                color: Colors.white,
+                              ),
+                              formatButtonDecoration: BoxDecoration(
+                                border: Border.all(color: Colors.white),
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              leftChevronIcon: const Icon(
+                                Icons.chevron_left,
+                                color: Colors.white,
+                              ),
+                              rightChevronIcon: const Icon(
+                                Icons.chevron_right,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
             ])));
   }
 
@@ -160,6 +164,8 @@ class _MyClass extends State<MyClass> {
       DateTime localDateTime = DateTime.now();
       DateTime classTime = DateTime.parse(formattedDateTime);
 
+      addClassToCalendar(classTime, current[ClassesKeys.subjectId]);
+
       if (classTime.isAfter(localDateTime)) {
         incomingClassesResult.add(CardClass(
             title: current[ClassesKeys.subjectId],
@@ -177,6 +183,13 @@ class _MyClass extends State<MyClass> {
     setState(() {
       incomingClasses = incomingClassesResult;
     });
+  }
+
+  void addClassToCalendar(DateTime datetime, var subject){
+        if(_events[datetime] == null) {
+          _events[datetime] = [];
+        }
+        _events[datetime]?.add(subject);
   }
 
   String _formatDateTime(String date, String time) {
