@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/main.dart';
 import 'package:teachme_app/pages/my_classes_page.dart';
-import 'package:teachme_app/pages/messages/chat_room.dart';
 import 'package:teachme_app/pages/profile/student_profile_page.dart';
 import 'package:teachme_app/pages/profile/teacher_profile_page.dart';
 import 'package:teachme_app/widgets/other/tm_navigator.dart';
+import '../pages/messages/chats_overview_page.dart';
 import '../pages/search_page.dart';
 
 int _currentIndex = 0;
@@ -55,7 +55,7 @@ class _TMBottomNavigationBarState extends State<TMBottomNavigationBar> {
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile')
         ]);
 
-        _pages.add(ChatRoom());
+        _pages.add(ChatsOverviewPage());
         _pages.add(value == ProfileType.teacher
             ? TeacherProfilePage()
             : StudentProfilePage());

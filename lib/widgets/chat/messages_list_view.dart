@@ -3,11 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../helpers/message_keys.dart';
-import '../../pages/messages/chat_page.dart' show messagesCollectionPath;
 import 'message_bubble.dart';
 
 class MessagesListView extends StatelessWidget {
-  const MessagesListView({Key? key}) : super(key: key);
+  const MessagesListView({
+    Key? key,
+    required this.messagesCollectionPath,
+  }) : super(key: key);
+
+  final String messagesCollectionPath;
 
   @override
   Widget build(BuildContext context) {

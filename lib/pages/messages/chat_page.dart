@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
 
-import '../../main.dart' show chatTopic;
 import '../../widgets/chat/messages_list_view.dart';
 import '../../widgets/chat/send_message_field.dart';
-
-const messagesCollectionPath = '${chatTopic}Messages';
 
 class ChatPage extends StatelessWidget {
   const ChatPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final messagesCollectionPath =
+        ModalRoute.of(context)!.settings.arguments as String;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: MyColors.bottomNavBarBackground,
@@ -20,9 +20,13 @@ class ChatPage extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Expanded(child: MessagesListView()),
+          Expanded(
+            child: MessagesListView(
+              messagesCollectionPath: messagesCollectionPath,
+            ),
+          ),
           const SizedBox(height: 8.0),
-          SendMessageField(),
+          SendMessageField(messagesCollectionPath: messagesCollectionPath),
         ],
       ),
     );
