@@ -233,8 +233,8 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                               ? Text(
                                                                   initialText,
                                                                   style: const TextStyle(
-                                                                  fontSize: 16)
-                                                              )
+                                                                      fontSize:
+                                                                          16))
                                                               : TextFormField(
                                                                   initialValue:
                                                                       initialText,
@@ -371,7 +371,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                     ],
                                                   ),
                                                 ),
-                                                const SizedBox(height: 50.0),
+                                                const SizedBox(height: 20.0),
                                                 const Divider(
                                                   height: 20.0,
                                                   thickness: 1.5,
@@ -522,7 +522,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                 ),
                                                 const SizedBox(height: 25.0),
                                                 const SizedBox(
-                                                  height: 200,
+                                                  height: 50,
                                                   // child: GridView.count(),
                                                 ),
                                                 const Divider(
