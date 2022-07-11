@@ -17,6 +17,9 @@ import '../../widgets/other/tm_navigator.dart';
 import 'package:weekday_selector/weekday_selector.dart';
 import 'package:mercado_pago_mobile_checkout/mercado_pago_mobile_checkout.dart';
 
+const String preferenceID = "425735901-07679a17-ebfb-43b9-8ef4-e29d557b1200";
+const String publicKey = "APP_USR-574f4f04-1b72-4b6f-acee-bbde68af6db3";
+
 class TeacherProfilePage extends StatefulWidget {
   const TeacherProfilePage({Key? key}) : super(key: key);
 
@@ -632,7 +635,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                             createOrder({
                                                           "price": 500,
                                                           "preference_id":
-                                                              "425735901-92da4190-300c-415f-bc6b-9d2aedb84af6",
+                                                              preferenceID,
                                                           "user": firebaseAuth
                                                               .currentUser!.uid
                                                         }),
@@ -1006,8 +1009,7 @@ class _OrderScreenState extends State<OrderScreen> {
     } else if (_paying == false) {
       if (event.data()!.containsKey('preference_id')) {
         var result = await MercadoPagoMobileCheckout.startCheckout(
-            "TEST-cdaac9ec-521a-443a-a999-3ff5352e4aff",
-            event.data()!['preference_id']);
+            publicKey, event.data()!['preference_id']);
         event.reference.set({
           'result': result.result,
           'status': result.status,
