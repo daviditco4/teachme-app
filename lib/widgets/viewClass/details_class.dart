@@ -128,6 +128,7 @@ class _DetailsClass extends State<DetailsClass> {
                     ElevatedButton(
                       onPressed: () {
                         _cancelarClase();
+                        Navigator.pop(context, false);
                       },
                       child: const Text('Cancelar Clase'),
                       style: MyColors.buttonStyleDefault,
