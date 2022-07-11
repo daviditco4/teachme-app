@@ -10,26 +10,6 @@ import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import 'package:teachme_app/widgets/other/tm_navigator.dart';
 import 'package:teachme_app/widgets/alert_class.dart';
 
-/*void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      // Remove the debug banner
-      debugShowCheckedModeBanner: false,
-      title: 'Search',
-      home: SearchPage(),
-    );
-  }
-}
-
- */
-
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
 
@@ -107,7 +87,7 @@ class _SearchPage extends State<SearchPage> {
       appBar: AppBar(
         leading: const ImageIcon(
           AssetImage("assets/images/teach_me_logo.png"),
-          color: MyColors.buttonCardClass,
+            color: MyColors.black,
         ),
         centerTitle: true,
         title: const Text('Busca tu clase',

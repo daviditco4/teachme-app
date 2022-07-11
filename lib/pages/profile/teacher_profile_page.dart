@@ -180,7 +180,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                             Radius.circular(30.0))),
                                     child: Padding(
                                       padding: const EdgeInsets.only(
-                                          top: 85.0, bottom: 20.0),
+                                          top: 65.0, bottom: 20.0),
                                       child: Row(
                                         children: [
                                           Expanded(
@@ -231,7 +231,10 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                       Expanded(
                                                           child: !_isEditingText
                                                               ? Text(
-                                                                  initialText)
+                                                                  initialText,
+                                                                  style: const TextStyle(
+                                                                  fontSize: 16)
+                                                              )
                                                               : TextFormField(
                                                                   initialValue:
                                                                       initialText,

@@ -120,7 +120,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                             Radius.circular(30.0))),
                                     child: Padding(
                                       padding: const EdgeInsets.only(
-                                          top: 85.0, bottom: 20.0),
+                                          top: 65.0, bottom: 20.0),
                                       child: Row(
                                         children: [
                                           Expanded(
@@ -173,7 +173,10 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                                       Expanded(
                                                           child: !_isEditingText
                                                               ? Text(
-                                                                  initialText)
+                                                                  initialText,
+                                                                  style: const TextStyle(
+                                                                    fontSize: 16,
+                                                                  ))
                                                               : TextFormField(
                                                                   initialValue:
                                                                       initialText,
@@ -257,7 +260,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                                     ],
                                                   ),
                                                 ),
-                                                const SizedBox(height: 50.0),
+                                                const SizedBox(height: 20.0),
                                                 const Divider(
                                                   height: 20.0,
                                                   thickness: 1.5,
@@ -287,7 +290,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                                   ),
                                                 ),
                                                 const SizedBox(
-                                                  height: 200,
+                                                  height: 100,
                                                   // child: GridView.count(),
                                                 )
                                               ],
