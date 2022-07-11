@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:teachme_app/widgets/viewClass/details_class.dart';
 
 class CardClass extends StatefulWidget {
+  final String cid;
   final String title;
   final String textButton;
   final String schedule;
@@ -16,6 +17,7 @@ class CardClass extends StatefulWidget {
 
   const CardClass(
       {Key? key,
+      required this.cid,
       required this.title,
       required this.textButton,
       required this.schedule,
@@ -104,6 +106,7 @@ class _CardClass extends State<CardClass> {
     showDialog<bool>(
         context: context,
         builder: (context) => DetailsClass(
+              cid: widget.cid,
               address: widget.address,
               cost: widget.cost,
               otherUserName: widget.otherUserName,

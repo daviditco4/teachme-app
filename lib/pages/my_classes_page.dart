@@ -156,6 +156,7 @@ class _MyClass extends State<MyClass> {
 
     while (docIterator.moveNext()) {
       var current = docIterator.current;
+      String cid = current.id;
       String date = current[ClassesKeys.date];
       String time = current[ClassesKeys.time];
       String formattedDateTime = _formatDateTime(date, time);
@@ -188,6 +189,7 @@ class _MyClass extends State<MyClass> {
         }
 
         incomingClassesResult.add(CardClass(
+            cid: cid,
             title: current[ClassesKeys.subjectId],
             textButton: "Detalles",
             schedule: "$date a las $time:00",
