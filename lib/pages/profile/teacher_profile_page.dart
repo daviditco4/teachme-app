@@ -31,12 +31,15 @@ class TeacherProfilePage extends StatefulWidget {
 class _TeacherProfilePage extends State<TeacherProfilePage> {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final ProfileService _profileService = ProfileService();
+
+  late String _userID;
   bool _isEditingText = false;
   bool _isEditingText2 = false;
   late TextEditingController _editingController;
   String initialText = "";
   String classPrice = "";
   String displayName = "";
+  ImageProvider _userImage = AssetImage("assets/images/hasbulla.png");
   String availableFrom = "...";
   String availableUpTo = "...";
   String dropdownValueFrom = "00:00";
@@ -85,18 +88,23 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   @override
   void initState() {
     super.initState();
+    if (widget.userID.isEmpty) {
+      _userID = FirebaseAuth.instance.currentUser!.uid;
+    } else {
+      _userID = widget.userID;
+    }
+
+    if (FirebaseAuth.instance.currentUser!.uid == _userID) {
+      isActualUser = true;
+    }
+
+    _getUserImage();
     _getSubjects();
     _getAvailableHours();
     _getAvailableWeekdays();
     _getClassPrice();
     _getUsername();
     _editingController = TextEditingController();
-
-    if (FirebaseAuth.instance.currentUser!.uid == widget.userID) {
-      setState(() {
-        isActualUser = true;
-      });
-    }
   }
 
   @override
@@ -108,7 +116,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: _profileService.getProfile(widget.userID),
+        future: _profileService.getProfile(_userID),
         builder: (context, AsyncSnapshot<Map<String, dynamic>?> snap) {
           if (snap.connectionState == ConnectionState.waiting ||
               !snap.hasData) {
@@ -711,7 +719,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                   child: Align(
                                     child: CircleAvatar(
                                       backgroundColor: MyColors.white,
-                                      backgroundImage: _getUserImage(),
+                                      backgroundImage: _userImage,
                                       radius: 65.0,
                                       // maxRadius: 200.0,
                                     ),
@@ -769,7 +777,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   void _getUsername() async {
     var document = FirebaseFirestore.instance
         .collection(TeachersKeys.collectionName)
-        .doc(widget.userID);
+        .doc(_userID);
 
     await document.get().then((document) => {
           setState(() {
@@ -779,19 +787,22 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   }
 
   //FIXME: Poner la del id actual
-  ImageProvider _getUserImage() {
-    String? userImageUrl; // user.photoURL;
-    if (userImageUrl != null) {
-      return NetworkImage(userImageUrl);
-    } else {
-      return const AssetImage("assets/images/hasbulla.png");
-    }
+  void _getUserImage() async {
+    var document = FirebaseFirestore.instance
+        .collection(TeachersKeys.collectionName)
+        .doc(_userID);
+
+    await document.get().then((value) => {
+          setState(() {
+            _userImage = NetworkImage(value[TeachersKeys.photoUrl]);
+          })
+        });
   }
 
   void _setAvailableWeekdays() async {
     await FirebaseFirestore.instance
         .collection(TeachersKeys.collectionName)
-        .doc(widget.userID)
+        .doc(_userID)
         .update({TeachersKeys.availableDays: availableDays});
     _getAvailableWeekdays();
   }
@@ -799,7 +810,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   void _getAvailableWeekdays() async {
     var document = FirebaseFirestore.instance
         .collection(TeachersKeys.collectionName)
-        .doc(widget.userID);
+        .doc(_userID);
 
     await document.get().then((document) => {
           setState(() {
@@ -851,7 +862,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   void _getAvailableHours() async {
     var document = FirebaseFirestore.instance
         .collection(TeachersKeys.collectionName)
-        .doc(widget.userID);
+        .doc(_userID);
 
     await document.get().then((document) => {
           setState(() {
@@ -869,7 +880,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
     try {
       await FirebaseFirestore.instance
           .collection(TeachersKeys.collectionName)
-          .doc(widget.userID)
+          .doc(_userID)
           .update({
         TeachersKeys.availableFrom: from,
         TeachersKeys.availableUpTo: to
@@ -897,7 +908,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
     try {
       await FirebaseFirestore.instance
           .collection(TeachersKeys.collectionName)
-          .doc(widget.userID)
+          .doc(_userID)
           .update({TeachersKeys.classPrice: double.parse(classPrice)});
     } on Exception catch (e) {
       print(e);
@@ -939,7 +950,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
     List<dynamic> aux = [];
     await firestore
         .collection(TeachersKeys.collectionName)
-        .doc(widget.userID)
+        .doc(_userID)
         .get()
         .then((document) => {
               aux = document[TeachersKeys.subjects],

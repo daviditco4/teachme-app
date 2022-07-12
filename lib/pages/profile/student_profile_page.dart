@@ -25,6 +25,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
 
   bool _isEditingText = false;
   late TextEditingController _editingController;
+  late String _userID;
   String initialText = "";
   String displayName = "";
   bool isActualUser = false;
@@ -32,14 +33,18 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
   @override
   void initState() {
     super.initState();
+    if (widget.userID.isEmpty) {
+      _userID = FirebaseAuth.instance.currentUser!.uid;
+    } else {
+      _userID = widget.userID;
+    }
+
+    if (FirebaseAuth.instance.currentUser!.uid == _userID) {
+      isActualUser = true;
+    }
+
     _editingController = TextEditingController();
     _getUsername();
-
-    if (FirebaseAuth.instance.currentUser!.uid == widget.userID) {
-      setState(() {
-        isActualUser = true;
-      });
-    }
   }
 
   @override
@@ -343,7 +348,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
   void _getUsername() async {
     var document = FirebaseFirestore.instance
         .collection(StudentsKeys.collectionName)
-        .doc(widget.userID);
+        .doc(_userID);
 
     await document.get().then((document) => {
           setState(() {

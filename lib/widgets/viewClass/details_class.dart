@@ -146,7 +146,7 @@ class _DetailsClass extends State<DetailsClass> {
                                 }
                             });
                       },
-                      child: const Text('Perfil profesor'),
+                      child: const Text('Ver Perfil'),
                       style: MyColors.buttonStyleDefault,
                     ),
                   ],
