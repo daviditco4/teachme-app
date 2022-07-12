@@ -265,7 +265,9 @@ class _AlertClass extends State<AlertClass> {
         ClassesKeys.time: classTime,
         ClassesKeys.subjectId: subjectId,
         ClassesKeys.cost: classPrice,
-        ClassesKeys.topics: topics
+        ClassesKeys.topics: topics,
+        ClassesKeys.studentConfirmed: false,
+        ClassesKeys.teacherConfirmed: false
       });
 
       await store
@@ -279,7 +281,9 @@ class _AlertClass extends State<AlertClass> {
         ClassesKeys.time: classTime,
         ClassesKeys.subjectId: subjectId,
         ClassesKeys.cost: classPrice,
-        ClassesKeys.topics: topics
+        ClassesKeys.topics: topics,
+        ClassesKeys.studentConfirmed: false,
+        ClassesKeys.teacherConfirmed: false
       });
     } on Exception catch (e) {
       /* print("MALARDOOOO"); */
