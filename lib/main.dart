@@ -74,8 +74,10 @@ class MyApp extends StatelessWidget {
                 '/class': (context) => const MyClass(),
                 '/notifications': (context) => const NotificationsPage(),
                 '/settings': (context) => const SettingsPage(),
-                '/teacher_profile': (context) => const TeacherProfilePage(),
-                '/student_profile': (context) => const StudentProfilePage(),
+                '/teacher_profile': (context) =>
+                    const TeacherProfilePage(userID: ''),
+                '/student_profile': (context) =>
+                    const StudentProfilePage(userID: ''),
                 '/chat': (context) => const ChatPage(),
               },
               home: snapshot.connectionState != ConnectionState.done

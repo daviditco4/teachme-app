@@ -87,7 +87,7 @@ class SearchTeacherSystem {
   /* Debe ser necesariamente un estudiante quien llame a este método */
   Future<List<Map<String, dynamic>>> _setDistance(
       List<Map<String, dynamic>> inList) async {
-    var userProfile = await ProfileService().getProfile();
+    var userProfile = await ProfileService().getProfile('');
     if (userProfile != null) {
       var userLat = double.parse(userProfile[StudentsKeys.positionLatitude]);
       var userLon = double.parse(userProfile[StudentsKeys.positionLongitude]);

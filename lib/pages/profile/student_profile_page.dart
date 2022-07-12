@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -11,7 +12,8 @@ import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import '../../widgets/other/tm_navigator.dart';
 
 class StudentProfilePage extends StatefulWidget {
-  const StudentProfilePage({Key? key}) : super(key: key);
+  final String userID;
+  const StudentProfilePage({Key? key, required this.userID}) : super(key: key);
 
   @override
   State<StudentProfilePage> createState() => _StudentProfilePageState();
@@ -24,11 +26,20 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
   bool _isEditingText = false;
   late TextEditingController _editingController;
   String initialText = "";
+  String displayName = "";
+  bool isActualUser = false;
 
   @override
   void initState() {
     super.initState();
     _editingController = TextEditingController();
+    _getUsername();
+
+    if (FirebaseAuth.instance.currentUser!.uid == widget.userID) {
+      setState(() {
+        isActualUser = true;
+      });
+    }
   }
 
   @override
@@ -40,7 +51,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: _profileService.getProfile(),
+        future: _profileService.getProfile(widget.userID),
         builder: (context, AsyncSnapshot<Map<String, dynamic>?> snap) {
           if (!snap.hasData ||
               snap.connectionState == ConnectionState.waiting) {
@@ -128,32 +139,35 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                               children: [
                                                 const SizedBox(height: 40.0),
                                                 Align(
-                                                  child: Text(_getUsername(),
+                                                  child: Text(displayName,
                                                       style: const TextStyle(
                                                           color: MyColors.black,
                                                           fontSize: 28.0,
                                                           fontWeight:
                                                               FontWeight.bold)),
                                                 ),
-                                                ElevatedButton(
-                                                  onPressed: () => {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                CurrentLocationScreen(
-                                                                  positionChanged:
-                                                                      (position) {
-                                                                    _profileService
-                                                                        .updatePosition(
-                                                                            position);
-                                                                  },
-                                                                ))),
-                                                  },
-                                                  child: const Text(
-                                                      "Usar ubicación actual"),
-                                                  style: MyColors
-                                                      .buttonStyleDefault,
+                                                Visibility(
+                                                  visible: isActualUser,
+                                                  child: ElevatedButton(
+                                                    onPressed: () => {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  CurrentLocationScreen(
+                                                                    positionChanged:
+                                                                        (position) {
+                                                                      _profileService
+                                                                          .updatePosition(
+                                                                              position);
+                                                                    },
+                                                                  ))),
+                                                    },
+                                                    child: const Text(
+                                                        "Usar ubicación actual"),
+                                                    style: MyColors
+                                                        .buttonStyleDefault,
+                                                  ),
                                                 ),
                                                 const SizedBox(height: 10.0),
                                                 const Divider(
@@ -171,11 +185,14 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                                       child: Center(
                                                     child: Row(children: [
                                                       Expanded(
-                                                          child: !_isEditingText
+                                                          child: !_isEditingText ||
+                                                                  !isActualUser
                                                               ? Text(
                                                                   initialText,
-                                                                  style: const TextStyle(
-                                                                    fontSize: 16,
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    fontSize:
+                                                                        16,
                                                                   ))
                                                               : TextFormField(
                                                                   initialValue:
@@ -194,7 +211,8 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                                                               initialText = value
                                                                             });
                                                                   })),
-                                                      IconButton(
+                                                      Visibility(
+                                                          child: IconButton(
                                                         icon: const Icon(
                                                             Icons.edit),
                                                         onPressed: () {
@@ -203,7 +221,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                                                     true,
                                                               });
                                                         },
-                                                      )
+                                                      ))
                                                     ]),
                                                   )),
                                                 ),
@@ -322,9 +340,16 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
         });
   }
 
-  String _getUsername() {
-    String? username = firebaseAuth.currentUser!.displayName;
-    return username ?? "";
+  void _getUsername() async {
+    var document = FirebaseFirestore.instance
+        .collection(StudentsKeys.collectionName)
+        .doc(widget.userID);
+
+    await document.get().then((document) => {
+          setState(() {
+            displayName = document[StudentsKeys.name].toString();
+          })
+        });
   }
 
   ImageProvider _getUserImage() {

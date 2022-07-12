@@ -21,7 +21,8 @@ const String preferenceID = "425735901-07679a17-ebfb-43b9-8ef4-e29d557b1200";
 const String publicKey = "APP_USR-574f4f04-1b72-4b6f-acee-bbde68af6db3";
 
 class TeacherProfilePage extends StatefulWidget {
-  const TeacherProfilePage({Key? key}) : super(key: key);
+  final String userID;
+  const TeacherProfilePage({Key? key, required this.userID}) : super(key: key);
 
   @override
   State<TeacherProfilePage> createState() => _TeacherProfilePage();
@@ -35,7 +36,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   late TextEditingController _editingController;
   String initialText = "";
   String classPrice = "";
-  User user = FirebaseAuth.instance.currentUser!;
+  String displayName = "";
   String availableFrom = "...";
   String availableUpTo = "...";
   String dropdownValueFrom = "00:00";
@@ -43,6 +44,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   List<bool> availableDays = List.filled(7, true);
   List<String> subjects = [];
   bool isLoading = true;
+  bool isActualUser = false;
 
   static final Map<int, String> indexToDayMap = {
     0: "Domingo",
@@ -87,7 +89,14 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
     _getAvailableHours();
     _getAvailableWeekdays();
     _getClassPrice();
+    _getUsername();
     _editingController = TextEditingController();
+
+    if (FirebaseAuth.instance.currentUser!.uid == widget.userID) {
+      setState(() {
+        isActualUser = true;
+      });
+    }
   }
 
   @override
@@ -99,7 +108,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: _profileService.getProfile(),
+        future: _profileService.getProfile(widget.userID),
         builder: (context, AsyncSnapshot<Map<String, dynamic>?> snap) {
           if (snap.connectionState == ConnectionState.waiting ||
               !snap.hasData) {
@@ -188,32 +197,34 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                               children: [
                                                 const SizedBox(height: 40.0),
                                                 Align(
-                                                  child: Text(_getUsername(),
+                                                  child: Text(displayName,
                                                       style: const TextStyle(
                                                           color: MyColors.black,
                                                           fontSize: 28.0,
                                                           fontWeight:
                                                               FontWeight.bold)),
                                                 ),
-                                                ElevatedButton(
-                                                    onPressed: () {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  CurrentLocationScreen(
-                                                                    positionChanged:
-                                                                        (position) {
-                                                                      _profileService
-                                                                          .updatePosition(
-                                                                              position);
-                                                                    },
-                                                                  )));
-                                                    },
-                                                    style: MyColors
-                                                        .buttonStyleDefault,
-                                                    child: const Text(
-                                                        "Usar ubicación actual")),
+                                                Visibility(
+                                                  visible: isActualUser,
+                                                  child: ElevatedButton(
+                                                      onPressed: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        CurrentLocationScreen(
+                                                                          positionChanged:
+                                                                              (position) {
+                                                                            _profileService.updatePosition(position);
+                                                                          },
+                                                                        )));
+                                                      },
+                                                      style: MyColors
+                                                          .buttonStyleDefault,
+                                                      child: const Text(
+                                                          "Usar ubicación actual")),
+                                                ),
                                                 const SizedBox(height: 10.0),
                                                 const Divider(
                                                   height: 40.0,
@@ -229,7 +240,8 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                   child: Align(
                                                     child: Row(children: [
                                                       Expanded(
-                                                          child: !_isEditingText
+                                                          child: !_isEditingText ||
+                                                                  !isActualUser
                                                               ? Text(
                                                                   initialText,
                                                                   style: const TextStyle(
@@ -252,16 +264,18 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                                               initialText = value
                                                                             });
                                                                   })),
-                                                      IconButton(
-                                                        icon: const Icon(
-                                                            Icons.edit),
-                                                        onPressed: () {
-                                                          setState(() => {
-                                                                _isEditingText =
-                                                                    true,
-                                                              });
-                                                        },
-                                                      )
+                                                      Visibility(
+                                                          visible: isActualUser,
+                                                          child: IconButton(
+                                                            icon: const Icon(
+                                                                Icons.edit),
+                                                            onPressed: () {
+                                                              setState(() => {
+                                                                    _isEditingText =
+                                                                        true,
+                                                                  });
+                                                            },
+                                                          ))
                                                     ]),
                                                   ),
                                                 ),
@@ -291,18 +305,21 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                             color:
                                                                 MyColors.black),
                                                       ),
-                                                      ElevatedButton(
-                                                        onPressed: () =>
-                                                            _editSubjectPopup(
-                                                                context,
-                                                                'Editar Materias',
-                                                                'Cancelar',
-                                                                'Aceptar'),
-                                                        child: const Text(
-                                                            'Editar'),
-                                                        style: MyColors
-                                                            .buttonStyleDefault,
-                                                      ),
+                                                      Visibility(
+                                                        visible: isActualUser,
+                                                        child: ElevatedButton(
+                                                          onPressed: () =>
+                                                              _editSubjectPopup(
+                                                                  context,
+                                                                  'Editar Materias',
+                                                                  'Cancelar',
+                                                                  'Aceptar'),
+                                                          child: const Text(
+                                                              'Editar'),
+                                                          style: MyColors
+                                                              .buttonStyleDefault,
+                                                        ),
+                                                      )
                                                     ],
                                                   ),
                                                 ),
@@ -397,101 +414,98 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                             color:
                                                                 MyColors.black),
                                                       ),
-                                                      ElevatedButton(
-                                                        child: const Text(
-                                                            'Editar'),
-                                                        style: MyColors
-                                                            .buttonStyleDefault,
-                                                        onPressed: () => showDialog<
-                                                                bool>(
-                                                            context: context,
-                                                            builder: (context) =>
-                                                                StatefulBuilder(
-                                                                  builder: (context,
-                                                                          setState) =>
-                                                                      AlertDialog(
-                                                                    title: const Text(
-                                                                        "Editar Horarios"),
-                                                                    content:
-                                                                        Column(
-                                                                      mainAxisSize:
-                                                                          MainAxisSize
-                                                                              .min,
-                                                                      children: <
-                                                                          Widget>[
-                                                                        const Text(
-                                                                            "Seleccione qué días está disponible"),
-                                                                        WeekdaySelector(
-                                                                            onChanged: (int
-                                                                                day) {
-                                                                              setState(() {
-                                                                                // Los dias estan numerados del 1 al 7
-                                                                                int index = day % 7;
+                                                      Visibility(
+                                                        visible: isActualUser,
+                                                        child: ElevatedButton(
+                                                          child: const Text(
+                                                              'Editar'),
+                                                          style: MyColors
+                                                              .buttonStyleDefault,
+                                                          onPressed: () => showDialog<
+                                                                  bool>(
+                                                              context: context,
+                                                              builder: (context) =>
+                                                                  StatefulBuilder(
+                                                                    builder: (context,
+                                                                            setState) =>
+                                                                        AlertDialog(
+                                                                      title: const Text(
+                                                                          "Editar Horarios"),
+                                                                      content:
+                                                                          Column(
+                                                                        mainAxisSize:
+                                                                            MainAxisSize.min,
+                                                                        children: <
+                                                                            Widget>[
+                                                                          const Text(
+                                                                              "Seleccione qué días está disponible"),
+                                                                          WeekdaySelector(
+                                                                              onChanged: (int day) {
+                                                                                setState(() {
+                                                                                  // Los dias estan numerados del 1 al 7
+                                                                                  int index = day % 7;
 
-                                                                                availableDays[index] = !availableDays[index];
-                                                                              });
-                                                                            },
-                                                                            values:
-                                                                                availableDays),
-                                                                        const Text(
-                                                                            "Seleccione de qué hora a qué hora se encuentra disponible"),
-                                                                        Row(
-                                                                          children: <
-                                                                              Widget>[
-                                                                            DropdownButton<String>(
-                                                                              menuMaxHeight: 200.0,
-                                                                              value: dropdownValueFrom,
-                                                                              icon: const Icon(Icons.arrow_drop_down),
-                                                                              onChanged: (String? newValue) {
-                                                                                setState(() {
-                                                                                  if (newValue != null) {
-                                                                                    dropdownValueFrom = newValue;
-                                                                                  }
+                                                                                  availableDays[index] = !availableDays[index];
                                                                                 });
                                                                               },
-                                                                              items: availableHours.map<DropdownMenuItem<String>>((String value) {
-                                                                                return DropdownMenuItem<String>(
-                                                                                  value: value,
-                                                                                  child: Text(value),
-                                                                                );
-                                                                              }).toList(),
-                                                                            ),
-                                                                            const Text("  a  "),
-                                                                            DropdownButton<String>(
-                                                                              value: dropdownValueUpTo,
-                                                                              icon: const Icon(Icons.arrow_drop_down),
-                                                                              onChanged: (String? newValue) {
-                                                                                setState(() {
-                                                                                  if (newValue != null) {
-                                                                                    dropdownValueUpTo = newValue;
-                                                                                  }
-                                                                                });
-                                                                              },
-                                                                              items: availableHours.map<DropdownMenuItem<String>>((String value) {
-                                                                                return DropdownMenuItem<String>(
-                                                                                  value: value,
-                                                                                  child: Text(value),
-                                                                                );
-                                                                              }).toList(),
-                                                                            )
-                                                                          ],
+                                                                              values: availableDays),
+                                                                          const Text(
+                                                                              "Seleccione de qué hora a qué hora se encuentra disponible"),
+                                                                          Row(
+                                                                            children: <Widget>[
+                                                                              DropdownButton<String>(
+                                                                                menuMaxHeight: 200.0,
+                                                                                value: dropdownValueFrom,
+                                                                                icon: const Icon(Icons.arrow_drop_down),
+                                                                                onChanged: (String? newValue) {
+                                                                                  setState(() {
+                                                                                    if (newValue != null) {
+                                                                                      dropdownValueFrom = newValue;
+                                                                                    }
+                                                                                  });
+                                                                                },
+                                                                                items: availableHours.map<DropdownMenuItem<String>>((String value) {
+                                                                                  return DropdownMenuItem<String>(
+                                                                                    value: value,
+                                                                                    child: Text(value),
+                                                                                  );
+                                                                                }).toList(),
+                                                                              ),
+                                                                              const Text("  a  "),
+                                                                              DropdownButton<String>(
+                                                                                value: dropdownValueUpTo,
+                                                                                icon: const Icon(Icons.arrow_drop_down),
+                                                                                onChanged: (String? newValue) {
+                                                                                  setState(() {
+                                                                                    if (newValue != null) {
+                                                                                      dropdownValueUpTo = newValue;
+                                                                                    }
+                                                                                  });
+                                                                                },
+                                                                                items: availableHours.map<DropdownMenuItem<String>>((String value) {
+                                                                                  return DropdownMenuItem<String>(
+                                                                                    value: value,
+                                                                                    child: Text(value),
+                                                                                  );
+                                                                                }).toList(),
+                                                                              )
+                                                                            ],
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                      actions: [
+                                                                        ElevatedButton(
+                                                                          onPressed: () =>
+                                                                              _handleChangedAvailableHours(),
+                                                                          child:
+                                                                              const Text('Aceptar'),
+                                                                          style:
+                                                                              ButtonStyle(backgroundColor: MaterialStateProperty.all(MyColors.buttonCardClass)),
                                                                         ),
                                                                       ],
                                                                     ),
-                                                                    actions: [
-                                                                      ElevatedButton(
-                                                                        onPressed:
-                                                                            () =>
-                                                                                _handleChangedAvailableHours(),
-                                                                        child: const Text(
-                                                                            'Aceptar'),
-                                                                        style: ButtonStyle(
-                                                                            backgroundColor:
-                                                                                MaterialStateProperty.all(MyColors.buttonCardClass)),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                )),
+                                                                  )),
+                                                        ),
                                                       )
                                                     ],
                                                   ),
@@ -550,64 +564,73 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                       child: Align(
                                                         child: Row(children: [
                                                           Expanded(
-                                                              child:
-                                                                  !_isEditingText2
-                                                                      ? Text(
-                                                                          classPrice,
-                                                                          style:
-                                                                              const TextStyle(fontSize: 15),
-                                                                          textAlign:
-                                                                              TextAlign.center,
-                                                                        )
-                                                                      : TextFormField(
-                                                                          validator:
-                                                                              ((value) {
-                                                                            if (value ==
-                                                                                null) {
-                                                                              return "Debe ingresar un valor";
-                                                                            }
-                                                                            int aux =
-                                                                                int.parse(value);
-                                                                            if (aux <=
-                                                                                0) {
-                                                                              return "Precio inválido";
-                                                                            }
-                                                                            return null;
-                                                                          }),
-                                                                          decoration: const InputDecoration(
-                                                                              labelStyle: TextStyle(
-                                                                                  color: Colors
-                                                                                      .black),
-                                                                              labelText:
-                                                                                  "Ingresa un nuevo precio"),
-                                                                          keyboardType: TextInputType
+                                                              child: !_isEditingText2 ||
+                                                                      !isActualUser
+                                                                  ? Text(
+                                                                      classPrice,
+                                                                      style: const TextStyle(
+                                                                          fontSize:
+                                                                              15),
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                    )
+                                                                  : TextFormField(
+                                                                      validator:
+                                                                          ((value) {
+                                                                        if (value ==
+                                                                            null) {
+                                                                          return "Debe ingresar un valor";
+                                                                        }
+                                                                        int aux =
+                                                                            int.parse(value);
+                                                                        if (aux <=
+                                                                            0) {
+                                                                          return "Precio inválido";
+                                                                        }
+                                                                        return null;
+                                                                      }),
+                                                                      decoration: const InputDecoration(
+                                                                          labelStyle: TextStyle(
+                                                                              color: Colors
+                                                                                  .black),
+                                                                          labelText:
+                                                                              "Ingresa un nuevo precio"),
+                                                                      keyboardType:
+                                                                          TextInputType
                                                                               .number,
-                                                                          inputFormatters: [
-                                                                            FilteringTextInputFormatter.digitsOnly
-                                                                          ],
-                                                                          initialValue:
-                                                                              classPrice,
-                                                                          textInputAction: TextInputAction
+                                                                      inputFormatters: [
+                                                                        FilteringTextInputFormatter
+                                                                            .digitsOnly
+                                                                      ],
+                                                                      initialValue:
+                                                                          classPrice,
+                                                                      textInputAction:
+                                                                          TextInputAction
                                                                               .done,
-                                                                          onFieldSubmitted:
-                                                                              (value) {
-                                                                            setState(() =>
-                                                                                {
-                                                                                  _isEditingText2 = false,
-                                                                                  classPrice = value
-                                                                                });
-                                                                            _handleChangedClassPrice();
-                                                                          })),
-                                                          IconButton(
-                                                            icon: const Icon(
-                                                                Icons.edit),
-                                                            onPressed: () {
-                                                              setState(() => {
-                                                                    _isEditingText2 =
-                                                                        true,
-                                                                  });
-                                                            },
-                                                          )
+                                                                      onFieldSubmitted:
+                                                                          (value) {
+                                                                        setState(() =>
+                                                                            {
+                                                                              _isEditingText2 = false,
+                                                                              classPrice = value
+                                                                            });
+                                                                        _handleChangedClassPrice();
+                                                                      })),
+                                                          Visibility(
+                                                              visible:
+                                                                  isActualUser,
+                                                              child: IconButton(
+                                                                icon: const Icon(
+                                                                    Icons.edit),
+                                                                onPressed: () {
+                                                                  setState(
+                                                                      () => {
+                                                                            _isEditingText2 =
+                                                                                true,
+                                                                          });
+                                                                },
+                                                              ))
                                                         ]),
                                                       ),
                                                     )
@@ -632,21 +655,25 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                             color:
                                                                 MyColors.black),
                                                       ),
-                                                      ElevatedButton(
-                                                        // disabled if la deuda es menor que 500
-                                                        onPressed: () =>
-                                                            createOrder({
-                                                          "price": 500,
-                                                          "preference_id":
-                                                              preferenceID,
-                                                          "user": firebaseAuth
-                                                              .currentUser!.uid
-                                                        }),
-                                                        child:
-                                                            const Text('Pagar'),
-                                                        style: MyColors
-                                                            .buttonStyleDefault,
-                                                      ),
+                                                      Visibility(
+                                                        visible: isActualUser,
+                                                        child: ElevatedButton(
+                                                          // disabled if la deuda es menor que 500
+                                                          onPressed: () =>
+                                                              createOrder({
+                                                            "price": 500,
+                                                            "preference_id":
+                                                                preferenceID,
+                                                            "user": firebaseAuth
+                                                                .currentUser!
+                                                                .uid
+                                                          }),
+                                                          child: const Text(
+                                                              'Pagar'),
+                                                          style: MyColors
+                                                              .buttonStyleDefault,
+                                                        ),
+                                                      )
                                                     ],
                                                   ),
                                                 ),
@@ -709,16 +736,51 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
         });
   }
 
+  Widget _buildAnimatedChildVisibleOnCondition({
+    required bool condition,
+    required Widget child,
+    SizedBox? onInvisibleWidget,
+    required SizedBox verticalSpace,
+    VerticalDirection verticalSpaceLocation = VerticalDirection.up,
+  }) {
+    final hasTopSpace = (verticalSpaceLocation == VerticalDirection.up);
+
+    return AnimatedCrossFade(
+      duration: const Duration(milliseconds: 500),
+      sizeCurve: Curves.ease,
+      alignment: hasTopSpace ? Alignment.bottomCenter : Alignment.topCenter,
+      crossFadeState:
+          condition ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+      firstChild: onInvisibleWidget ?? Container(),
+      secondChild: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (hasTopSpace) verticalSpace,
+          if (condition) child,
+          if (!hasTopSpace) verticalSpace,
+        ],
+      ),
+    );
+  }
+
   //TODO: Implementar
   void _updateLocation() {}
 
-  String _getUsername() {
-    String? username = user.displayName;
-    return username ?? "ERROR";
+  void _getUsername() async {
+    var document = FirebaseFirestore.instance
+        .collection(TeachersKeys.collectionName)
+        .doc(widget.userID);
+
+    await document.get().then((document) => {
+          setState(() {
+            displayName = document[TeachersKeys.name].toString();
+          })
+        });
   }
 
+  //FIXME: Poner la del id actual
   ImageProvider _getUserImage() {
-    String? userImageUrl = user.photoURL;
+    String? userImageUrl; // user.photoURL;
     if (userImageUrl != null) {
       return NetworkImage(userImageUrl);
     } else {
@@ -729,7 +791,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   void _setAvailableWeekdays() async {
     await FirebaseFirestore.instance
         .collection(TeachersKeys.collectionName)
-        .doc(user.uid)
+        .doc(widget.userID)
         .update({TeachersKeys.availableDays: availableDays});
     _getAvailableWeekdays();
   }
@@ -737,7 +799,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   void _getAvailableWeekdays() async {
     var document = FirebaseFirestore.instance
         .collection(TeachersKeys.collectionName)
-        .doc(user.uid);
+        .doc(widget.userID);
 
     await document.get().then((document) => {
           setState(() {
@@ -789,7 +851,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   void _getAvailableHours() async {
     var document = FirebaseFirestore.instance
         .collection(TeachersKeys.collectionName)
-        .doc(user.uid);
+        .doc(widget.userID);
 
     await document.get().then((document) => {
           setState(() {
@@ -807,7 +869,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
     try {
       await FirebaseFirestore.instance
           .collection(TeachersKeys.collectionName)
-          .doc(user.uid)
+          .doc(widget.userID)
           .update({
         TeachersKeys.availableFrom: from,
         TeachersKeys.availableUpTo: to
@@ -835,7 +897,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
     try {
       await FirebaseFirestore.instance
           .collection(TeachersKeys.collectionName)
-          .doc(user.uid)
+          .doc(widget.userID)
           .update({TeachersKeys.classPrice: double.parse(classPrice)});
     } on Exception catch (e) {
       print(e);
@@ -847,7 +909,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   void _getClassPrice() async {
     var document = FirebaseFirestore.instance
         .collection(TeachersKeys.collectionName)
-        .doc(user.uid);
+        .doc(widget.userID);
 
     await document.get().then((document) => {
           setState(() {
@@ -877,7 +939,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
     List<dynamic> aux = [];
     await firestore
         .collection(TeachersKeys.collectionName)
-        .doc(user.uid)
+        .doc(widget.userID)
         .get()
         .then((document) => {
               aux = document[TeachersKeys.subjects],
