@@ -259,7 +259,8 @@ void _updateStudentsOrTeachersCollection(String userType) async {
         TeachersKeys.rating: 0.0,
         TeachersKeys.accumRatig: 0.0,
         TeachersKeys.reviewCount: 0,
-        TeachersKeys.comments: []
+        TeachersKeys.comments: [],
+        TeachersKeys.debt: 0.0
       });
     }
   } on Exception catch (e) {

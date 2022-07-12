@@ -11,6 +11,8 @@ import 'package:teachme_app/helpers/teachers_keys.dart';
 import 'package:teachme_app/main.dart';
 import 'package:teachme_app/widgets/viewClass/details_class.dart';
 
+const double teachMeServiceCharge = 0.085;
+
 class ConfirmClassCard extends StatefulWidget {
   final String otherUserName;
   final String otherUserUID;
@@ -162,6 +164,31 @@ class _ConfirmClassCard extends State<ConfirmClassCard> {
         TeachersKeys.accumRatig: newAccumRating,
         TeachersKeys.reviewCount: newReviewCount,
         TeachersKeys.rating: newAccumRating / newReviewCount.toDouble()
+      });
+    }
+
+    // Si esta confirmacion fue la ultima, se actualiza la deuda del profesor
+    bool otherUserConfirmed = false;
+    double classCost = 0.0;
+    await store
+        .collection(userCollectionPath)
+        .doc(userUid)
+        .collection(ClassesKeys.collectionName)
+        .doc(widget.classDocName)
+        .get()
+        .then((doc) {
+      otherUserConfirmed = doc[otherUserConfirmedField];
+      classCost = doc[ClassesKeys.cost];
+    });
+
+    if (otherUserConfirmed) {
+      String teacherUid = isStudent ? widget.otherUserUID : userUid;
+      String teacherCollectionPath =
+          isStudent ? otherUserCollectionPath : userCollectionPath;
+
+      await store.collection(teacherCollectionPath).doc(teacherUid).update({
+        TeachersKeys.debt:
+            FieldValue.increment((classCost * teachMeServiceCharge))
       });
     }
 
