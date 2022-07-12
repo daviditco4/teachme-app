@@ -16,6 +16,7 @@ class DetailsClass extends StatefulWidget {
   final String address;
   final String topics;
   final String otherUserName;
+  final String otherUserImage;
 
   const DetailsClass(
       {Key? key,
@@ -25,7 +26,8 @@ class DetailsClass extends StatefulWidget {
       required this.time,
       required this.address,
       required this.topics,
-      required this.otherUserName})
+      required this.otherUserName,
+      required this.otherUserImage})
       : super(key: key);
   @override
   _DetailsClass createState() => _DetailsClass();
@@ -61,7 +63,8 @@ class _DetailsClass extends State<DetailsClass> {
                       style: const TextStyle(
                           color: MyColors.black,
                           fontSize: 28.0,
-                          fontWeight: FontWeight.bold)),
+                          fontWeight: FontWeight.bold)
+                  ),
                 ),
                 const SizedBox(height: 20),
                 Row(
@@ -73,8 +76,7 @@ class _DetailsClass extends State<DetailsClass> {
                             : 'Alumno',
                         style: const TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold)),
-                    Text(widget.otherUserName,
-                        style: const TextStyle(fontSize: 18))
+                    Text(widget.otherUserName, style: const TextStyle(fontSize: 18))
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -118,7 +120,6 @@ class _DetailsClass extends State<DetailsClass> {
                   ],
                 ),
                 Wrap(
-                  // mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(widget.topics, style: const TextStyle(fontSize: 17)),
                   ],
@@ -160,12 +161,8 @@ class _DetailsClass extends State<DetailsClass> {
   }
 
   ImageProvider _getUserImage() {
-    String? userImageUrl = firebaseAuth.currentUser!.photoURL;
-    if (userImageUrl != null) {
-      return NetworkImage(userImageUrl);
-    } else {
-      return const AssetImage("assets/images/hasbulla.png");
-    }
+    String? userImageUrl = widget.otherUserImage;
+    return NetworkImage(userImageUrl);
   }
 
   Future<String?> _getTeacherID() async {
