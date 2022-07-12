@@ -94,7 +94,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
       String date = current[ClassesKeys.date];
       String time = current[ClassesKeys.time];
       bool teacherConfirmed = current[ClassesKeys.teacherConfirmed];
-      bool studentConfirmed = current[ClassesKeys.teacherConfirmed];
+      bool studentConfirmed = current[ClassesKeys.studentConfirmed];
       String otherUserUid = isStudent
           ? current[ClassesKeys.teacherUid]
           : current[ClassesKeys.studentUid];
@@ -106,24 +106,27 @@ class _NotificationsPageState extends State<NotificationsPage> {
         bool currentUserConfirmed =
             isStudent ? studentConfirmed : teacherConfirmed;
 
-        bool otherUserConfirmed =
-            isStudent ? teacherConfirmed : studentConfirmed;
+        /* bool otherUserConfirmed =
+            isStudent ? teacherConfirmed : studentConfirmed; */
 
         if (!currentUserConfirmed) {
           _addNewNotificationCard(
               otherUserUid,
               localDateTime
                   .difference(classTime.add(const Duration(hours: 1)))
-                  .inHours);
+                  .inHours,
+              docIterator.current.id);
         }
       }
     }
   }
 
-  void _addNewNotificationCard(String otherUserUid, int timeAgo) async {
+  void _addNewNotificationCard(
+      String otherUserUid, int timeAgo, String classDocName) async {
     bool isStudent = userProfileType.value == ProfileType.student;
     String username = "Username";
     String imgUrl = "";
+    String uid = "";
 
     FirebaseFirestore store = FirebaseFirestore.instance;
     String otherUserCollectionName =
@@ -136,10 +139,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
         .then((doc) {
       username = doc["name"];
       imgUrl = doc["photoUrl"];
+      uid = doc["uid"];
     });
 
     TMNotification newNotif = TMNotification(
-        username: username, imgUrl: imgUrl, timeAgo: timeAgo.toString());
+        username: username,
+        imgUrl: imgUrl,
+        timeAgo: timeAgo.toString(),
+        uid: uid,
+        classDocName: classDocName);
 
     setState(() {
       notifications.add(newNotif);

@@ -17,4 +17,5 @@ class TeachersKeys {
   static const collectionName = 'teachers';
   static const accumRatig = 'accumRating';
   static const reviewCount = 'ratingCount';
+  static const comments = "comments";
 }

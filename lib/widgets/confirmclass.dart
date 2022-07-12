@@ -1,35 +1,33 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:teachme_app/constants/theme.dart';
+import 'package:teachme_app/helpers/classes_keys.dart';
+import 'package:teachme_app/helpers/students_keys.dart';
+import 'package:teachme_app/helpers/teachers_keys.dart';
+import 'package:teachme_app/main.dart';
 import 'package:teachme_app/widgets/viewClass/details_class.dart';
 
-/*void main() {
-  runApp(const MyApp());
-}
+class ConfirmClassCard extends StatefulWidget {
+  final String otherUserName;
+  final String otherUserUID;
+  final String classDocName;
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      // Remove the debug banner
-      debugShowCheckedModeBanner: false,
-      title: 'Search',
-      home: ConfirmClass(user: 'User'),
-    );
-  }
-}
-*/
-class ConfirmClass extends StatefulWidget {
-  const ConfirmClass({Key? key, required this.user}) : super(key: key);
-  final String user;
+  const ConfirmClassCard(
+      {Key? key,
+      required this.otherUserName,
+      required this.otherUserUID,
+      required this.classDocName})
+      : super(key: key);
 
   @override
-  State<ConfirmClass> createState() => _ConfirmClass();
+  State<ConfirmClassCard> createState() => _ConfirmClassCard();
 }
 
-class _ConfirmClass extends State<ConfirmClass> {
+class _ConfirmClassCard extends State<ConfirmClassCard> {
   //FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   @override
@@ -47,7 +45,7 @@ class _ConfirmClass extends State<ConfirmClass> {
               ListTile(
                 contentPadding: const EdgeInsets.fromLTRB(15, 10, 25, 0),
                 title: Text(
-                  widget.user + ' comentanos como fue la clase',
+                  ' Considera escribir un comentario sobre tu clase con ${widget.otherUserName}',
                   style: const TextStyle(color: MyColors.black, fontSize: 17),
                 ),
               ),
@@ -84,12 +82,12 @@ class _ConfirmClass extends State<ConfirmClass> {
                 ),
               ),
               const SizedBox(height: 10),
+              const Text("Recuerda confirmar que se hizo la clase"),
               Row(
                 children: <Widget>[
                   ElevatedButton(
-                    onPressed: () => viewDetails(context),
-                    //onPressed: () => onPressed(widget.textButton),
-                    child: const Text('Confirmar Clase',
+                    onPressed: () => _handleClassConfirmed(),
+                    child: const Text('Confirmar',
                         style: TextStyle(color: MyColors.white, fontSize: 15)),
                     style: MyColors.buttonStyleDefault,
                   ),
@@ -101,9 +99,65 @@ class _ConfirmClass extends State<ConfirmClass> {
       ),
     );
   }
-}
 
-void viewDetails(BuildContext context) async {
-  // showDialog<bool>(
-  //     context: context, builder: (context) => const DetailsClass());
+  _handleClassConfirmed() async {
+    FirebaseFirestore store = FirebaseFirestore.instance;
+    String userUid = FirebaseAuth.instance.currentUser!.uid;
+    double rating = 3.5;
+    String comment = "Este es un comentario de la clase";
+    bool isStudent = userProfileType.value == ProfileType.student;
+    String userCollectionPath =
+        isStudent ? StudentsKeys.collectionName : TeachersKeys.collectionName;
+    String otherUserCollectionPath =
+        isStudent ? TeachersKeys.collectionName : StudentsKeys.collectionName;
+    String userConfirmedField =
+        isStudent ? ClassesKeys.studentConfirmed : ClassesKeys.teacherConfirmed;
+    String otherUserConfirmedField =
+        isStudent ? ClassesKeys.teacherConfirmed : ClassesKeys.studentConfirmed;
+
+    // Agrego el comentario
+    await store
+        .collection(otherUserCollectionPath)
+        .doc(widget.otherUserUID)
+        .update({
+      "comments": FieldValue.arrayUnion([comment]),
+    });
+
+    // Actualizo en las clases del usuario, que confirmo
+    await store
+        .collection(otherUserCollectionPath)
+        .doc(widget.otherUserUID)
+        .collection(ClassesKeys.collectionName)
+        .doc(widget.classDocName)
+        .update({userConfirmedField: true});
+
+    // Actualizo en las clases del otro, que confirmo
+    await store
+        .collection(userCollectionPath)
+        .doc(userUid)
+        .collection(ClassesKeys.collectionName)
+        .doc(widget.classDocName)
+        .update({userConfirmedField: true});
+
+    // Actualizo rating del profesor (si soy alumno)
+    if (isStudent) {
+      double newAccumRating = 0.0;
+      int newReviewCount = 0;
+      var otherUserDocument =
+          store.collection(otherUserCollectionPath).doc(widget.otherUserUID);
+
+      await otherUserDocument.get().then((doc) {
+        newAccumRating = doc[TeachersKeys.accumRatig] + rating;
+        newReviewCount = doc[TeachersKeys.reviewCount] + 1;
+      });
+
+      await otherUserDocument.update({
+        TeachersKeys.accumRatig: newAccumRating,
+        TeachersKeys.reviewCount: newReviewCount,
+        TeachersKeys.rating: newAccumRating / newReviewCount.toDouble()
+      });
+    }
+
+    Navigator.pop(context);
+  }
 }

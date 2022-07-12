@@ -9,5 +9,5 @@ class ClassesKeys {
   static const cost = 'cost';
   static const topics = 'topics';
   static const teacherConfirmed = 'teacherConfirmed';
-  static const studentConfirmed = 'studentConfirmend';
+  static const studentConfirmed = 'studentConfirmed';
 }

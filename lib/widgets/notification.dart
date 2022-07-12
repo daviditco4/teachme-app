@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
+import 'package:teachme_app/widgets/confirmclass.dart';
+import 'package:teachme_app/widgets/other/tm_navigator.dart';
 
 class TMNotification extends StatefulWidget {
   final String username;
+  final String uid;
+  final String classDocName;
   final String imgUrl;
   final String timeAgo;
 
@@ -10,7 +14,9 @@ class TMNotification extends StatefulWidget {
       {Key? key,
       required this.username,
       required this.imgUrl,
-      required this.timeAgo})
+      required this.timeAgo,
+      required this.uid,
+      required this.classDocName})
       : super(key: key);
 
   @override
@@ -35,6 +41,13 @@ class _TMNotification extends State<TMNotification> {
               const TextSpan(
                   text: ' ? No te olvides de confirmar la finalización')
             ])),
-        subtitle: Text("Hace ${widget.timeAgo} hora(s)"));
+        subtitle: Text("Hace ${widget.timeAgo} hora(s)"),
+        onTap: () => showDialog<bool>(
+              context: context,
+              builder: (context) => ConfirmClassCard(
+                  otherUserName: widget.username,
+                  otherUserUID: widget.uid,
+                  classDocName: widget.classDocName),
+            ));
   }
 }
