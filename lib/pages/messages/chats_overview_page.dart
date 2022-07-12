@@ -5,7 +5,8 @@ import '../../widgets/bottom_nav_bar.dart';
 import '../../widgets/chat/chats_list_view.dart';
 import '../../widgets/other/top_bar.dart';
 
-const _chatsMapCollectionPath = "chatsMappedByUsers";
+const chatsMapCollectionPath = "chatsMappedByUsers";
+const chatsListCollectionPath = "chatsList";
 
 class ChatsOverviewPage extends StatelessWidget {
   const ChatsOverviewPage({Key? key}) : super(key: key);
@@ -14,7 +15,7 @@ class ChatsOverviewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final auth = FirebaseAuth.instance;
     final chatsList =
-        "$_chatsMapCollectionPath/${auth.currentUser!.uid}/chatsList";
+        "$chatsMapCollectionPath/${auth.currentUser!.uid}/$chatsListCollectionPath";
 
     return Scaffold(
       appBar: TopBar(title: "Mensajes"),

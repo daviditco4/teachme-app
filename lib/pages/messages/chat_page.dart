@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teachme_app/constants/theme.dart';
+import 'package:teachme_app/helpers/chat_keys.dart';
 
 import '../../widgets/chat/messages_list_view.dart';
 import '../../widgets/chat/send_message_field.dart';
@@ -9,8 +10,10 @@ class ChatPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final messagesCollectionPath =
-        ModalRoute.of(context)!.settings.arguments as String;
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, String>;
+    final messagesCollectionPath = args[ChatKeys.msg]!;
+    final recipientUid = args[ChatKeys.rp]!;
 
     return Scaffold(
       appBar: AppBar(
@@ -26,7 +29,10 @@ class ChatPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8.0),
-          SendMessageField(messagesCollectionPath: messagesCollectionPath),
+          SendMessageField(
+            messagesCollectionPath: messagesCollectionPath,
+            recipientUid: recipientUid,
+          ),
         ],
       ),
     );

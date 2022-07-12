@@ -1,16 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:teachme_app/helpers/chat_keys.dart';
 
 import '../../helpers/message_keys.dart';
+import '../../pages/messages/chats_overview_page.dart'
+    show chatsMapCollectionPath, chatsListCollectionPath;
 
 class SendMessageField extends StatefulWidget {
   const SendMessageField({
     Key? key,
     required this.messagesCollectionPath,
+    required this.recipientUid,
   }) : super(key: key);
 
-  final String messagesCollectionPath;
+  final String messagesCollectionPath, recipientUid;
 
   @override
   _SendMessageFieldState createState() => _SendMessageFieldState();
@@ -23,17 +27,34 @@ class _SendMessageFieldState extends State<SendMessageField> {
   void _send() async {
     try {
       setState(() => _sendEnabled = false);
+      final firestore = FirebaseFirestore.instance;
       final user = FirebaseAuth.instance.currentUser!;
+      final now = Timestamp.now();
 
-      FirebaseFirestore.instance.collection(widget.messagesCollectionPath).add({
+      firestore.collection(widget.messagesCollectionPath).add({
         MessageKeys.txt: _textController.text.trim(),
-        MessageKeys.crAt: Timestamp.now(),
+        MessageKeys.crAt: now,
         MessageKeys.cr: {
           MessageKeys.uid: user.uid,
           MessageKeys.usn: user.displayName,
           MessageKeys.pto: user.photoURL,
         },
       });
+
+      firestore
+          .collection(
+            '$chatsMapCollectionPath/{$user.uid}/$chatsListCollectionPath',
+          )
+          .doc(widget.recipientUid)
+          .update({ChatKeys.upAt: now});
+
+      firestore
+          .collection(
+            '$chatsMapCollectionPath/${widget.recipientUid}/$chatsListCollectionPath',
+          )
+          .doc(user.uid)
+          .update({ChatKeys.upAt: now});
+
       _textController.clear();
     } on Exception catch (e) {
       print(e);

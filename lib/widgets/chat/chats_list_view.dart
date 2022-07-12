@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../helpers/chat_keys.dart';
 import 'chat_list_item.dart';
 
-const _chatsCollectionPath = "chats";
+const chatsCollectionPath = "chats";
 
 class ChatsListView extends StatelessWidget {
   const ChatsListView({
@@ -20,8 +20,7 @@ class ChatsListView extends StatelessWidget {
     final chtCollec = firestore.collection(chatsListCollectionPath);
 
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      // orderBy(MessageKeys.crAt, descending: true).
-      stream: chtCollec.snapshots(),
+      stream: chtCollec.orderBy(ChatKeys.upAt, descending: true).snapshots(),
       builder: (_, snapshot) {
         final isWaiting = snapshot.connectionState == ConnectionState.waiting;
         if (isWaiting) return const Center(child: CircularProgressIndicator());
@@ -37,13 +36,12 @@ class ChatsListView extends StatelessWidget {
         final n = docs.length;
 
         return ListView.builder(
-          // reverse: true,
           itemCount: n,
           itemBuilder: (_, i) {
             final document = docs[i];
             final documentData = document.data();
             final messagesCollectionPath =
-                "$_chatsCollectionPath/${documentData[ChatKeys.msg]}/messages";
+                "$chatsCollectionPath/${documentData[ChatKeys.msg]}/messages";
             const rpKey = ChatKeys.rp;
             final recipient = documentData[rpKey];
             final usn = recipient[ChatKeys.usn];
@@ -52,6 +50,7 @@ class ChatsListView extends StatelessWidget {
             return ChatListItem(
               key: ValueKey(document.id),
               messagesCollectionPath: messagesCollectionPath,
+              recipientUid: document.id,
               recipientUsername: usn,
               recipientPhotoURL: rpPhoto,
             );

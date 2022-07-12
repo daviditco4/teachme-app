@@ -24,7 +24,14 @@ class MessagesListView extends StatelessWidget {
         final isWaiting = snapshot.connectionState == ConnectionState.waiting;
         if (isWaiting) return const Center(child: CircularProgressIndicator());
 
-        final docs = snapshot.data!.docs;
+        final docs = snapshot.data?.docs;
+
+        if (docs == null) {
+          return const Center(
+            child: Text("¡El chat está vacío, qué esperas!"),
+          );
+        }
+
         final n = docs.length;
 
         return ListView.builder(

@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 
+import '../../helpers/chat_keys.dart';
+
 class ChatListItem extends StatelessWidget {
   const ChatListItem({
     Key? key,
     required this.messagesCollectionPath,
+    required this.recipientUid,
     required this.recipientUsername,
     required this.recipientPhotoURL,
   }) : super(key: key);
 
-  final String messagesCollectionPath, recipientUsername, recipientPhotoURL;
+  final String messagesCollectionPath;
+  final String recipientUid;
+  final String recipientUsername;
+  final String recipientPhotoURL;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +24,10 @@ class ChatListItem extends StatelessWidget {
         onTap: () {
           Navigator.of(context).pushNamed(
             '/chat',
-            arguments: messagesCollectionPath,
+            arguments: {
+              ChatKeys.msg: messagesCollectionPath,
+              ChatKeys.rp: recipientUid,
+            },
           );
         },
         leading: CircleAvatar(
