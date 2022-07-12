@@ -45,6 +45,8 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   bool isLoading = true;
   double teacherRating = 0;
   double teacherDebt = 0;
+  int commentIndex = 0;
+  List<String> commentList = [];
 
   static final Map<int, String> indexToDayMap = {
     0: "Domingo",
@@ -113,6 +115,10 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
             _editingController.text = teacherData[TeachersKeys.description];
             teacherRating = teacherData[TeachersKeys.rating];
             teacherDebt = teacherData[TeachersKeys.debt];
+            List<dynamic> aux = teacherData[TeachersKeys.comments];
+            commentList = aux.cast<String>();
+
+            print("COMENTARIOS " + commentList.toString());
             isLoading = false;
           }
 
@@ -374,6 +380,72 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                   ),
                                                 ),
                                                 const SizedBox(height: 50.0),
+                                                const Divider(
+                                                  height: 20.0,
+                                                  thickness: 1.5,
+                                                  indent: 32.0,
+                                                  endIndent: 32.0,
+                                                ),
+                                                Column(
+                                                  children: <Widget>[
+                                                    const Text(
+                                                      "Comentarios",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 20.0,
+                                                          color:
+                                                              MyColors.black),
+                                                    ),
+                                                    const SizedBox(
+                                                        height: 25.0),
+                                                    SizedBox(
+                                                        height:
+                                                            200, // card height
+                                                        child: PageView.builder(
+                                                            itemCount:
+                                                                commentList
+                                                                    .length,
+                                                            controller:
+                                                                PageController(
+                                                                    viewportFraction:
+                                                                        0.85),
+                                                            onPageChanged: (int
+                                                                    index) =>
+                                                                setState(() =>
+                                                                    commentIndex =
+                                                                        index),
+                                                            itemBuilder:
+                                                                (_, i) {
+                                                              return Transform
+                                                                  .scale(
+                                                                      scale: i ==
+                                                                              commentIndex
+                                                                          ? 1
+                                                                          : 0.9,
+                                                                      child:
+                                                                          Card(
+                                                                        elevation:
+                                                                            6,
+                                                                        shape: RoundedRectangleBorder(
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(20)),
+                                                                        child:
+                                                                            Padding(
+                                                                          padding:
+                                                                              EdgeInsets.all(10.0),
+                                                                          child:
+                                                                              Text(
+                                                                            commentList[commentIndex],
+                                                                            style:
+                                                                                TextStyle(fontSize: 16),
+                                                                          ),
+                                                                        ),
+                                                                      ));
+                                                            }))
+                                                  ],
+                                                ),
+                                                const SizedBox(height: 25.0),
                                                 const Divider(
                                                   height: 20.0,
                                                   thickness: 1.5,
