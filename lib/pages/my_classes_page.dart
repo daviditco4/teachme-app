@@ -164,6 +164,7 @@ class _MyClass extends State<MyClass> {
 
       if (classTime.isAfter(localDateTime)) {
         String otherUsername = "Usuario";
+        String otherUserImage = "Image";
 
         print("OTHER USERNAME");
         if (userProfileType.value == ProfileType.student) {
@@ -173,6 +174,7 @@ class _MyClass extends State<MyClass> {
               .get()
               .then((doc) {
             otherUsername = doc[TeachersKeys.name];
+            otherUserImage = doc[TeachersKeys.photoUrl];
           });
         } else {
           await store
@@ -181,6 +183,7 @@ class _MyClass extends State<MyClass> {
               .get()
               .then((doc) {
             otherUsername = doc[StudentsKeys.name];
+            otherUserImage = doc[StudentsKeys.photoUrl];
           });
         }
 
@@ -191,6 +194,7 @@ class _MyClass extends State<MyClass> {
             schedule: "$date a las $time:00",
             cost: current[ClassesKeys.cost],
             otherUserName: otherUsername,
+            otherUserImage: otherUserImage,
             subject: current[ClassesKeys.subjectId],
             time: current[ClassesKeys.time] + ":00",
             topics: current[ClassesKeys.topics],

@@ -13,6 +13,7 @@ class CardClass extends StatefulWidget {
   final String time;
   final String topics;
   final String otherUserName;
+  final String otherUserImage;
   final String subject;
 
   const CardClass(
@@ -26,7 +27,8 @@ class CardClass extends StatefulWidget {
       required this.time,
       required this.topics,
       required this.otherUserName,
-      required this.subject})
+      required this.otherUserImage,
+        required this.subject})
       : super(key: key);
 
   @override
@@ -66,7 +68,6 @@ class _CardClass extends State<CardClass> {
                   backgroundColor: MyColors.white,
                   backgroundImage: _getUserImage(),
                   radius: 65.0,
-                  // maxRadius: 200.0,
                 ),
               ),
               Row(
@@ -74,10 +75,10 @@ class _CardClass extends State<CardClass> {
                 children: <Widget>[
                   ElevatedButton(
                     onPressed: () => viewDetails(context),
-                    //onPressed: () => onPressed(widget.textButton),
                     child: Text(widget.textButton,
                         style: const TextStyle(
-                            color: MyColors.white, fontSize: 15)),
+                            color: MyColors.white, fontSize: 15)
+                    ),
                     style: MyColors.buttonStyleDefault,
                   ),
                 ],
@@ -90,12 +91,8 @@ class _CardClass extends State<CardClass> {
   }
 
   ImageProvider _getUserImage() {
-    String? userImageUrl = firebaseAuth.currentUser!.photoURL;
-    if (userImageUrl != null) {
-      return NetworkImage(userImageUrl);
-    } else {
-      return const AssetImage("assets/images/hasbulla.png");
-    }
+    String? userImageUrl = widget.otherUserImage;
+    return NetworkImage(userImageUrl);
   }
 
   void onPressed(String text) {
@@ -110,6 +107,7 @@ class _CardClass extends State<CardClass> {
               address: widget.address,
               cost: widget.cost,
               otherUserName: widget.otherUserName,
+              otherUserImage: widget.otherUserImage,
               subject: widget.subject,
               time: widget.time,
               topics: widget.topics,
