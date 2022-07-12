@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/helpers/students_keys.dart';
 import 'package:teachme_app/pages/geolocation/current_location_screen.dart';
@@ -207,59 +206,6 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                                 const SizedBox(height: 25.0),
                                                 const Divider(
                                                   height: 40.0,
-                                                  thickness: 1.5,
-                                                  indent: 32.0,
-                                                  endIndent: 32.0,
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 25.0,
-                                                          left: 25.0),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: <Widget>[
-                                                      const Text(
-                                                        "Calificación",
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 20.0,
-                                                            color:
-                                                                MyColors.black),
-                                                      ),
-                                                      RatingBar.builder(
-                                                        initialRating: 3,
-                                                        itemSize: 25,
-                                                        minRating: 1,
-                                                        direction:
-                                                            Axis.horizontal,
-                                                        allowHalfRating: true,
-                                                        itemCount: 5,
-                                                        itemPadding:
-                                                            const EdgeInsets
-                                                                    .symmetric(
-                                                                horizontal:
-                                                                    2.0),
-                                                        itemBuilder:
-                                                            (context, _) =>
-                                                                const Icon(
-                                                          Icons.star,
-                                                          color: MyColors.white,
-                                                        ),
-                                                        onRatingUpdate:
-                                                            (rating) {
-                                                          print(rating);
-                                                        },
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 50.0),
-                                                const Divider(
-                                                  height: 20.0,
                                                   thickness: 1.5,
                                                   indent: 32.0,
                                                   endIndent: 32.0,

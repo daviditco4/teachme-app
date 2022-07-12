@@ -32,6 +32,7 @@ class ConfirmClassCard extends StatefulWidget {
 class _ConfirmClassCard extends State<ConfirmClassCard> {
   double rating = 0.0;
   TextEditingController textEditingController = TextEditingController();
+  bool isStudent = userProfileType.value == ProfileType.student;
 
   @override
   Widget build(BuildContext context) {
@@ -62,30 +63,34 @@ class _ConfirmClassCard extends State<ConfirmClassCard> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(25, 10, 40, 20),
-                child: Row(
-                  children: <Widget>[
-                    const Text('Califica la clase: '),
-                    RatingBar.builder(
-                      itemSize: 25,
-                      minRating: 0.0,
-                      direction: Axis.horizontal,
-                      allowHalfRating: true,
-                      itemCount: 5,
-                      itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
-                      itemBuilder: (context, _) => const Icon(
-                        Icons.star,
-                        color: MyColors.white,
+              Visibility(
+                visible: !isStudent,
+                child: Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(25, 10, 40, 20),
+                  child: Row(
+                    children: <Widget>[
+                      const Text('Califica la clase: '),
+                      RatingBar.builder(
+                        itemSize: 25,
+                        minRating: 0.0,
+                        direction: Axis.horizontal,
+                        allowHalfRating: true,
+                        itemCount: 5,
+                        itemPadding:
+                            const EdgeInsets.symmetric(horizontal: 2.0),
+                        itemBuilder: (context, _) => const Icon(
+                          Icons.star,
+                          color: MyColors.white,
+                        ),
+                        onRatingUpdate: (rating) {
+                          setState(() {
+                            this.rating = rating;
+                          });
+                        },
+                        initialRating: rating,
                       ),
-                      onRatingUpdate: (rating) {
-                        setState(() {
-                          this.rating = rating;
-                        });
-                      },
-                      initialRating: rating,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 10),
@@ -111,8 +116,7 @@ class _ConfirmClassCard extends State<ConfirmClassCard> {
     FirebaseFirestore store = FirebaseFirestore.instance;
     String userUid = FirebaseAuth.instance.currentUser!.uid;
     String comment = textEditingController.text;
-    print(comment);
-    bool isStudent = userProfileType.value == ProfileType.student;
+
     String userCollectionPath =
         isStudent ? StudentsKeys.collectionName : TeachersKeys.collectionName;
     String otherUserCollectionPath =
