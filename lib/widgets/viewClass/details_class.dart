@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/main.dart';
-import 'package:teachme_app/widgets/auth/profile_service.dart';
+import 'package:teachme_app/pages/profile/teacher_profile_page.dart';
+import 'package:teachme_app/widgets/other/tm_navigator.dart';
 import '../../constants/theme.dart';
 
 class DetailsClass extends StatefulWidget {
@@ -72,7 +73,8 @@ class _DetailsClass extends State<DetailsClass> {
                             : 'Alumno',
                         style: const TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold)),
-                    Text(widget.otherUserName, style: TextStyle(fontSize: 18))
+                    Text(widget.otherUserName,
+                        style: const TextStyle(fontSize: 18))
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -135,9 +137,16 @@ class _DetailsClass extends State<DetailsClass> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.pop(context, false);
+                        // Navigator.pop(context, false);
+                        _getTeacherID().then((value) => {
+                              if (value != null)
+                                {
+                                  TMNavigator.navigateToPage(context,
+                                      TeacherProfilePage(userID: value))
+                                }
+                            });
                       },
-                      child: const Text('Cerrar'),
+                      child: const Text('Perfil profesor'),
                       style: MyColors.buttonStyleDefault,
                     ),
                   ],
@@ -159,7 +168,7 @@ class _DetailsClass extends State<DetailsClass> {
     }
   }
 
-  void _cancelarClase() async {
+  Future<String?> _getTeacherID() async {
     final studentid = FirebaseAuth.instance.currentUser!.uid;
 
     var classDoc = await FirebaseFirestore.instance
@@ -169,8 +178,16 @@ class _DetailsClass extends State<DetailsClass> {
 
     var data = classDoc.data();
     if (data != null && data.containsKey("teacherUid")) {
-      var teacherid = data["teacherUid"].toString();
+      return data["teacherUid"].toString();
+    }
+    return null;
+  }
 
+  void _cancelarClase() async {
+    var teacherID = await _getTeacherID();
+    final studentid = FirebaseAuth.instance.currentUser!.uid;
+
+    if (teacherID != null) {
       FirebaseFirestore.instance
           .collection("students/$studentid/classes")
           .doc(widget.cid)
@@ -181,7 +198,7 @@ class _DetailsClass extends State<DetailsClass> {
                   },
               onError: (e) => {print("Error updating document $e")});
       FirebaseFirestore.instance
-          .collection("teachers/$teacherid/classes")
+          .collection("teachers/$teacherID/classes")
           .doc(widget.cid)
           .delete()
           .then(

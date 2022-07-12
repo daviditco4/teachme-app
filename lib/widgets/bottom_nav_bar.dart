@@ -57,8 +57,8 @@ class _TMBottomNavigationBarState extends State<TMBottomNavigationBar> {
 
         _pages.add(ChatsOverviewPage());
         _pages.add(value == ProfileType.teacher
-            ? TeacherProfilePage()
-            : StudentProfilePage());
+            ? TeacherProfilePage(userID: '')
+            : StudentProfilePage(userID: ''));
         return BottomNavigationBar(
             currentIndex: _currentIndex,
             type: BottomNavigationBarType.fixed,
