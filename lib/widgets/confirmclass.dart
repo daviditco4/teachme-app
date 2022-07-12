@@ -64,7 +64,7 @@ class _ConfirmClassCard extends State<ConfirmClassCard> {
                 ),
               ),
               Visibility(
-                visible: !isStudent,
+                visible: isStudent,
                 child: Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(25, 10, 40, 20),
                   child: Row(
