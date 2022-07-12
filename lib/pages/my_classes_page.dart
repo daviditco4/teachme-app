@@ -54,10 +54,6 @@ class _MyClass extends State<MyClass> {
                     fontWeight: FontWeight.w900,
                   )),
               actions: [
-                IconButton(
-                    icon: const Icon(Icons.settings, color: Colors.black),
-                    onPressed: () => TMNavigator.navigateToPage(
-                        context, const SettingsPage())),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: IconButton(
