@@ -28,7 +28,8 @@ class ConfirmClassCard extends StatefulWidget {
 }
 
 class _ConfirmClassCard extends State<ConfirmClassCard> {
-  //FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  double rating = 0.0;
+  TextEditingController textEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -49,10 +50,11 @@ class _ConfirmClassCard extends State<ConfirmClassCard> {
                   style: const TextStyle(color: MyColors.black, fontSize: 17),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(25, 10, 40, 20),
+              Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(25, 10, 40, 20),
                 child: TextField(
-                  decoration: InputDecoration(
+                  controller: textEditingController,
+                  decoration: const InputDecoration(
                     border: UnderlineInputBorder(),
                     hintText: 'Comentanos como fue la clase',
                   ),
@@ -65,7 +67,7 @@ class _ConfirmClassCard extends State<ConfirmClassCard> {
                     const Text('Califica la clase: '),
                     RatingBar.builder(
                       itemSize: 25,
-                      minRating: 1,
+                      minRating: 0.0,
                       direction: Axis.horizontal,
                       allowHalfRating: true,
                       itemCount: 5,
@@ -75,8 +77,11 @@ class _ConfirmClassCard extends State<ConfirmClassCard> {
                         color: MyColors.white,
                       ),
                       onRatingUpdate: (rating) {
-                        print(rating);
+                        setState(() {
+                          this.rating = rating;
+                        });
                       },
+                      initialRating: rating,
                     ),
                   ],
                 ),
@@ -103,8 +108,8 @@ class _ConfirmClassCard extends State<ConfirmClassCard> {
   _handleClassConfirmed() async {
     FirebaseFirestore store = FirebaseFirestore.instance;
     String userUid = FirebaseAuth.instance.currentUser!.uid;
-    double rating = 3.5;
-    String comment = "Este es un comentario de la clase";
+    String comment = textEditingController.text;
+    print(comment);
     bool isStudent = userProfileType.value == ProfileType.student;
     String userCollectionPath =
         isStudent ? StudentsKeys.collectionName : TeachersKeys.collectionName;
@@ -116,12 +121,14 @@ class _ConfirmClassCard extends State<ConfirmClassCard> {
         isStudent ? ClassesKeys.teacherConfirmed : ClassesKeys.studentConfirmed;
 
     // Agrego el comentario
-    await store
-        .collection(otherUserCollectionPath)
-        .doc(widget.otherUserUID)
-        .update({
-      "comments": FieldValue.arrayUnion([comment]),
-    });
+    if (comment.isNotEmpty) {
+      await store
+          .collection(otherUserCollectionPath)
+          .doc(widget.otherUserUID)
+          .update({
+        "comments": FieldValue.arrayUnion([comment]),
+      });
+    }
 
     // Actualizo en las clases del usuario, que confirmo
     await store
