@@ -14,8 +14,6 @@ import 'pages/notifications_page.dart';
 import 'pages/settings_page.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-const chatTopic = 'public';
-
 enum ProfileType { student, teacher, missing }
 
 // var userProfileType = ProfileType.missing;

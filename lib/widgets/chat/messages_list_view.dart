@@ -3,11 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../helpers/message_keys.dart';
-import '../../pages/messages/chat_page.dart' show messagesCollectionPath;
 import 'message_bubble.dart';
 
 class MessagesListView extends StatelessWidget {
-  const MessagesListView({Key? key}) : super(key: key);
+  const MessagesListView({
+    Key? key,
+    required this.messagesCollectionPath,
+  }) : super(key: key);
+
+  final String messagesCollectionPath;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +24,14 @@ class MessagesListView extends StatelessWidget {
         final isWaiting = snapshot.connectionState == ConnectionState.waiting;
         if (isWaiting) return const Center(child: CircularProgressIndicator());
 
-        final docs = snapshot.data!.docs;
+        final docs = snapshot.data?.docs;
+
+        if (docs == null) {
+          return const Center(
+            child: Text("¡El chat está vacío, qué esperas!"),
+          );
+        }
+
         final n = docs.length;
 
         return ListView.builder(

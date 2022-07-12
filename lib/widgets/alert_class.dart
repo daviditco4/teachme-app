@@ -3,8 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:teachme_app/helpers/teachers_keys.dart';
 import '../constants/theme.dart';
+import '../helpers/chat_keys.dart';
 import '../helpers/classes_keys.dart';
 import '../helpers/students_keys.dart';
+import '../pages/messages/chats_overview_page.dart'
+    show chatsMapCollectionPath, chatsListCollectionPath;
+import 'chat/chats_list_view.dart' show chatsCollectionPath;
 
 class AlertClass extends StatefulWidget {
   final String title;
@@ -221,6 +225,55 @@ class _AlertClass extends State<AlertClass> {
     return time.split(':')[0];
   }
 
+  void _createChatMapping(String teacherUid) async {
+    final firestore = FirebaseFirestore.instance;
+
+    try {
+      final mapCollection = firestore.collection(
+        '$chatsMapCollectionPath/${user.uid}/$chatsListCollectionPath',
+      );
+      final query = await mapCollection.doc(teacherUid).get();
+
+      if (query.exists) return;
+
+      final chatsCollection = firestore.collection(chatsCollectionPath);
+      final newChatId = (await chatsCollection.add({})).id;
+      final now = Timestamp.now();
+      final teacherData = (await firestore
+              .collection(TeachersKeys.collectionName)
+              .doc(teacherUid)
+              .get())
+          .data()!;
+      final teacherName = teacherData[TeachersKeys.name] as String;
+      final teacherPtoURL = teacherData[TeachersKeys.photoUrl] as String;
+
+      mapCollection.doc(teacherUid).set({
+        ChatKeys.msg: newChatId,
+        ChatKeys.upAt: now,
+        ChatKeys.rp: {
+          ChatKeys.usn: teacherName,
+          ChatKeys.pto: teacherPtoURL,
+        },
+      });
+
+      firestore
+          .collection(
+            '$chatsMapCollectionPath/$teacherUid/$chatsListCollectionPath',
+          )
+          .doc(user.uid)
+          .set({
+        ChatKeys.msg: newChatId,
+        ChatKeys.upAt: now,
+        ChatKeys.rp: {
+          ChatKeys.usn: user.displayName,
+          ChatKeys.pto: user.photoURL,
+        },
+      });
+    } on Exception catch (e) {
+      print(e);
+    }
+  }
+
   void _handleBookedClass(BuildContext context, String teacherUid,
       String subjectId, double classPrice) async {
     bool classExists = false;
@@ -247,6 +300,7 @@ class _AlertClass extends State<AlertClass> {
 
     Navigator.pop(context, true);
     _updateClassesCollection(teacherUid, subjectId, classPrice);
+    _createChatMapping(teacherUid);
   }
 
   void _updateClassesCollection(
