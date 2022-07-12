@@ -16,9 +16,11 @@ import 'package:teachme_app/widgets/bottom_nav_bar.dart';
 import '../../widgets/other/tm_navigator.dart';
 import 'package:weekday_selector/weekday_selector.dart';
 import 'package:mercado_pago_mobile_checkout/mercado_pago_mobile_checkout.dart';
+import 'package:mercadopago_sdk/mercadopago_sdk.dart';
 
 const String preferenceID = "425735901-07679a17-ebfb-43b9-8ef4-e29d557b1200";
 const String publicKey = "APP_USR-574f4f04-1b72-4b6f-acee-bbde68af6db3";
+const String accessToken = "APP_USR-3179086559063432-070509-58e24f17cded975cfbace4363c346153-425735901";
 
 class TeacherProfilePage extends StatefulWidget {
   final String userID;
@@ -647,7 +649,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                             .spaceBetween,
                                                     children: <Widget>[
                                                       const Text(
-                                                        "Deuda", //otro nombre para esto
+                                                        "Deuda",
                                                         style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight.bold,
@@ -661,12 +663,12 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                           // disabled if la deuda es menor que 500
                                                           onPressed: () =>
                                                               createOrder({
-                                                            "price": 500,
-                                                            "preference_id":
-                                                                preferenceID,
-                                                            "user": firebaseAuth
+                                                            "price":
+                                                                500, // poner la deuda del profe
+                                                            "email": firebaseAuth
                                                                 .currentUser!
-                                                                .uid
+                                                                .email,
+                                                            "name": displayName
                                                           }),
                                                           child: const Text(
                                                               'Pagar'),
@@ -1007,6 +1009,7 @@ class _OrderScreenState extends State<OrderScreen> {
   bool _loading = true;
   bool _paying = false;
   String _message = "";
+  var mp = MP.fromAccessToken(accessToken);
 
   late StreamSubscription<DocumentSnapshot> subscription;
 
@@ -1020,7 +1023,25 @@ class _OrderScreenState extends State<OrderScreen> {
   createOrder() async {
     var paymentRef = FirebaseFirestore.instance.collection('payments').doc();
 
-    await paymentRef.set(widget.orderData);
+    var preference = {
+      "items": [
+        {
+          "title": "Pago TeachMe",
+          "description": "Pago de deuda TeachMe",
+          "quantity": 1,
+          "currency_id": "ARS",
+          "unit_price": widget.orderData['price']
+        }
+      ],
+      "payer": {
+        "name": widget.orderData['name'],
+        "email": widget.orderData['email']
+      }
+    };
+    var result = await mp.createPreference(preference);
+    paymentRef.set(preference);
+    paymentRef.set(
+        {'preference_id': result['response']['id']}, SetOptions(merge: true));
 
     paymentRef.snapshots().listen(onData);
   }
