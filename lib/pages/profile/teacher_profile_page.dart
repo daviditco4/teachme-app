@@ -43,6 +43,8 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
   List<bool> availableDays = List.filled(7, true);
   List<String> subjects = [];
   bool isLoading = true;
+  double teacherRating = 0;
+  double teacherDebt = 0;
 
   static final Map<int, String> indexToDayMap = {
     0: "Domingo",
@@ -105,8 +107,12 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
               !snap.hasData) {
             isLoading = true;
           } else {
-            initialText = snap.data![TeachersKeys.description];
-            _editingController.text = snap.data![TeachersKeys.description];
+            Map<String, dynamic> teacherData = snap.data!;
+
+            initialText = teacherData[TeachersKeys.description];
+            _editingController.text = teacherData[TeachersKeys.description];
+            teacherRating = teacherData[TeachersKeys.rating];
+            teacherDebt = teacherData[TeachersKeys.debt];
             isLoading = false;
           }
 
@@ -342,12 +348,14 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                                 MyColors.black),
                                                       ),
                                                       RatingBar.builder(
-                                                        initialRating: 3,
+                                                        initialRating:
+                                                            teacherRating,
                                                         itemSize: 25,
-                                                        minRating: 1,
+                                                        minRating: 0,
                                                         direction:
                                                             Axis.horizontal,
                                                         allowHalfRating: true,
+                                                        ignoreGestures: true,
                                                         itemCount: 5,
                                                         itemPadding:
                                                             const EdgeInsets
@@ -360,10 +368,7 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                           Icons.star,
                                                           color: MyColors.white,
                                                         ),
-                                                        onRatingUpdate:
-                                                            (rating) {
-                                                          print(rating);
-                                                        },
+                                                        onRatingUpdate: (_) {},
                                                       ),
                                                     ],
                                                   ),
@@ -518,10 +523,6 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                           TextAlign.center),
                                                 ),
                                                 const SizedBox(height: 25.0),
-                                                const SizedBox(
-                                                  height: 200,
-                                                  // child: GridView.count(),
-                                                ),
                                                 const Divider(
                                                   height: 40.0,
                                                   thickness: 1.5,
@@ -630,10 +631,9 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                                 MyColors.black),
                                                       ),
                                                       ElevatedButton(
-                                                        // disabled if la deuda es menor que 500
                                                         onPressed: () =>
                                                             createOrder({
-                                                          "price": 500,
+                                                          "price": teacherDebt,
                                                           "preference_id":
                                                               preferenceID,
                                                           "user": firebaseAuth
@@ -656,10 +656,13 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
                                                             .spaceBetween,
-                                                    children: const <Widget>[
+                                                    children: <Widget>[
                                                       Text(
-                                                        "\$500", //poner el dato de firebase
-                                                        style: TextStyle(
+                                                        "\$" +
+                                                            teacherDebt
+                                                                .toStringAsFixed(
+                                                                    2), //poner el dato de firebase
+                                                        style: const TextStyle(
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                             fontSize: 16.0,
