@@ -50,7 +50,12 @@ dependencies:
   mercadopago_sdk: ^1.3.0
   table_calendar: ^2.3.1
   intl: ^0.17.0
+  flutter_launcher_icons: ^0.9.3
 
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon/TeachMeLogo.png"
 
 dev_dependencies:
   flutter_test:
