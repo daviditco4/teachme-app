@@ -7,6 +7,22 @@ import 'package:teachme_app/helpers/users_profile_type_keys.dart';
 import 'package:teachme_app/widgets/auth/auth_service.dart';
 
 class ProfileService {
+  Future<String?> getType(String userId) async {
+    if (userId.isEmpty) {
+      userId = FirebaseAuth.instance.currentUser!.uid;
+    }
+    try {
+      var docSnapShot = await FirebaseFirestore.instance
+          .collection("usersProfileType")
+          .doc(userId)
+          .get();
+      return docSnapShot.get(UsersProfileTypeKeys.type);
+    } on Exception catch (e) {
+      print(e.toString());
+    }
+    return null;
+  }
+
   Future<Map<String, dynamic>?> getProfile(String userId) async {
     if (userId.isEmpty) {
       userId = FirebaseAuth.instance.currentUser!.uid;

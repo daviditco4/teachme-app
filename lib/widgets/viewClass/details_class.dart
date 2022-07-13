@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/main.dart';
+import 'package:teachme_app/pages/profile/student_profile_page.dart';
 import 'package:teachme_app/pages/profile/teacher_profile_page.dart';
+import 'package:teachme_app/widgets/auth/profile_service.dart';
 import 'package:teachme_app/widgets/other/tm_navigator.dart';
 import '../../constants/theme.dart';
 
@@ -63,8 +65,7 @@ class _DetailsClass extends State<DetailsClass> {
                       style: const TextStyle(
                           color: MyColors.black,
                           fontSize: 28.0,
-                          fontWeight: FontWeight.bold)
-                  ),
+                          fontWeight: FontWeight.bold)),
                 ),
                 const SizedBox(height: 20),
                 Row(
@@ -76,7 +77,8 @@ class _DetailsClass extends State<DetailsClass> {
                             : 'Alumno',
                         style: const TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold)),
-                    Text(widget.otherUserName, style: const TextStyle(fontSize: 18))
+                    Text(widget.otherUserName,
+                        style: const TextStyle(fontSize: 18))
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -138,14 +140,34 @@ class _DetailsClass extends State<DetailsClass> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        // Navigator.pop(context, false);
-                        _getTeacherID().then((value) => {
-                              if (value != null)
-                                {
-                                  TMNavigator.navigateToPage(context,
-                                      TeacherProfilePage(userID: value))
-                                }
-                            });
+                        ProfileService()
+                            .getType(FirebaseAuth.instance.currentUser!.uid)
+                            .then((value) => {
+                                  if (value.toString() == "student")
+                                    {
+                                      _getTeacherID().then((value) => {
+                                            if (value != null)
+                                              {
+                                                TMNavigator.navigateToPage(
+                                                    context,
+                                                    TeacherProfilePage(
+                                                        userID: value))
+                                              }
+                                          })
+                                    }
+                                  else
+                                    {
+                                      _getStudentID().then((value) => {
+                                            if (value != null)
+                                              {
+                                                TMNavigator.navigateToPage(
+                                                    context,
+                                                    StudentProfilePage(
+                                                        userID: value))
+                                              }
+                                          })
+                                    }
+                                });
                       },
                       child: const Text('Ver Perfil'),
                       style: MyColors.buttonStyleDefault,
@@ -163,6 +185,21 @@ class _DetailsClass extends State<DetailsClass> {
   ImageProvider _getUserImage() {
     String? userImageUrl = widget.otherUserImage;
     return NetworkImage(userImageUrl);
+  }
+
+  Future<String?> _getStudentID() async {
+    final teacherid = FirebaseAuth.instance.currentUser!.uid;
+
+    var classDoc = await FirebaseFirestore.instance
+        .collection("teachers/$teacherid/classes")
+        .doc(widget.cid)
+        .get();
+
+    var data = classDoc.data();
+    if (data != null && data.containsKey("studentUid")) {
+      return data["studentUid"].toString();
+    }
+    return null;
   }
 
   Future<String?> _getTeacherID() async {

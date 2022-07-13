@@ -190,8 +190,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                                       child: Center(
                                                     child: Row(children: [
                                                       Expanded(
-                                                          child: !_isEditingText ||
-                                                                  !isActualUser
+                                                          child: !_isEditingText
                                                               ? Text(
                                                                   initialText,
                                                                   style:
@@ -217,16 +216,17 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                                                             });
                                                                   })),
                                                       Visibility(
+                                                          visible: isActualUser,
                                                           child: IconButton(
-                                                        icon: const Icon(
-                                                            Icons.edit),
-                                                        onPressed: () {
-                                                          setState(() => {
-                                                                _isEditingText =
-                                                                    true,
-                                                              });
-                                                        },
-                                                      ))
+                                                            icon: const Icon(
+                                                                Icons.edit),
+                                                            onPressed: () {
+                                                              setState(() => {
+                                                                    _isEditingText =
+                                                                        true,
+                                                                  });
+                                                            },
+                                                          ))
                                                     ]),
                                                   )),
                                                 ),
