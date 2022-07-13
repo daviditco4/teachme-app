@@ -118,7 +118,6 @@ class _TeacherProfilePage extends State<TeacherProfilePage> {
             List<dynamic> aux = teacherData[TeachersKeys.comments];
             commentList = aux.cast<String>();
 
-            print("COMENTARIOS " + commentList.toString());
             isLoading = false;
           }
 
