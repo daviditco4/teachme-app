@@ -237,7 +237,8 @@ void _updateStudentsOrTeachersCollection(String userType) async {
         StudentsKeys.uid: user.uid,
         StudentsKeys.address: 'placeholder',
         StudentsKeys.positionLatitude: 0,
-        StudentsKeys.positionLongitude: 0
+        StudentsKeys.positionLongitude: 0,
+        StudentsKeys.comments: []
       });
     } else {
       await FirebaseFirestore.instance
@@ -257,7 +258,9 @@ void _updateStudentsOrTeachersCollection(String userType) async {
         TeachersKeys.classPrice: 100,
         TeachersKeys.rating: 0.0,
         TeachersKeys.accumRatig: 0.0,
-        TeachersKeys.reviewCount: 0
+        TeachersKeys.reviewCount: 0,
+        TeachersKeys.comments: [],
+        TeachersKeys.debt: 0.0
       });
     }
   } on Exception catch (e) {

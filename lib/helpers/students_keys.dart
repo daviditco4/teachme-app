@@ -8,4 +8,5 @@ class StudentsKeys {
   static const collectionName = 'students';
   static const positionLatitude = "positionLatitude";
   static const positionLongitude = "positionLongitude";
+  static const comments = "comments";
 }

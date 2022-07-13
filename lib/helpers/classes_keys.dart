@@ -8,4 +8,6 @@ class ClassesKeys {
   static const date = 'date';
   static const cost = 'cost';
   static const topics = 'topics';
+  static const teacherConfirmed = 'teacherConfirmed';
+  static const studentConfirmed = 'studentConfirmed';
 }

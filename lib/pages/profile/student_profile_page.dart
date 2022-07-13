@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:teachme_app/constants/theme.dart';
 import 'package:teachme_app/helpers/students_keys.dart';
 import 'package:teachme_app/pages/geolocation/current_location_screen.dart';
@@ -22,13 +21,15 @@ class StudentProfilePage extends StatefulWidget {
 class _StudentProfilePageState extends State<StudentProfilePage> {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final ProfileService _profileService = ProfileService();
-
+  bool isLoading = true;
   bool _isEditingText = false;
   late TextEditingController _editingController;
   late String _userID;
   String initialText = "";
   String displayName = "";
   bool isActualUser = false;
+  List<String> commentList = [];
+  int commentIndex = 0;
 
   @override
   void initState() {
@@ -58,74 +59,78 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
     return FutureBuilder(
         future: _profileService.getProfile(widget.userID),
         builder: (context, AsyncSnapshot<Map<String, dynamic>?> snap) {
-          if (!snap.hasData ||
-              snap.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+          if (snap.connectionState == ConnectionState.waiting ||
+              !snap.hasData) {
+            isLoading = true;
           } else {
-            initialText = snap.data![StudentsKeys.description];
-            _editingController.text = snap.data![StudentsKeys.description];
+            Map<String, dynamic> studentData = snap.data!;
+            initialText = studentData[StudentsKeys.description];
+            _editingController.text = studentData[StudentsKeys.description];
+            List<dynamic> aux = studentData[StudentsKeys.comments];
+            commentList = aux.cast<String>();
 
-            return Scaffold(
-                extendBodyBehindAppBar: true,
-                backgroundColor: MyColors.background,
-                bottomNavigationBar: const TMBottomNavigationBar(),
-                appBar: AppBar(
-                  leading: const ImageIcon(
-                    AssetImage("assets/images/teach_me_logo.png"),
-                    color: MyColors.black,
-                  ),
-                  centerTitle: true,
-                  title: const Text('Mi Perfil',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.w900,
-                      )),
-                  actions: [
-                    IconButton(
-                        icon: const Icon(Icons.settings, color: Colors.black),
-                        onPressed: () => TMNavigator.navigateToPage(
-                            context, const SettingsPage())),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: IconButton(
-                        icon: const Icon(Icons.notifications_none,
-                            color: Colors.black),
-                        onPressed: () => TMNavigator.navigateToPage(
-                            context, const NotificationsPage()),
-                      ),
-                    ),
-                  ],
-                  backgroundColor: MyColors.background,
-                  elevation: 0,
+            isLoading = false;
+          }
+
+          return Scaffold(
+              extendBodyBehindAppBar: true,
+              backgroundColor: MyColors.background,
+              bottomNavigationBar: const TMBottomNavigationBar(),
+              appBar: AppBar(
+                leading: const ImageIcon(
+                  AssetImage("assets/images/teach_me_logo.png"),
+                  color: MyColors.black,
                 ),
-                body: Stack(children: <Widget>[
-                  SafeArea(
-                    child: ListView(children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 16.0, right: 16.0, top: 74.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Stack(children: <Widget>[
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: MyColors.cardClass,
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(30.0)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.1),
-                                      spreadRadius: 1,
-                                      blurRadius: 7,
-                                      offset: const Offset(
-                                          0, 3), // changes position of shadow
-                                    ),
-                                  ],
-                                ),
+                centerTitle: true,
+                title: const Text('Mi Perfil',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 25,
+                      fontWeight: FontWeight.w900,
+                    )),
+                actions: [
+                  IconButton(
+                      icon: const Icon(Icons.settings, color: Colors.black),
+                      onPressed: () => TMNavigator.navigateToPage(
+                          context, const SettingsPage())),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: IconButton(
+                      icon: const Icon(Icons.notifications_none,
+                          color: Colors.black),
+                      onPressed: () => TMNavigator.navigateToPage(
+                          context, const NotificationsPage()),
+                    ),
+                  ),
+                ],
+                backgroundColor: MyColors.background,
+                elevation: 0,
+              ),
+              body: Stack(children: <Widget>[
+                SafeArea(
+                  child: ListView(children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16.0, right: 16.0, top: 74.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Stack(children: <Widget>[
+                            Container(
+                              decoration: BoxDecoration(
+                                color: MyColors.cardClass,
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(30.0)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.1),
+                                    spreadRadius: 1,
+                                    blurRadius: 7,
+                                    offset: const Offset(
+                                        0, 3), // changes position of shadow
+                                  ),
+                                ],
+                              ),
                                 child: Card(
                                     color: MyColors.cardClass,
                                     semanticContainer: true,
@@ -230,118 +235,109 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                                     ]),
                                                   )),
                                                 ),
-                                                const SizedBox(height: 25.0),
-                                                const Divider(
-                                                  height: 40.0,
-                                                  thickness: 1.5,
-                                                  indent: 32.0,
-                                                  endIndent: 32.0,
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 25.0,
-                                                          left: 25.0),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: <Widget>[
-                                                      const Text(
-                                                        "Calificación",
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 20.0,
-                                                            color:
-                                                                MyColors.black),
-                                                      ),
-                                                      RatingBar.builder(
-                                                        initialRating: 3,
-                                                        itemSize: 25,
-                                                        minRating: 1,
-                                                        direction:
-                                                            Axis.horizontal,
-                                                        allowHalfRating: true,
-                                                        itemCount: 5,
-                                                        itemPadding:
-                                                            const EdgeInsets
-                                                                    .symmetric(
-                                                                horizontal:
-                                                                    2.0),
-                                                        itemBuilder:
-                                                            (context, _) =>
-                                                                const Icon(
-                                                          Icons.star,
-                                                          color: MyColors.white,
-                                                        ),
-                                                        onRatingUpdate:
-                                                            (rating) {
-                                                          print(rating);
-                                                        },
-                                                      ),
-                                                    ],
+                                                
+                                              const SizedBox(height: 25.0),
+                                              const Divider(
+                                                height: 40.0,
+                                                thickness: 1.5,
+                                                indent: 32.0,
+                                                endIndent: 32.0,
+                                              ),
+                                              Column(
+                                                children: <Widget>[
+                                                  const Text(
+                                                    "Comentarios",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 20.0,
+                                                        color: MyColors.black),
                                                   ),
-                                                ),
-                                                const SizedBox(height: 20.0),
-                                                const Divider(
-                                                  height: 20.0,
-                                                  thickness: 1.5,
-                                                  indent: 32.0,
-                                                  endIndent: 32.0,
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 25.0,
-                                                          left: 25.0),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: const [
-                                                      Text(
-                                                        "Comentarios",
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 20.0,
-                                                            color:
-                                                                MyColors.black),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  height: 100,
-                                                  // child: GridView.count(),
-                                                )
-                                              ],
-                                            ),
+                                                  const SizedBox(height: 25.0),
+                                                  SizedBox(
+                                                      height:
+                                                          200, // card height
+                                                      child: PageView.builder(
+                                                          itemCount: commentList
+                                                              .length,
+                                                          controller:
+                                                              PageController(
+                                                                  viewportFraction:
+                                                                      0.85),
+                                                          onPageChanged: (int
+                                                                  index) =>
+                                                              setState(() =>
+                                                                  commentIndex =
+                                                                      index),
+                                                          itemBuilder: (_, i) {
+                                                            return Transform
+                                                                .scale(
+                                                                    scale: i ==
+                                                                            commentIndex
+                                                                        ? 1
+                                                                        : 0.9,
+                                                                    child: Card(
+                                                                      elevation:
+                                                                          6,
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(20)),
+                                                                      child:
+                                                                          Padding(
+                                                                        padding:
+                                                                            EdgeInsets.all(10.0),
+                                                                        child:
+                                                                            Text(
+                                                                          commentList[
+                                                                              commentIndex],
+                                                                          style:
+                                                                              TextStyle(fontSize: 16),
+                                                                        ),
+                                                                      ),
+                                                                    ));
+                                                          }))
+                                                ],
+                                              ),
+                                              const SizedBox(height: 25.0),
+                                              const Divider(
+                                                height: 20.0,
+                                                thickness: 1.5,
+                                                indent: 32.0,
+                                                endIndent: 32.0,
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                    )),
-                              ),
-                              FractionalTranslation(
-                                  translation: const Offset(0.0, -0.5),
-                                  child: Align(
-                                    child: CircleAvatar(
-                                      backgroundColor: MyColors.white,
-                                      backgroundImage: _getUserImage(),
-                                      radius: 65.0,
-                                      // maxRadius: 200.0,
+                                        ),
+                                      ],
                                     ),
-                                    alignment: const FractionalOffset(0.5, 0.0),
-                                  ))
-                            ]),
-                          ],
-                        ),
+                                  )),
+                            ),
+                            FractionalTranslation(
+                                translation: const Offset(0.0, -0.5),
+                                child: Align(
+                                  child: CircleAvatar(
+                                    backgroundColor: MyColors.white,
+                                    backgroundImage: _getUserImage(),
+                                    radius: 65.0,
+                                    // maxRadius: 200.0,
+                                  ),
+                                  alignment: const FractionalOffset(0.5, 0.0),
+                                ))
+                          ]),
+                        ],
                       ),
-                    ]),
-                  )
-                ]));
-          }
+                    ),
+                  ]),
+                ),
+                Visibility(
+                  visible: isLoading,
+                  maintainInteractivity: false,
+                  child: const Center(
+                    child: CircularProgressIndicator(
+                        color: MyColors.buttonCardClass),
+                  ),
+                )
+              ]));
         });
   }
 
